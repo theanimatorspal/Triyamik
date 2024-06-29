@@ -330,9 +330,6 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     o.CreateFont = function(inFontFileName, inFontSize)
         local font = {}
         font.mId = o.t:AddFontFace(inFontFileName, inFontSize)
-        font.GetTextDimension = function(self, inText)
-            return o.t:GetTextDimensions(inText, font.mId)
-        end
         return font
     end
 
@@ -350,11 +347,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         textLabel.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText)
             if inFont then self.mFont = inFont end
             if inText then self.mText = inText end
-            if inText then
-                o.t:Update(self.mId, self.mFont.mId, inPosition_3f, self.mText)
-            else
-                o.t:UpdatePosOnly(self.mId, self.mFont.mId, inPosition_3f, self.mText)
-            end
+            o.t:Update(self.mId, self.mFont.mId, inPosition_3f, self.mText)
         end
 
         textLabel.Remove = function(self)
@@ -392,7 +385,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         end
 
         SampledImage.CopyToCompute = function(inComputeImage)
-            o.s:CopyFromImage(SampledImage.mId, inComputeImage.mId)
+            o.s:CopyToImage(SampledImage.mId, inComputeImage.mId)
         end
         return SampledImage
     end
