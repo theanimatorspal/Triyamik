@@ -71,40 +71,56 @@ Presentation = function(inPresentation)
 
                     WindowClearColor = vec4(0)
 
+
+
+                    --[==================================================================]
+                    --
+                    --
+                    -- Event and Updates
+                    --
+                    --
+                    --[==================================================================]
                     local currentFrame = 1
                     local t = 0
                     local hasNextFrame = false
 
+                    local currentTime = w:GetWindowCurrentTime()
+                    local stepTime = 0.01
+                    local residualTime = 0
+                    local direction = 1
+                    local animate = true
 
                     local Event = function()
                               if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
-                                        if (hasNextFrame and t >= 1.0) then
+                                        if (hasNextFrame) then
                                                   currentFrame = currentFrame + 1
                                                   t = 0.0
+                                                  direction = 1
+                                                  animate = true
                                         end
                               end
 
                               if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
-                                        if (currentFrame >= 1 and t >= 1.0) then
+                                        if (currentFrame > 1) then
                                                   currentFrame = currentFrame - 1
-                                                  t = 0.0
+                                                  t = 1.0
+                                                  direction = -1
+                                                  animate = true
                                         end
                               end
                     end
 
-                    --[==================================================================]
-                    -- FRAME RATE INDEPENDENCE
-                    --[==================================================================]
 
-                    local currentTime = w:GetWindowCurrentTime()
-                    local stepTime = 0.01
-                    local residualTime = 0
+
                     local function Update()
                               gwid.Update()
-                              hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t)
+                              hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                               if w:GetWindowCurrentTime() - currentTime > stepTime then
-                                        if t <= 1.0 then
-                                                  t = t + stepTime + residualTime
+                                        if animate then
+                                                  t = t + direction * (stepTime + residualTime)
+                                                  if t <= 0.0 or t >= 1.0 then
+                                                            animate = false
+                                                  end
                                         end
                                         residualTime = (w:GetWindowCurrentTime() - currentTime) / 1000
                                         currentTime = w:GetWindowCurrentTime()

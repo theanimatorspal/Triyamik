@@ -27,9 +27,21 @@ local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIn
 end
 
 local ExecuteFunction = {
-          TEXT = function(inPresentation, inElement, inFrameIndex, t)
+          TEXT = function(inPresentation, inElement, inFrameIndex, t, inDirection)
                     tracy.ZoneBeginN("TEXT Execute")
-                    local PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
+                    local PreviousElement = 0
+
+                    if inDirection == 1 then
+                              PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
+                    elseif inDirection == -1 then
+                              PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex + 2)
+                              if PreviousElement then
+                                        local newel = PreviousElement
+                                        PreviousElement = inElement
+                                        inElement = newel
+                              end
+                    end
+
                     if PreviousElement then
                               local prevValue = PreviousElement.value
                               local interP = glerp_3f(
@@ -50,7 +62,7 @@ local ExecuteFunction = {
           end
 }
 
-ExecuteFrame = function(inPresentation, inFrameIndex, t)
+ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
           if (gFrameKeys[inFrameIndex]) then
                     tracy.ZoneBeginN("ExecuteFrame")
                     local CurrentFrame = gFrameKeys[inFrameIndex]
@@ -58,7 +70,7 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t)
                     for i = 1, CurrentFrameKeyCount, 1 do
                               local Key = CurrentFrame[i]
                               for _, element in pairs(Key.Elements) do
-                                        ExecuteFunction[element[1]](inPresentation, element, inFrameIndex, t)
+                                        ExecuteFunction[element[1]](inPresentation, element, inFrameIndex, t, inDirection)
                               end
                     end
                     tracy.ZoneEnd()

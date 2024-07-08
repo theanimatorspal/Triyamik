@@ -118,6 +118,7 @@
           "Lua.diagnostics.globals": [
                     "gWindowDimension",
                     "gwindow",
-                    "gwid"
+                    "gwid",
+                    "Keyboard"
           ]
 }
