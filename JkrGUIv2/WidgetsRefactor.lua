@@ -360,7 +360,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
                 o.t:UpdatePosOnly(self.mId, self.mFont.mId, inPosition_3f, self.mText)
             end
             if inColor then
-                o.c.mDrawables[textLabel.PushId].mColor = inColor
+                o.c.mDrawables[textLabel.PushId].mColor = inColor 
             end
         end
 

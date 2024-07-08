@@ -25,7 +25,12 @@ glerp_3f = function(a, b, t)
           return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
 end
 
+glerp_4f = function(a, b, t)
+          return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
+end
+
 ComputePositionByName = function(inPositionName, inDimension)
+          tracy.ZoneBeginN("ComputePositionByName")
           if type(inPositionName) ~= "string" then
                     return inPositionName
           end
@@ -49,5 +54,6 @@ ComputePositionByName = function(inPositionName, inDimension)
                     xPos = gWindowDimension.x - inDimension.x
           end
 
+          tracy.ZoneEnd()
           return vec3(xPos, yPos, gbaseDepth)
 end

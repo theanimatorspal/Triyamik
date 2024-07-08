@@ -8,22 +8,27 @@ local inspect = require("Present.inspect")
 
 local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
           local PreviousFrame = gFrameKeys[inFrameIndex - 1]
-          print("FrameKeys", inspect(gFrameKeys))
+          -- print("FrameKeys", inspect(gFrameKeys))
           if PreviousFrame then
+                    tracy.ZoneBeginN("GetPreviousFrameKeyElement")
                     local keysCount = #PreviousFrame
                     for i = 1, keysCount, 1 do
                               local Key = PreviousFrame[i]
-                              for _, element in pairs(Key.Elements) do
-                                        if element.name == inElement.name then
-                                                  return element
+                              local elements = Key.Elements
+                              local elementCount = #elements
+                              for i = 1, elementCount, 1 do
+                                        if elements[i].name == inElement.name then
+                                                  return elements[i]
                                         end
                               end
                     end
+                    tracy.ZoneEnd()
           end
 end
 
 local ExecuteFunction = {
           TEXT = function(inPresentation, inElement, inFrameIndex, t)
+                    tracy.ZoneBeginN("TEXT Execute")
                     local PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
                     if PreviousElement then
                               local prevValue = PreviousElement.value
@@ -33,7 +38,7 @@ local ExecuteFunction = {
                                         t
                               )
                               local interD = glerp_3f(prevValue.d, inElement.value.d, t)
-                              local interC = glerp_3f(prevValue.c, inElement.value.c, t)
+                              local interC = glerp_4f(prevValue.c, inElement.value.c, t)
                               inElement.handle:Update(interP, interD, nil, nil, interC)
                     else
                               inElement.handle:Update(ComputePositionByName(inElement.value.p, inElement.value.d),
@@ -41,11 +46,13 @@ local ExecuteFunction = {
                     end
                     -- print("inElement:", inspect(inElement))
                     -- print("PrevElement:", inspect(PreviousElement))
+                    tracy.ZoneEnd()
           end
 }
 
 ExecuteFrame = function(inPresentation, inFrameIndex, t)
           if (gFrameKeys[inFrameIndex]) then
+                    tracy.ZoneBeginN("ExecuteFrame")
                     local CurrentFrame = gFrameKeys[inFrameIndex]
                     local CurrentFrameKeyCount = #CurrentFrame
                     for i = 1, CurrentFrameKeyCount, 1 do
@@ -54,6 +61,7 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t)
                                         ExecuteFunction[element[1]](inPresentation, element, inFrameIndex, t)
                               end
                     end
+                    tracy.ZoneEnd()
                     return true
           end
 end

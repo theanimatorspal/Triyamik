@@ -70,20 +70,48 @@ Presentation = function(inPresentation)
                     local mt = Engine.mt
 
                     WindowClearColor = vec4(0)
-                    -- ExecuteFrame(inPresentation, 1, 1)
 
                     local currentFrame = 1
-                    ExecuteFrame(inPresentation, currentFrame, 1)
+                    local t = 0
+                    local hasNextFrame = false
+
+
                     local Event = function()
                               if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
-                                        if (ExecuteFrame(inPresentation, currentFrame, 1)) then
+                                        if (hasNextFrame and t >= 1.0) then
                                                   currentFrame = currentFrame + 1
+                                                  t = 0.0
+                                        end
+                              end
+
+                              if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
+                                        if (currentFrame >= 1 and t >= 1.0) then
+                                                  currentFrame = currentFrame - 1
+                                                  t = 0.0
                                         end
                               end
                     end
 
+                    --[==================================================================]
+                    -- FRAME RATE INDEPENDENCE
+                    --[==================================================================]
+
+                    local currentTime = w:GetWindowCurrentTime()
+                    local stepTime = 0.01
+                    local residualTime = 0
                     local function Update()
                               gwid.Update()
+                              hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t)
+                              if w:GetWindowCurrentTime() - currentTime > stepTime then
+                                        if t <= 1.0 then
+                                                  t = t + stepTime + residualTime
+                                        end
+                                        residualTime = (w:GetWindowCurrentTime() - currentTime) / 1000
+                                        currentTime = w:GetWindowCurrentTime()
+                              else
+                                        residualTime = residualTime / 1000 + stepTime -
+                                            (w:GetWindowCurrentTime() - currentTime) / 1000
+                              end
                     end
 
                     local function Dispatch()
