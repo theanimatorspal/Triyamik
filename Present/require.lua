@@ -1,3 +1,6 @@
+require("JkrGUIv2.Engine.Engine")
+require("JkrGUIv2.WidgetsRefactor")
+
 ---@diagnostic disable: lowercase-global
 gwindow = {}
 gwid = {}
@@ -23,13 +26,28 @@ glerp_3f = function(a, b, t)
 end
 
 ComputePositionByName = function(inPositionName, inDimension)
-          if inPositionName == "CENTER" then
-                    print(inDimension.x / 20, inDimension.y / 20)
-                    print(gWindowDimension.x / 20, gWindowDimension.y / 20)
-                    return vec3(gWindowDimension.x / 2.0 - inDimension.x / 2.0,
-                              gWindowDimension.y / 2.0 - inDimension.y / 2.0,
-                              gbaseDepth)
-          else
+          if type(inPositionName) ~= "string" then
                     return inPositionName
           end
+
+          local upDown, leftRight = inPositionName:match("([^_]+)_([^_]+)")
+
+          local xPos, yPos
+          if upDown == "TOP" then
+                    yPos = 0
+          elseif upDown == "CENTER" then
+                    yPos = gWindowDimension.y / 2.0 - inDimension.y / 2.0
+          elseif upDown == "BOTTOM" then
+                    yPos = gWindowDimension.y - inDimension.y
+          end
+
+          if leftRight == "LEFT" then
+                    xPos = 0
+          elseif leftRight == "CENTER" then
+                    xPos = gWindowDimension.x / 2.0 - inDimension.x / 2.0
+          elseif leftRight == "RIGHT" then
+                    xPos = gWindowDimension.x - inDimension.x
+          end
+
+          return vec3(xPos, yPos, gbaseDepth)
 end

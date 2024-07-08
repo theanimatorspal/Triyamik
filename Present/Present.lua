@@ -2,15 +2,13 @@ require("Present.require")
 require("Present.ProcessPass")
 require("Present.ExecutePass")
 require("Present.Elements")
-require("JkrGUIv2.Engine.Engine")
-require("JkrGUIv2.WidgetsRefactor")
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
 
 Presentation = function(inPresentation)
           local Log = function(inContent)
-                    print(string.format("[JkrGUI Present: ] %s", inContent))
+                    -- print(string.format("[JkrGUI Present: ] %s", inContent))
           end
           local shouldRun = true
           local Validation = false
@@ -54,10 +52,6 @@ Presentation = function(inPresentation)
                                                                                 ProcessFunctions[processFunctionIndex](
                                                                                           inPresentation, ElementValue,
                                                                                           FrameIndex, felementName)
-                                                                                print("processFunctionIndex : ",
-                                                                                          processFunctionIndex,
-                                                                                          "elementName: ",
-                                                                                          felementName)
                                                                       end
                                                             else
                                                                       ProcessLiterals(felementName, felement)
@@ -69,9 +63,24 @@ Presentation = function(inPresentation)
                               end
                     end
 
+                    local oldTime = 0.0
+                    local frameCount = 0
+                    local e = Engine.e
+                    local w = gwindow
+                    local mt = Engine.mt
 
                     WindowClearColor = vec4(0)
-                    ExecuteFrame(inPresentation, 1, 0)
+                    -- ExecuteFrame(inPresentation, 1, 1)
+
+                    local currentFrame = 1
+                    ExecuteFrame(inPresentation, currentFrame, 1)
+                    local Event = function()
+                              if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
+                                        if (ExecuteFrame(inPresentation, currentFrame, 1)) then
+                                                  currentFrame = currentFrame + 1
+                                        end
+                              end
+                    end
 
                     local function Update()
                               gwid.Update()
@@ -91,11 +100,8 @@ Presentation = function(inPresentation)
                     local function MultiThreadedExecute()
                     end
 
-                    local oldTime = 0.0
-                    local frameCount = 0
-                    local e = Engine.e
-                    local w = gwindow
-                    local mt = Engine.mt
+
+                    e:SetEventCallBack(Event)
                     while not e:ShouldQuit() and shouldRun do
                               oldTime = w:GetWindowCurrentTime()
                               e:ProcessEvents()

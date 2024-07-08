@@ -84,12 +84,16 @@ Jkr.CreateCallBuffers = function() -- Similar to Comptable in JrkGUI v1
     o.Push = function(inCall)
         if inCall.mDrawType then
             o.mDrawables[#o.mDrawables + 1] = inCall
+            return #o.mDrawables
         elseif inCall.mUpdate then
             o.mUpdatables[#o.mUpdatables + 1] = inCall
+            return #o.mUpdatables
         elseif inCall.mDispatch then
             o.mDispatchables[#o.mDispatchables + 1] = inCall
+            return #o.mDispatchables
         elseif inCall.mEvent then
             o.mEventables[#o.mEventables + 1] = inCall
+            return #o.mEventables
         end
     end
     o.PushOneTime = function(inCall, inFrame)
@@ -330,6 +334,9 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     o.CreateFont = function(inFontFileName, inFontSize)
         local font = {}
         font.mId = o.t:AddFontFace(inFontFileName, inFontSize)
+        font.GetTextDimension = function(self, inText)
+            return o.t:GetTextDimensions(inText, font.mId)
+        end
         return font
     end
 
@@ -344,10 +351,17 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         textLabel.mId = o.t:Add(inFont.mId, inPosition_3f, inText)
         textLabel.PushId = o.c.Push(Jkr.CreateDrawable(textLabel.mId, nil, "TEXT", nil, inColor))
 
-        textLabel.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText)
+        textLabel.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText, inColor)
             if inFont then self.mFont = inFont end
             if inText then self.mText = inText end
-            o.t:Update(self.mId, self.mFont.mId, inPosition_3f, self.mText)
+            if inText then
+                o.t:Update(self.mId, self.mFont.mId, inPosition_3f, self.mText)
+            else
+                o.t:UpdatePosOnly(self.mId, self.mFont.mId, inPosition_3f, self.mText)
+            end
+            if inColor then
+                o.c.mDrawables[textLabel.PushId].mColor = inColor
+            end
         end
 
         textLabel.Remove = function(self)
@@ -385,7 +399,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         end
 
         SampledImage.CopyToCompute = function(inComputeImage)
-            o.s:CopyToImage(SampledImage.mId, inComputeImage.mId)
+            o.s:CopyFromImage(SampledImage.mId, inComputeImage.mId)
         end
         return SampledImage
     end

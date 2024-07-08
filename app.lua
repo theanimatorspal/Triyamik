@@ -29,9 +29,9 @@ Presentation {
                               Item "You will love this too",
                               Item "Thank You",
                     },
-                    Tex1 = Text { t = "Hello", f = "Normal", p = "CENTER", c = vec4(1, 0, 0, 1) }
+                    Tex1 = Text { t = "Hello", f = "Normal", p = "CENTER_CENTER", c = vec4(1, 0, 0, 1) }
           },
           Frame {
-                    Tex1 = Text { t = "Hello", f = "Normal", p = "CENTER", c = vec4(0, 1, 0, 1) }
+                    Tex1 = Text { t = "Hello", f = "Normal", p = "CENTER_LEFT", c = vec4(0, 1, 0, 1) }
           }
 }

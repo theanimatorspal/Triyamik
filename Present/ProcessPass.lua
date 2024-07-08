@@ -1,4 +1,6 @@
 require("Present.require")
+require("Present.inspect")
+local inspect = require("Present.inspect")
 
 local index = 0
 local Unique = function(inElementName) -- Generate Unique Name
@@ -8,6 +10,11 @@ local Unique = function(inElementName) -- Generate Unique Name
           elseif type(inElementName) == "string" then
                     return inElementName
           end
+end
+
+local AddFrameKey = function(inKey, inFrameIndex)
+          gFrameKeys[inFrameIndex][#gFrameKeys[inFrameIndex] + 1] = inKey
+          -- print("gFrameKeys = ", inspect(gFrameKeys))
 end
 
 
@@ -23,18 +30,25 @@ ProcessFunctions = {
           Text = function(inPresentation, inValue, inFrameIndex, inElementName)
                     local ElementName = Unique(inElementName)
                     if not gscreenElements[ElementName] then
-                              gscreenElements[ElementName] = gwid.CreateTextLabel(vec3(math.huge),
-                                        vec3(math.huge),
-                                        gFontMap[inValue.f],
-                                        inValue.t, inValue.c)
+                              gscreenElements[ElementName] =
+                                  gwid.CreateTextLabel(
+                                            vec3(math.huge),
+                                            vec3(math.huge),
+                                            gFontMap[inValue.f],
+                                            inValue.t,
+                                            inValue.c
+                                  )
                     end
                     inValue.d = gFontMap[inValue.f]:GetTextDimension(inValue.t)
-                    gFrameKeys[inFrameIndex][#gFrameKeys[inFrameIndex] + 1] = {
+                    AddFrameKey({
                               FrameIndex = inFrameIndex,
-                              Elements = {
-                                        { "TEXT", handle = gscreenElements[ElementName], value = inValue, name = ElementName },
-                              }
-                    };
+                              Elements = { {
+                                        "TEXT",
+                                        handle = gscreenElements[ElementName],
+                                        value = inValue,
+                                        name = ElementName
+                              } }
+                    }, inFrameIndex)
           end
 }
 
