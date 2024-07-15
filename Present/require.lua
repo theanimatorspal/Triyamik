@@ -13,12 +13,23 @@ gWindowDimension = vec2(0)
 gFrameKeys = {}
 gbaseDepth = 50
 
+
 --[============================================================[
           UTILITY FUNCTIONS
 ]============================================================]
 
+glogError = function(inStr)
+          print("=======ERROR======")
+          print(inStr)
+          print("==================")
+end
+
 glerp = function(a, b, t)
           return (a * (1 - t) + t * b) * (1 - t) + b * t
+end
+
+glerp_2f = function(a, b, t)
+          return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
 end
 
 glerp_3f = function(a, b, t)
@@ -44,6 +55,22 @@ ComputePositionByName = function(inPositionName, inDimension)
                     yPos = gWindowDimension.y / 2.0 - inDimension.y / 2.0
           elseif upDown == "BOTTOM" then
                     yPos = gWindowDimension.y - inDimension.y
+          elseif upDown == "OUT" then
+                    yPos = gWindowDimension.y * 2
+          else
+                    glogError("Invalid position")
+          end
+
+          if leftRight == "LEFT" then
+                    xPos = 0
+          elseif leftRight == "CENTER" then
+                    xPos = gWindowDimension.x / 2.0 - inDimension.x / 2.0
+          elseif leftRight == "RIGHT" then
+                    xPos = gWindowDimension.x - inDimension.x
+          elseif leftRight == "OUT" then
+                    xPos = gWindowDimension.x * 2
+          else
+                    glogError("Invalid position")
           end
 
           if leftRight == "LEFT" then

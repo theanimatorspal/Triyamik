@@ -26,39 +26,87 @@ local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIn
           end
 end
 
+local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex, inDirection)
+          local PreviousElement = 0
+          if inDirection == 1 then
+                    PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
+          elseif inDirection == -1 then
+                    PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex + 2)
+                    if PreviousElement then
+                              local newel = PreviousElement
+                              PreviousElement = inElement
+                              inElement = newel
+                    end
+          end
+          return PreviousElement, inElement
+end
+
 local ExecuteFunction = {
           TEXT = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-                    tracy.ZoneBeginN("TEXT Execute")
-                    local PreviousElement = 0
+                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement,
+                              inFrameIndex, inDirection)
 
-                    if inDirection == 1 then
-                              PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
-                    elseif inDirection == -1 then
-                              PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex + 2)
-                              if PreviousElement then
-                                        local newel = PreviousElement
-                                        PreviousElement = inElement
-                                        inElement = newel
-                              end
-                    end
-
+                    local new = inElement.value
                     if PreviousElement then
-                              local prevValue = PreviousElement.value
+                              local prev = PreviousElement.value
                               local interP = glerp_3f(
-                                        ComputePositionByName(prevValue.p, prevValue.d),
-                                        ComputePositionByName(inElement.value.p, inElement.value.d),
+                                        ComputePositionByName(prev.p, prev.d),
+                                        ComputePositionByName(new.p, inElement.value.d),
                                         t
                               )
-                              local interD = glerp_3f(prevValue.d, inElement.value.d, t)
-                              local interC = glerp_4f(prevValue.c, inElement.value.c, t)
+                              local interD = glerp_3f(prev.d, new.d, t)
+                              local interC = glerp_4f(prev.c, new.c, t)
                               inElement.handle:Update(interP, interD, nil, nil, interC)
                     else
-                              inElement.handle:Update(ComputePositionByName(inElement.value.p, inElement.value.d),
-                                        vec3(inElement.value.d.x, inElement.value.d.y, inElement.value.d.z))
+                              inElement.handle:Update(ComputePositionByName(new.p, new.d),
+                                        vec3(new.d.x, new.d.y, new.d.z))
                     end
-                    -- print("inElement:", inspect(inElement))
-                    -- print("PrevElement:", inspect(PreviousElement))
-                    tracy.ZoneEnd()
+          end,
+          CIMAGE = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex,
+                              inDirection)
+                    local new = inElement.value
+                    local shader_parameters
+                    if PreviousElement then
+                              local prev = PreviousElement.value
+                              local interP = glerp_3f(
+                                        ComputePositionByName(prev.p, prev.d),
+                                        ComputePositionByName(new.p, new.d),
+                                        t
+                              )
+                              local interD = glerp_2f(prev.d, new.d, t)
+                              local shader_parameters_ = {
+                                        threads = glerp_3f(prev.shader_parameters.threads, prev.shader_parameters
+                                                  .threads, t),
+                                        p1 = glerp_4f(prev.shader_parameters.p1, new.shader_parameters.p1, t),
+                                        p2 = glerp_4f(prev.shader_parameters.p2, new.shader_parameters.p2, t),
+                                        p3 = glerp_4f(prev.shader_parameters.p3, new.shader_parameters.p3, t),
+                              }
+                              inElement.handle.sampledImage:Update(interP, interD)
+                              shader_parameters = shader_parameters_
+                    else
+                              inElement.handle.sampledImage:Update(ComputePositionByName(new.p, new.d),
+                                        vec3(new.d.x, new.d.y, 1))
+                              shader_parameters = new.shader_parameters
+                    end
+
+                    local computeImage = inElement.handle.computeImage
+                    local painter = gscreenElements[new.shader]
+                    local threads = shader_parameters.threads
+                    local thread_x = math.floor(threads.x)
+                    local thread_y = math.floor(threads.y)
+                    local thread_z = math.floor(threads.z)
+
+                    local pushconstant = Jkr.DefaultCustomImagePainterPushConstant()
+                    pushconstant.x = shader_parameters.p1
+                    pushconstant.y = shader_parameters.p2
+                    pushconstant.z = shader_parameters.p3
+
+                    gwid.c.PushOneTime(Jkr.CreateDispatchable(function()
+                              computeImage.BindPainter(painter)
+                              computeImage.DrawPainter(painter, pushconstant, thread_x, thread_y, thread_z)
+                              computeImage.CopyToSampled(inElement.handle.sampledImage)
+                    end), 1)
           end
 }
 

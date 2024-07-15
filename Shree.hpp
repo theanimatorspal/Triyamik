@@ -123,5 +123,54 @@ struct Scanner {
                     return true;
           }
 };
+struct Visitor {
+};
+struct Expr__ {
 
+                              virtual atype Accept(Visitor& inVisitor) = 0;
+                              virtual ~Expr__()                          = default;
+                        };
+
+                    struct Parser {
+                    
+                                    Parser(v<Token>& inTokens) : mTokens(inTokens) {}
+                    
+                    private:
+                    
+                                    bool Check(TokenType inType) {
+                                          if (IsAtEnd()) return false;
+                                                      return Peek().mType == inType;
+                                    }
+
+                                    Token Advance() {
+                                                if (not IsAtEnd()) {
+                                                            mCurrent++;
+                                                }
+                                                return Previous();
+                                    }
+                                    Token Consume(TokenType inType, const sv inStr);
+                                    bool IsAtEnd() { return Peek().mType == TokenType::EOF_; }
+                                    Token Peek() { return mTokens[mCurrent]; }
+                                    Token Previous() { return mTokens[mCurrent - 1]; }
+
+
+                                    int mCurrent = 0;
+                                    v<Token> mTokens;
+                                    template <typename... T> bool MatchAndAdvance(T... inTokenType) {
+                                                bool retval = false;
+                                                (
+                                                      [&]() {
+                                                            if (Check(inTokenType)) {
+                                                                        if (retval == false) {
+                                                                                    Advance();
+                                                                                    retval = true;
+                                                                        }
+                                                            }
+                                                      }(),
+                                                      ...);
+                                                return retval;
+                                    }
+                  
+                    };
+                        
 }

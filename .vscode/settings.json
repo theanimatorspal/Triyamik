@@ -119,6 +119,7 @@
                     "gWindowDimension",
                     "gwindow",
                     "gwid",
-                    "Keyboard"
+                    "Keyboard",
+                    "tracy"
           ]
 }
