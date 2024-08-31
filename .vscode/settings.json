@@ -121,5 +121,6 @@
                     "gwid",
                     "Keyboard",
                     "tracy"
-          ]
+          ],
+          "editor.occurrencesHighlight": "off"
 }

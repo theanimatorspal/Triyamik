@@ -2,8 +2,8 @@ require("JkrGUIv2.Engine.Engine")
 require("JkrGUIv2.WidgetsRefactor")
 
 ---@diagnostic disable: lowercase-global
-gwindow = {}
-gwid = {}
+gwindow = nil
+gwid = nil
 gassets = {}
 gliterals = {}
 gscreenElements = {}

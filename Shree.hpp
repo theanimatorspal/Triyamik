@@ -148,7 +148,11 @@ struct Expr__ {
                                                 }
                                                 return Previous();
                                     }
-                                    Token Consume(TokenType inType, const sv inStr);
+                                    Token Consume(TokenType inType, const sv inStr) {
+                                          if (Check(inType)) return Advance();
+                                          std::cout << inStr << "\n";
+                                          return {};
+                                    }
                                     bool IsAtEnd() { return Peek().mType == TokenType::EOF_; }
                                     Token Peek() { return mTokens[mCurrent]; }
                                     Token Previous() { return mTokens[mCurrent - 1]; }

@@ -2,7 +2,8 @@ require("Present.require")
 require("Present.ProcessPass")
 require("Present.ExecutePass")
 require("Present.Elements")
-local inspect = require("Present.inspect")
+---@diagnostic disable-next-line: lowercase-global
+inspect = require("Present.inspect")
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
@@ -13,10 +14,19 @@ Presentation = function(inPresentation)
     end
     local shouldRun = true
     local Validation = true
-    Engine:Load(Validation)
-    gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3)
-    gWindowDimension = gwindow:GetWindowDimension()
-    gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
+
+    -- If already initialized, don't again
+    if not Engine.i then
+        Engine:Load(Validation)
+    end
+
+    if not gwindow then
+        gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3)
+        gWindowDimension = gwindow:GetWindowDimension()
+        gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
+    end
+
+    gwindow:Show()
 
     if inPresentation.Config then
         local conf = inPresentation.Config
@@ -109,6 +119,10 @@ Presentation = function(inPresentation)
                     animate = true
                 end
             end
+
+            if (e:IsCloseWindowEvent()) then
+                shouldRun = false
+            end
         end
 
 
@@ -150,9 +164,8 @@ Presentation = function(inPresentation)
         local function MultiThreadedExecute()
         end
 
-
         e:SetEventCallBack(Event)
-        while not e:ShouldQuit() and shouldRun do
+        while shouldRun do
             oldTime = w:GetWindowCurrentTime()
             e:ProcessEvents()
             w:BeginUpdates()
@@ -180,7 +193,53 @@ Presentation = function(inPresentation)
                 w:SetTitle("Samprahar Frame Rate" .. 1000 / delta)
             end
             frameCount = frameCount + 1
-            mt:InjectToGate("__MtDrawCount", 0)
         end
+        w:Hide()
     end
+end
+
+
+function DefaultPresentation()
+    return {
+        Config = {
+            Font = {
+                Tiny = { "res/fonts/font.ttf", 10 },     -- \tiny
+                Small = { "res/fonts/font.ttf", 12 },    -- \small
+                Normal = { "res/fonts/font.ttf", 16 },   -- \normalsize
+                large = { "res/fonts/font.ttf", 20 },    -- \large
+                Large = { "res/fonts/font.ttf", 24 },    -- \Large
+                huge = { "res/fonts/font.ttf", 28 },     -- \huge
+                Huge = { "res/fonts/font.ttf", 32 },     -- \Huge
+                gigantic = { "res/fonts/font.ttf", 38 }, -- \gigantic
+                Gigantic = { "res/fonts/font.ttf", 42 }, -- \Gigantic
+            }
+        },
+        Animation {
+            Interpolation = "Constant",
+        },
+    }
+end
+
+function Plotter()
+    return Shader { cs = Engine.Shader()
+        .Header(450)
+        .CInvocationLayout(1, 1, 1)
+        .uImage2D()
+        .ImagePainterPush()
+        .Append [[
+        float plot(vec2 st, float fx, float inthickness) {
+                return smoothstep(fx - inthickness, fx, st.y) -
+                smoothstep(fx, fx + inthickness, st.y);
+        }
+        ]]
+        .GlslMainBegin()
+        .ImagePainterAssist()
+        .Append [[
+        float x = xy.x;
+        float y = xy.y;
+        float fx = sin(x);
+        flot pl = plot(vec2(x, y), fx, 0.01);
+        ]]
+        .GlslMainEnd().str,
+    }
 end
