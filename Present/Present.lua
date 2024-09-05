@@ -238,7 +238,7 @@ function Plotter()
         float x = xy.x;
         float y = xy.y;
         float fx = sin(x);
-        flot pl = plot(vec2(x, y), fx, 0.01);
+        float pl = plot(vec2(x, y), fx, 0.01);
         ]]
         .GlslMainEnd().str,
     }
