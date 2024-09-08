@@ -698,108 +698,39 @@ vec3 SpecularContribution(vec3 L, vec3 V, vec3 N, vec3 F0, float metallic, float
         end
         return o
     end
+    o.gltfPutMaterialTextures  = function(inGLTF, inMaterialIndex)
+        local Material = inGLTF:GetMaterialsRef()[inMaterialIndex]
+        local binding = 3
+        o.gltfMaterialTextures = {}
+        if (Material.mBaseColorTextureIndex ~= -1) then
+            o.uSampler2D(binding, "uBaseColorTexture").NewLine()
+            o.gltfMaterialTextures.mBaseColorTexture = true
+            binding = binding + 1
+        end
+        if (Material.mMetallicRoughnessTextureIndex ~= -1) then
+            o.uSampler2D(binding, "uMetallicRoughnessTexture").NewLine()
+            o.gltfMaterialTextures.mMetallicRoughnessTexture = true
+            binding = binding + 1
+        end
+        if (Material.mNormalTextureIndex ~= -1) then
+            o.uSampler2D(binding, "uNormalTexture").NewLine()
+            o.gltfMaterialTextures.mNormalTexture = true
+            binding = binding + 1
+        end
+        if (Material.mOcclusionTextureIndex ~= -1) then
+            o.uSampler2D(binding, "uOcclusionTexture").NewLine()
+            o.gltfMaterialTextures.mOcclusionTexture = true
+            binding = binding + 1
+        end
+        if (Material.mEmissiveTextureIndex ~= -1) then
+            o.uSampler2D(binding, "uEmissiveTexture").NewLine()
+            o.gltfMaterialTextures.mEmissiveTextureIndex = true
+            binding = binding + 1
+        end
+        return o
+    end
 
     return o
-end
-
-
-Jkrmt.CreateShaderByGLTFMaterial = function(inGLTF, inMaterialIndex)
-    local Material = inGLTF:GetMaterialsRef()[inMaterialIndex]
-    local vShader = Jkrmt.Shader()
-        .Header(450)
-        .NewLine()
-        .VLayout()
-        .Out(0, "vec2", "vUV")
-        .Out(1, "vec3", "vNormal")
-        .Out(2, "vec3", "vWorldPos")
-        .Push()
-        .Ubo()
-        .GlslMainBegin()
-        .Indent()
-        .Append(
-            [[
-              vec4 Pos = Push.model * vec4(inPosition, 1.0);
-              gl_Position = Ubo.proj * Ubo.view * Pos;
-              vUV = inUV;
-              vNormal = vec3(Push.model) * inNormal;
-              vWorldPos = vec3(Pos);
-        ]]
-        )
-        .NewLine()
-        .InvertY()
-        .GlslMainEnd()
-        .NewLine()
-    local fShader = Jkrmt.Shader()
-        .Header(450)
-        .NewLine()
-        .In(0, "vec2", "vUV")
-        .In(1, "vec3", "vNormal")
-        .In(2, "vec3", "vWorldPos")
-        .outFragColor()
-        .Push()
-        .Ubo()
-
-    local binding = 3
-    if (Material.mBaseColorTextureIndex ~= -1) then
-        fShader.uSampler2D(binding, "uBaseColorTexture").NewLine()
-        binding = binding + 1
-    end
-    if (Material.mMetallicRoughnessTextureIndex ~= -1) then
-        fShader.uSampler2D(binding, "uMetallicRoughnessTexture").NewLine()
-        binding = binding + 1
-    end
-    if (Material.mNormalTextureIndex ~= -1) then
-        fShader.uSampler2D(binding, "uNormalTexture").NewLine()
-        binding = binding + 1
-    end
-    if (Material.mOcclusionTextureIndex ~= -1) then
-        fShader.uSampler2D(binding, "uOcclusionTexture").NewLine()
-        binding = binding + 1
-    end
-    if (Material.mEmissiveTextureIndex ~= -1) then
-        fShader.uSampler2D(binding, "uEmissiveTexture").NewLine()
-        binding = binding + 1
-    end
-
-    fShader.GlslMainBegin()
-    if (Material.mBaseColorTextureIndex ~= -1) then
-        fShader.Append([[ vec4 BaseColor = texture(uBaseColorTexture, vUV); ]])
-            .NewLine()
-    else
-        fShader.Append([[ vec4 BaseColor = vec4(1, 1, 0, 1); ]])
-            .NewLine()
-    end
-
-    fShader.Append([[outFragColor = BaseColor;]])
-    fShader.GlslMainEnd()
-
-    return { vShader = vShader.str, fShader = fShader.str }
-end
-
-Engine.CreateObjectByGLTFPrimitiveAndUniform = function(inWorld3d,
-                                                        inGLTFModelId,
-                                                        inGLTFModelInWorld3DId,
-                                                        inMaterialToSimple3DIndex,
-                                                        inMeshIndex,
-                                                        inPrimitive)
-    local uniformIndex = inWorld3d:AddUniform3D(Engine.i)
-    local uniform = inWorld3d:GetUniform3D(uniformIndex)
-    local simple3dIndex = inMaterialToSimple3DIndex[inPrimitive.mMaterialIndex + 1]
-    local simple3d = inWorld3d:GetSimple3D(simple3dIndex)
-    local gltf = inWorld3d:GetGLTFModel(inGLTFModelId)
-    uniform:Build(simple3d, gltf, inPrimitive)
-
-    local Object3D = Jkr.Object3D()
-    Object3D.mId = inGLTFModelInWorld3DId
-    Object3D.mAssociatedUniform = uniformIndex
-    Object3D.mAssociatedModel = inGLTFModelId
-    Object3D.mAssociatedSimple3D = simple3dIndex
-    Object3D.mIndexCount = inPrimitive.mIndexCount
-    Object3D.mFirstIndex = inPrimitive.mFirstIndex
-    local NodeIndices = gltf:GetNodeIndexByMeshIndex(inMeshIndex - 1)
-    Object3D.mMatrix = gltf:GetNodeMatrixByIndex(NodeIndices[1])
-
-    return Object3D
 end
 
 PBR = {}
@@ -1222,8 +1153,10 @@ Deferred.ScreenQuadCompositionFragment = Engine.Shader()
         vec3 normal = texture(inNormalImage, vUV).rgb;
         vec4 albedo = texture(inAlbedoImage, vUV);
         #define lightCount 8
-        #define ambient 0.0
+        #define ambient 0.1
         vec3 fragColor = albedo.rgb * ambient;
+
+        vec3 N = normalize(normal);
 
         for(int i = 0; i < 8; ++i)
         {
@@ -1233,8 +1166,8 @@ Deferred.ScreenQuadCompositionFragment = Engine.Shader()
             V = normalize(V);
             L = normalize(L);
             float attenuation = Ubo.lights[i].w / (dist * dist + 1.0f);
+
             // diffuse
-            vec3 N = normalize(normal);
             float NdotL = max(0.0f, dot(N, L));
             vec3 lightColor = vec3(1, 1, 1);
             vec3 diff = lightColor * albedo.rgb * NdotL * attenuation;
@@ -1248,11 +1181,37 @@ Deferred.ScreenQuadCompositionFragment = Engine.Shader()
     ]]
     .GlslMainEnd()
 
-Deferred.BasicVertex = Engine.Shader()
-    .Header(450)
-    .VLayout()
-    .Ubo()
-    .Push()
+---@diagnostic disable-next-line: duplicate-set-field
+function Deferred.GetBasicVertexHeader()
+    return Engine.Shader()
+        .Header(450)
+        .VLayout()
+        .Ubo()
+        .Push()
+        .Out(0, "vec3", "vNormal")
+        .Out(1, "vec2", "vUV")
+        .Out(2, "vec3", "vColor")
+        .Out(3, "vec3", "vTangent")
+        .Out(4, "vec3", "vWorldPos")
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function Deferred.GetBasicFragmentHeader()
+    return Engine.Shader()
+        .Header(450)
+        .Ubo()
+        .Push()
+        .In(0, "vec3", "vNormal")
+        .In(1, "vec2", "vUV")
+        .In(2, "vec3", "vColor")
+        .In(3, "vec3", "vTangent")
+        .In(4, "vec3", "vWorldPos")
+        .Out(0, "vec4", "outPosition")
+        .Out(1, "vec4", "outNormal")
+        .Out(2, "vec4", "outAlbedo")
+end
+
+Deferred.BasicVertex = Deferred.GetBasicVertexHeader()
     .Append [[
         struct Tangent {
             vec4 mTangent;
@@ -1262,38 +1221,22 @@ Deferred.BasicVertex = Engine.Shader()
             Tangent inTangent[];
         };
     ]]
-    .Out(0, "vec3", "vNormal")
-    .Out(1, "vec2", "vUV")
-    .Out(2, "vec3", "vColor")
-    .Out(3, "vec3", "vTangent")
-    .Out(4, "vec3", "vWorldPos")
     .GlslMainBegin()
     .Append
     [[
-        gl_Position = Ubo.proj * Ubo.view * Push.model * inPosition;
-        vWorldPos = vec3(Push.model * vec4(inPosition, 1))
+        gl_Position = Ubo.proj * Ubo.view * Push.model * vec4(inPosition, 1);
+        vWorldPos = vec3(Push.model * vec4(inPosition, 1));
         mat3 mNormal = transpose(inverse(mat3(Push.model)));
-        vNormal = mNormal * normalize(inNormal);
-        vTangent = mNormal * normalize(inTangent[gl_VertexIndex]);
+        vNormal = mNormal * normalize(inNormal.xyz);
+        vTangent = mNormal * normalize(inTangent[gl_VertexIndex].mTangent.xyz);
         vUV = inUV;
         vColor = inColor;
     ]]
     .GlslMainEnd()
 
-Deferred.BasicFragment = Engine.Shader()
-    .Header(450)
+Deferred.BasicFragment = Deferred.GetBasicFragmentHeader()
     .uSampler2D(3, "samplerColor", 1)
-    .uSampler2D(3, "samplerNormal", 1)
-    .Ubo()
-    .Push()
-    .In(0, "vec3", "vNormal")
-    .In(1, "vec2", "vUV")
-    .In(2, "vec3", "vColor")
-    .In(3, "vec3", "vTangent")
-    .In(4, "vec3", "vWorldPos")
-    .Out(0, "vec4", "outPosition")
-    .Out(1, "vec4", "outNormal")
-    .Out(2, "vec4", "outAlbedo")
+    .uSampler2D(4, "samplerNormal", 1)
     .GlslMainBegin()
     .Append
     [[
@@ -1305,8 +1248,6 @@ Deferred.BasicFragment = Engine.Shader()
         mat3 TBN = mat3(T, B, N);
         vec3 tnorm = TBN * normalize(texture(samplerNormal, vUV).xyz * 2.0 - vec3(1.0));
         outNormal = vec4(tnorm, 1.0);
-        outAlbedo = texture(samplerColor, inUV);
+        outAlbedo = texture(samplerColor, vUV);
     ]]
     .GlslMainEnd()
-
--- TODO Remove str form everywhere

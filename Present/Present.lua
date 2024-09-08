@@ -190,7 +190,7 @@ Presentation = function(inPresentation)
             w:Present()
             local delta = w:GetWindowCurrentTime() - oldTime
             if (frameCount % 100 == 0) then
-                w:SetTitle("Samprahar Frame Rate" .. 1000 / delta)
+                w:SetTitle("JkrGUI Present : " .. 1000 / delta)
             end
             frameCount = frameCount + 1
         end
@@ -200,7 +200,7 @@ end
 
 
 function DefaultPresentation()
-    return {
+    local o = {
         Config = {
             Font = {
                 Tiny = { "res/fonts/font.ttf", 10 },     -- \tiny
@@ -217,11 +217,13 @@ function DefaultPresentation()
         Animation {
             Interpolation = "Constant",
         },
+        insert = table.insert
     }
+    return o
 end
 
 function Plotter()
-    return Shader { cs = Engine.Shader()
+    return Engine.Shader()
         .Header(450)
         .CInvocationLayout(1, 1, 1)
         .uImage2D()
@@ -240,6 +242,5 @@ function Plotter()
         float fx = sin(x);
         float pl = plot(vec2(x, y), fx, 0.01);
         ]]
-        .GlslMainEnd().str,
-    }
+        .GlslMainEnd().str
 end

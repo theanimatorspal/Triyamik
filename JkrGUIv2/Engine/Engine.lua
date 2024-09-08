@@ -190,7 +190,8 @@ Engine.Animate_4f = function(inCallBuffer, inV1, inV2, inV, inStepValue, inStart
     return Frame
 end
 
-Engine.GetGLTFInfo = function(inLoadedGLTF, inShouldPrint)
+
+Engine.PrintGLTFInfo = function(inLoadedGLTF, inShouldPrint)
     if (inShouldPrint) then
         io.write(string.format(
             [[
@@ -217,6 +218,8 @@ Meshes = %d
         ))
     end
 end
+
+Engine.GetGLTFInfo = Engine.PrintGLTFInfo
 
 Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex)
     inMaterialIndex = inMaterialIndex + 1
@@ -437,12 +440,12 @@ vec3 calculateNormal()
     return { vShader = vShader, fShader = fShader }
 end
 
-Jkrmt.CreateObjectByGLTFPrimitiveAndUniform = function(inWorld3d,
-                                                       inGLTFModelId,
-                                                       inGLTFModelInWorld3DId,
-                                                       inMaterialToSimple3DIndex,
-                                                       inMeshIndex,
-                                                       inPrimitive)
+Engine.CreateObjectByGLTFPrimitiveAndUniform = function(inWorld3d,
+                                                        inGLTFModelId,
+                                                        inGLTFModelInWorld3DId,
+                                                        inMaterialToSimple3DIndex,
+                                                        inMeshIndex,
+                                                        inPrimitive)
     local uniformIndex = inWorld3d:AddUniform3D(i)
     local uniform = inWorld3d:GetUniform3D(uniformIndex)
     local simple3dIndex = inMaterialToSimple3DIndex[inPrimitive.mMaterialIndex + 1]
