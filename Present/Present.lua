@@ -21,7 +21,7 @@ Presentation = function(inPresentation)
     end
 
     if not gwindow then
-        gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, vec2(1920, 1080))
+        gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, gFrameDimension)
         gWindowDimension = gwindow:GetWindowDimension()
         gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
     end

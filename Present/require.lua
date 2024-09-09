@@ -12,6 +12,7 @@ gCurrentKey = 1
 gWindowDimension = vec2(0)
 gFrameKeys = {}
 gbaseDepth = 50
+gFrameDimension = vec2(1920 / 2, 1080 / 2)
 
 
 --[============================================================[
@@ -52,11 +53,11 @@ ComputePositionByName = function(inPositionName, inDimension)
           if upDown == "TOP" then
                     yPos = 0
           elseif upDown == "CENTER" then
-                    yPos = gWindowDimension.y / 2.0 - inDimension.y / 2.0
+                    yPos = gFrameDimension.y / 2.0 - inDimension.y / 2.0
           elseif upDown == "BOTTOM" then
-                    yPos = gWindowDimension.y - inDimension.y
+                    yPos = gFrameDimension.y - inDimension.y
           elseif upDown == "OUT" then
-                    yPos = gWindowDimension.y * 2
+                    yPos = gFrameDimension.y * 2
           else
                     print("Unsupported UPDOWN Type")
           end
@@ -64,11 +65,11 @@ ComputePositionByName = function(inPositionName, inDimension)
           if leftRight == "LEFT" then
                     xPos = 0
           elseif leftRight == "CENTER" then
-                    xPos = gWindowDimension.x / 2.0 - inDimension.x / 2.0
+                    xPos = gFrameDimension.x / 2.0 - inDimension.x / 2.0
           elseif leftRight == "RIGHT" then
-                    xPos = gWindowDimension.x - inDimension.x
+                    xPos = gFrameDimension.x - inDimension.x
           elseif leftRight == "OUT" then
-                    xPos = gWindowDimension.x * 2
+                    xPos = gFrameDimension.x * 2
           else
                     print("Unsupported LEFTRIGHT Type")
           end
