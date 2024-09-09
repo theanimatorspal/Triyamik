@@ -1,5 +1,5 @@
 require("JkrGUIv2.Engine.Engine")
-require("JkrGUIv2.WidgetsRefactor")
+require("JkrGUIv2.Widgets.Basic")
 
 ---@diagnostic disable: lowercase-global
 gwindow = nil
@@ -58,7 +58,7 @@ ComputePositionByName = function(inPositionName, inDimension)
           elseif upDown == "OUT" then
                     yPos = gWindowDimension.y * 2
           else
-                    glogError("Invalid position")
+                    print("Unsupported UPDOWN Type")
           end
 
           if leftRight == "LEFT" then
@@ -70,15 +70,7 @@ ComputePositionByName = function(inPositionName, inDimension)
           elseif leftRight == "OUT" then
                     xPos = gWindowDimension.x * 2
           else
-                    glogError("Invalid position")
-          end
-
-          if leftRight == "LEFT" then
-                    xPos = 0
-          elseif leftRight == "CENTER" then
-                    xPos = gWindowDimension.x / 2.0 - inDimension.x / 2.0
-          elseif leftRight == "RIGHT" then
-                    xPos = gWindowDimension.x - inDimension.x
+                    print("Unsupported LEFTRIGHT Type")
           end
 
           tracy.ZoneEnd()

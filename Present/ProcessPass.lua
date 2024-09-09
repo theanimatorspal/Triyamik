@@ -14,7 +14,6 @@ end
 
 local AddFrameKey = function(inKey, inFrameIndex)
     gFrameKeys[inFrameIndex][#gFrameKeys[inFrameIndex] + 1] = inKey
-    -- print("gFrameKeys = ", inspect(gFrameKeys))
 end
 
 
@@ -72,6 +71,30 @@ ProcessFunctions = {
             }
         }, inFrameIndex)
     end,
+    Button = function(inPresentation, inValue, inFrameIndex, inElementName)
+        local ElementName = Unique(inElementName)
+        if not gscreenElements[ElementName] then
+            local Button = gwid.CreateButton(ComputePositionByName(inValue.p, inValue.d),
+                vec3(inValue.d.x, inValue.d.y, 1),
+                inValue.onclick)
+            gscreenElements[ElementName] = Button
+        end
+        AddFrameKey({
+            FrameIndex = inFrameIndex,
+            Elements = {
+                {
+                    "BUTTON",
+                    handle = gscreenElements[ElementName],
+                    value = inValue,
+                    name = ElementName
+                }
+            }
+        }, inFrameIndex)
+    end,
+    ButtonText = function(inPresentation, inValue, inFrameIndex, inElementName)
+        ProcessFunctions.Button(inPresentation, inValue, inFrameIndex, inElementName .. "button")
+        ProcessFunctions.Text(inPresentation, inValue, inFrameIndex, inElementName .. "text")
+    end,
     Shader = function(inPresentation, inValue, inFrameIndex, inElementName)
         local ElementName = Unique(inElementName)
         if not gscreenElements[ElementName] then
@@ -81,7 +104,7 @@ ProcessFunctions = {
             painter:Store(Engine.i, gwindow)
             gscreenElements[ElementName] = painter
         end
-    end
+    end,
 }
 
 ProcessLiterals = function(inName, inValue)

@@ -190,7 +190,7 @@ Presentation {
             p = "CENTER_CENTER",
             d = vec2(700, 700)
         },
-        Tex1 = Text { t = "Hello", f = "Normal", p = "CENTER_LEFT", c = vec4(0, 1, 0, 1) },
+        Tex1 = Text { t = "Not Hello", f = "Normal", p = "CENTER_LEFT", c = vec4(0, 1, 0, 1) },
         Tex2 = Text { t = "Fucker", f = "Normal", p = "CENTER_RIGHT", c = vec4(0, 1, 1, 1) },
         Tex3 = Text { t = "I am darshan", f = "Normal", p = "OUT_OUT", c = vec4(1, 1, 1, 1) }
     },

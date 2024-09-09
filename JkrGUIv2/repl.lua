@@ -5,7 +5,7 @@ require("JkrGUIv2.Widgets.Basic")
 require("JkrGUIv2.require")
 inspect = require("JkrGUIv2.inspect")
 
-Engine:Load(false)
+Engine:Load(true)
 i = Engine.i
 e = Engine.e
 mt = Engine.mt
@@ -75,7 +75,7 @@ function repl.Window(inThreadIndex, showWindow)
 
           gate.window_cc = vec4(1, 1, 1, 1)
 
-          if not gate.windwo_up then gate.window_up = function() end end
+          if not gate.window_up then gate.window_up = function() end end
           if not gate.window_uidraw then gate.window_uidraw = function() end end
           if not gate.window_disp then gate.window_disp = function() end end
 
@@ -94,6 +94,7 @@ function repl.Window(inThreadIndex, showWindow)
                                         WindowUpdateFunction = gate.window_up
                                         WindowUIDrawFunction = gate.window_uidraw
                                         WindowDispatchFunction = gate.window_disp
+                                        wid = gate.wid
 
                                         w:BeginUpdates()
                                         WindowUpdateFunction()
@@ -126,9 +127,9 @@ function repl.WidgetRenderer()
                     wid = Jkr.CreateWidgetRenderer(gate.i, gate.w, gate.e)
           end
           gate.wid = wid
-          gate.window_up = function() gate.wid:Update() end
-          gate.window_uidraw = function() gate.wid:Draw() end
-          gate.window_disp = function() gate.wid:Dispatch() end
+          gate.window_up = function() wid:Update() end
+          gate.window_uidraw = function() wid:Draw() end
+          gate.window_disp = function() wid:Dispatch() end
 end
 
 gate.repl = repl

@@ -55,8 +55,27 @@ local ExecuteFunction = {
                                         t
                               )
                               local interD = glerp_3f(prev.d, new.d, t)
-                              local interC = glerp_4f(prev.c, new.c, t)
+                              local interC = glerp_4f(prev.c, new.c, t) -- C means Color here
                               inElement.handle:Update(interP, interD, nil, nil, interC)
+                    else
+                              inElement.handle:Update(ComputePositionByName(new.p, new.d),
+                                        vec3(new.d.x, new.d.y, new.d.z))
+                    end
+          end,
+          BUTTON = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex,
+                              inDirection)
+                    local new = inElement.value
+                    if PreviousElement then
+                              local prev = PreviousElement.value
+                              local interP = glerp_3f(
+                                        ComputePositionByName(prev.p, prev.d),
+                                        ComputePositionByName(new.p, inElement.value.d),
+                                        t
+                              )
+                              local interD = glerp_3f(prev.d, new.d, t)
+                              local interC = glerp_4f(prev.c, new.c, t)
+                              inElement.handle:Update(interP, interD)
                     else
                               inElement.handle:Update(ComputePositionByName(new.p, new.d),
                                         vec3(new.d.x, new.d.y, new.d.z))
@@ -102,7 +121,7 @@ local ExecuteFunction = {
                     pushconstant.y = shader_parameters.p2
                     pushconstant.z = shader_parameters.p3
 
-                    gwid.c.PushOneTime(Jkr.CreateDispatchable(function()
+                    gwid.c:PushOneTime(Jkr.CreateDispatchable(function()
                               computeImage.BindPainter(painter)
                               computeImage.DrawPainter(painter, pushconstant, thread_x, thread_y, thread_z)
                               computeImage.CopyToSampled(inElement.handle.sampledImage)

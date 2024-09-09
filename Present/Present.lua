@@ -21,7 +21,7 @@ Presentation = function(inPresentation)
     end
 
     if not gwindow then
-        gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3)
+        gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, vec2(1920, 1080))
         gWindowDimension = gwindow:GetWindowDimension()
         gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
     end
@@ -104,31 +104,34 @@ Presentation = function(inPresentation)
         local Event = function()
             if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
                 if (hasNextFrame) then
-                    currentFrame = currentFrame + 1
                     t = 0.0
+                    currentFrame = currentFrame + 1
                     direction = 1
                     animate = true
                 end
+                print("currentFrame: ", currentFrame)
             end
 
             if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
                 if (currentFrame > 1) then
-                    currentFrame = currentFrame - 1
                     t = 1.0
+                    currentFrame = currentFrame - 1
                     direction = -1
                     animate = true
                 end
+                print("currentFrame: ", currentFrame)
             end
 
             if (e:IsCloseWindowEvent()) then
                 shouldRun = false
             end
+            gwid:Event()
         end
 
 
 
         local function Update()
-            gwid.Update()
+            gwid:Update()
             hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
             if w:GetWindowCurrentTime() - currentTime > stepTime then
                 if animate then
@@ -151,11 +154,11 @@ Presentation = function(inPresentation)
         end
 
         local function Dispatch()
-            gwid.Dispatch()
+            gwid:Dispatch()
         end
 
         local function Draw()
-            gwid.Draw()
+            gwid:Draw()
         end
 
         local function MultiThreadedDraws()
@@ -167,7 +170,7 @@ Presentation = function(inPresentation)
         e:SetEventCallBack(Event)
         while shouldRun do
             oldTime = w:GetWindowCurrentTime()
-            e:ProcessEvents()
+            e:ProcessEventsEXT(gwindow)
             w:BeginUpdates()
             Update()
             gWindowDimension = w:GetWindowDimension()
@@ -220,27 +223,4 @@ function DefaultPresentation()
         insert = table.insert
     }
     return o
-end
-
-function Plotter()
-    return Engine.Shader()
-        .Header(450)
-        .CInvocationLayout(1, 1, 1)
-        .uImage2D()
-        .ImagePainterPush()
-        .Append [[
-        float plot(vec2 st, float fx, float inthickness) {
-                return smoothstep(fx - inthickness, fx, st.y) -
-                smoothstep(fx, fx + inthickness, st.y);
-        }
-        ]]
-        .GlslMainBegin()
-        .ImagePainterAssist()
-        .Append [[
-        float x = xy.x;
-        float y = xy.y;
-        float fx = sin(x);
-        float pl = plot(vec2(x, y), fx, 0.01);
-        ]]
-        .GlslMainEnd().str
 end
