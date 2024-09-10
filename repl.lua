@@ -5,7 +5,24 @@
 -- b = wid.CreateButton(vec3(100, 100, 1), vec3(0), function() print("hello") end, true)
 require "Present.Present"
 
+
 Pr = DefaultPresentation()
+Pr.__statebuf = Jkr.CreateCallBuffers()
+PresentationEventFunction = function(inJumpToFrame,
+                                     inDirection,
+                                     shouldRun,
+                                     int,
+                                     inanimate)
+          Pr.__statebuf.__forward = function()
+                    inJumpToFrame = inJumpToFrame + 1
+          end
+          Pr.__statebuf.__backward = function()
+                    inJumpToFrame = inJumpToFrame + 1
+          end
+          Pr.__statebuf:Update()
+          return inJumpToFrame, inDirection, shouldRun, int, inanimate
+end
+
 Pr:insert(
           Frame {
                     Plot = Shader({}, "Plotter")
@@ -15,7 +32,10 @@ Pr:insert(Frame {
                     t = "button1",
                     p = "BOTTOM_RIGHT",
                     onclick = function()
-                              print("Button Clicked")
+                              Pr.__statebuf:PushOneTime(Jkr.CreateUpdatable(function()
+                                        print("Hello World")
+                                        Pr.__statebuf.__backward()
+                              end), 1)
                     end
           },
           text1 = Text { p = "CENTER_CENTER" },
@@ -29,14 +49,14 @@ Pr:insert(Frame {
                     p = vec3(100, 100, 900)
           }
 })
--- Pr:insert(
---           Frame {
---                     Text1 = Text { p = "OUT_OUT" },
---                     cimg = CImage {
---                               shader = "Plot",
---                               p = "CENTER_LEFT"
---                     }
---           }
--- );
+Pr:insert(
+          Frame {
+                    text1 = Text { p = "CENTER_LEFT" },
+                    cimg = CImage {
+                              shader = "Plot",
+                              p = "CENTER_LEFT"
+                    }
+          }
+);
 
 Presentation(Pr)

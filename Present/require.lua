@@ -12,6 +12,8 @@ gCurrentKey = 1
 gWindowDimension = vec2(0)
 gFrameKeys = {}
 gbaseDepth = 50
+gFrameCount = 0
+gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
 
 

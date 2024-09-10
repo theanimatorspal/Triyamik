@@ -7,6 +7,17 @@ inspect = require("Present.inspect")
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
+PresentationEventFunction = function(inJumpToFrame,
+                                     inDirection,
+                                     shouldRun,
+                                     int,
+                                     inanimate)
+    return inJumpToFrame,
+        inDirection,
+        shouldRun,
+        int,
+        inanimate
+end
 
 Presentation = function(inPresentation)
     local Log = function(inContent)
@@ -73,6 +84,7 @@ Presentation = function(inPresentation)
                 end
             end
         end
+        gFrameCount = FrameIndex
 
         local oldTime = 0.0
         local frameCount = 0
@@ -121,6 +133,35 @@ Presentation = function(inPresentation)
                 end
                 print("currentFrame: ", currentFrame)
             end
+
+            ---
+            ---
+            --- This is for External State management
+            ---
+            ---
+
+            local newcurrentFrame, newdirection, newshouldRun, newt, newanimate =
+                PresentationEventFunction(
+                    currentFrame,
+                    direction,
+                    shouldRun,
+                    t,
+                    animate)
+
+            direction = newdirection
+            shouldRun = newshouldRun
+            t = newt
+            animate = newanimate
+
+            if newcurrentFrame <= gFrameCount and newcurrentFrame >= 1 then
+                currentFrame = newcurrentFrame
+            end
+
+            ---
+            ---
+            --- This is for External State management
+            ---
+            ---
 
             if (e:IsCloseWindowEvent()) then
                 shouldRun = false
