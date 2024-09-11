@@ -7,34 +7,20 @@ require "Present.Present"
 
 
 Pr = DefaultPresentation()
-Pr.__statebuf = Jkr.CreateCallBuffers()
-PresentationEventFunction = function(inJumpToFrame,
-                                     inDirection,
-                                     shouldRun,
-                                     int,
-                                     inanimate)
-          Pr.__statebuf.__forward = function()
-                    inJumpToFrame = inJumpToFrame + 1
-          end
-          Pr.__statebuf.__backward = function()
-                    inJumpToFrame = inJumpToFrame + 1
-          end
-          Pr.__statebuf:Update()
-          return inJumpToFrame, inDirection, shouldRun, int, inanimate
-end
 
 Pr:insert(
           Frame {
                     Plot = Shader({}, "Plotter")
           })
+
 Pr:insert(Frame {
           btext1 = ButtonText {
                     t = "button1",
                     p = "BOTTOM_RIGHT",
                     onclick = function()
-                              Pr.__statebuf:PushOneTime(Jkr.CreateUpdatable(function()
+                              gstate:PushOneTime(Jkr.CreateUpdatable(function()
                                         print("Hello World")
-                                        Pr.__statebuf.__backward()
+                                        gstate.__backward()
                               end), 1)
                     end
           },
@@ -51,10 +37,10 @@ Pr:insert(Frame {
 })
 Pr:insert(
           Frame {
-                    text1 = Text { p = "CENTER_LEFT" },
+                    text1 = Text { t = "My name is Darshan Koirala", p = "CENTER_LEFT" },
                     cimg = CImage {
                               shader = "Plot",
-                              p = "CENTER_LEFT"
+                              p = "OUT_OUT"
                     }
           }
 );

@@ -7,16 +7,22 @@ inspect = require("Present.inspect")
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
+---@diagnostic disable-next-line: lowercase-global
+gstate = Jkr.CreateCallBuffers()
+
 PresentationEventFunction = function(inJumpToFrame,
                                      inDirection,
                                      shouldRun,
                                      int,
                                      inanimate)
-    return inJumpToFrame,
-        inDirection,
-        shouldRun,
-        int,
-        inanimate
+    gstate.__forward = function()
+        inJumpToFrame = inJumpToFrame + 1
+    end
+    gstate.__backward = function()
+        inJumpToFrame = inJumpToFrame + 1
+    end
+    gstate:Update()
+    return inJumpToFrame, inDirection, shouldRun, int, inanimate
 end
 
 Presentation = function(inPresentation)
@@ -261,7 +267,7 @@ function DefaultPresentation()
         Animation {
             Interpolation = "Constant",
         },
-        insert = table.insert
+        insert = table.insert,
     }
     return o
 end

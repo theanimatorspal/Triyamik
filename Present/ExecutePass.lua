@@ -6,6 +6,37 @@ local inspect = require("Present.inspect")
           element = { "TEXT", handle = screenElements[ElementName], value = inValue, name = ElementName },
 ]============================================================]
 
+function TextInterop(inText1, inText2, t)
+          local inText1_length = #inText1
+          local inText2_length = #inText2
+          local sub = string.sub
+          local byte = string.byte
+
+          local interm = ""
+          local inText1 = "" .. inText1
+          local inText2 = "" .. inText2
+
+          if inText2_length > inText1_length then
+                    inText1 = inText1 .. string.rep(" ", inText2_length - inText1_length)
+                    for i = 1, inText2_length do
+                              local x1 = byte(sub(inText1, i, i))
+                              local x2 = byte(sub(inText2, i, i))
+                              local char = string.char(math.int(glerp(x1, x2, t)))
+                              interm = interm .. char
+                    end
+                    return string.sub(interm, 1, math.int(glerp(inText1_length, inText2_length, t)))
+          elseif inText2_length < inText1_length then
+                    inText2 = inText2 .. string.rep(" ", inText1_length - inText2_length)
+                    for i = 1, inText1_length do
+                              local x1 = byte(sub(inText1, i, i))
+                              local x2 = byte(sub(inText2, i, i))
+                              local char = string.char(math.int(glerp(x1, x2, t)))
+                              interm = interm .. char
+                    end
+                    return string.sub(interm, 1, math.int(glerp(inText2_length, inText1_length, t)))
+          end
+end
+
 local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
           local PreviousFrame = gFrameKeys[inFrameIndex - 1]
           -- print("FrameKeys", inspect(gFrameKeys))
@@ -56,7 +87,8 @@ local ExecuteFunction = {
                               )
                               local interD = glerp_3f(prev.d, new.d, t)
                               local interC = glerp_4f(prev.c, new.c, t) -- C means Color here
-                              inElement.handle:Update(interP, interD, nil, nil, interC)
+                              local interT = TextInterop(prev.t, new.t, t)
+                              inElement.handle:Update(interP, interD, gFontMap[inElement.value.f], interT, interC)
                     else
                               inElement.handle:Update(ComputePositionByName(new.p, new.d),
                                         vec3(new.d.x, new.d.y, new.d.z))
