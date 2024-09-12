@@ -5,13 +5,12 @@ local inspect = require("Present.inspect")
           these functions actually show the presenation and update it interactively
           element = { "TEXT", handle = screenElements[ElementName], value = inValue, name = ElementName },
 ]============================================================]
+local sub = string.sub
+local byte = string.byte
 
 function TextInterop(inText1, inText2, t)
           local inText1_length = #inText1
           local inText2_length = #inText2
-          local sub = string.sub
-          local byte = string.byte
-
           local interm = ""
           local inText1 = "" .. inText1
           local inText2 = "" .. inText2
