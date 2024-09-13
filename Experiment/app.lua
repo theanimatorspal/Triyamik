@@ -90,10 +90,10 @@ function Main()
             gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, Engine.e)
             net = Engine.net
             net.Client(string.sub(DisplayText, 2, #DisplayText))
-            glisten_continous = true
         end
         if pcall(afunction) then
             Jkr.ShowToastNotification("Connection Succeeded")
+            glisten_continous = true
         else
             Jkr.ShowToastNotification("Connection Failed")
             grun = false
@@ -119,14 +119,19 @@ function Main()
     grun = true
 
     while not e:ShouldQuit() and grun do
+        e:ProcessEventsEXT(w)
         if glisten_continous then
-            gnetwork_value = Engine.net.listenOnce()
+            gnetwork_value = net.listenOnce()
             if type(gnetwork_value) == "function" then
-                gnetwork_value()
+                if not pcall(gnetwork_value) then
+                    Jkr.ShowToastNotification("Error Calling the function")
+                end
+            end
+            if type(gnetwork_value) == "string" then
+                Jkr.ShowToastNotification("M:" .. gnetwork_value)
             end
         end
 
-        e:ProcessEventsEXT(w)
         w:BeginUpdates()
         gWindowDimension = w:GetWindowDimension()
         gwr:Update()
