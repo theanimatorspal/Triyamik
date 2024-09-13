@@ -1,12 +1,11 @@
-require "JkrGUIv2.Widgets.General"
-require "JkrGUIv2.Engine.Engine"
 function Main()
+    -- Jkr.ShowToastNotification("Fuck you Bro")
     Engine:Load(true)
     local framed = vec2(200, 400)
     w = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, framed)
     e = Engine.e
     gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
-    f = gwr.CreateFont("res/fonts/font.ttf", 14)
+    f = gwr.CreateFont("font.ttf", 14)
 
     e:SetEventCallBack(
         function()
@@ -87,10 +86,18 @@ function Main()
 
     local NumericHLayout_6 = Jkr.HLayout:New(0)
     NumericHLayout_6:AddComponents({ cpbf("."), cpbf("0"), spbf("Submit", function()
-        gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, Engine.e)
-        net = Engine.net
-        net.Client(string.sub(DisplayText, 2, #DisplayText))
-        glisten_continous = true
+        local function afunction()
+            gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, Engine.e)
+            net = Engine.net
+            net.Client(string.sub(DisplayText, 2, #DisplayText))
+            glisten_continous = true
+        end
+        if pcall(afunction) then
+            Jkr.ShowToastNotification("Connection Succeeded")
+        else
+            Jkr.ShowToastNotification("Connection Failed")
+            grun = false
+        end
     end), }, NRatioTable)
 
     ScreenVLayout:AddComponents({
@@ -109,7 +116,9 @@ function Main()
         ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
     end
 
-    while not e:ShouldQuit() do
+    grun = true
+
+    while not e:ShouldQuit() and grun do
         if glisten_continous then
             gnetwork_value = Engine.net.listenOnce()
             if type(gnetwork_value) == "function" then
