@@ -611,3 +611,52 @@ Engine.AddObject = function(modObjectsVector, inId, inAssociatedModel, inUniform
     modObjectsVector:add(Object)
     return #modObjectsVector
 end
+
+Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, ingltfmodelname, inshadertype)
+    local materialindex = 0
+    local shouldload = false
+
+    local gltfmodelindex = inworld3d:AddGLTFModel(ingltfmodelname)
+    local gltfmodel = inworld3d:GetGLTFModel(gltfmodelindex)
+    local uniform3dindex = inworld3d:AddUniform3D()
+    local uniform = inworld3d:GetUniform3D(uniform3dindex)
+
+    local shaderindex = inworld3d:AddSimple3D(Engine.i, w)
+    local shader = inworld3d:GetSimple3D(shaderindex)
+
+    if inshadertype == "CONSTANT_COLOR" then
+        local vshader = Basics.GetVertexWithTangent()
+        local fshader = Basics.GetConstantFragmentHeader()
+            .gltfPutMaterialTextures(gltfmodel, materialindex)
+            .GlslMainBegin()
+        if fshader.gltfMaterialTextures.mBaseColorTexture == true then
+            fshader.Append [[
+                    outFragColor = texture(uBaseColorTexture, vUV);
+                    ]]
+        end
+        shader:CompileEXT(
+            Engine.i,
+            w,
+            "cache/constant_color.glsl",
+            vshader.str,
+            fshader.str,
+            "",
+            shouldload,
+            Jkr.CompileContext.Default
+        )
+    end
+
+    -- make all the required uniforms
+    -- make all the required simple3d
+    -- get and upload the GLTF model to shit
+    -- local objects = {}
+    -- for i = 0, meshindices do
+    --     local object = Jkr.Object3D()
+    --     object.mId = 0;
+    --     object.mAssociatedModel = 0;
+    --     object.mAssociatedUniform = 0;
+    --     object.mAssociatedSimple3D = 0;
+    --     local NodeIndices = gltf:GetNodeIndexByMeshIndex(meshindex)
+    --     object.mMatrix = gltf:GetNodeMatrixByIndex(NodeIndices[1])
+    -- end
+end

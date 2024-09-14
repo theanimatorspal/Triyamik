@@ -2,6 +2,8 @@ require("JkrGUIv2.Engine.Engine")
 require("JkrGUIv2.Widgets.Basic")
 
 ---@diagnostic disable: lowercase-global
+--
+-- General Stuffs
 gwindow = nil
 gwid = nil
 gassets = {}
@@ -15,6 +17,11 @@ gbaseDepth = 50
 gFrameCount = 0
 gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
+
+-- 3d Stuffs
+gworld3d = {}
+gshaper3d = {}
+gobjects3d = {}
 
 
 --[============================================================[
@@ -78,4 +85,17 @@ ComputePositionByName = function(inPositionName, inDimension)
 
           tracy.ZoneEnd()
           return vec3(xPos, yPos, gbaseDepth)
+end
+
+
+function IterateEachFrame(inPresentation, infunc_int_val)
+          local frameindex = 1
+          for _, elements in ipairs(inPresentation) do
+                    for __, value in pairs(elements) do
+                              if (__ == "Frame") then
+                                        infunc_int_val(frameindex, value)
+                                        frameindex = frameindex + 1
+                              end
+                    end
+          end
 end

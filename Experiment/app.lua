@@ -1,5 +1,6 @@
 function Main()
     -- Jkr.ShowToastNotification("Fuck you Bro")
+    gdisplayloop = true
     Engine:Load(true)
     local framed = vec2(200, 400)
     w = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, framed)
@@ -87,16 +88,14 @@ function Main()
     local NumericHLayout_6 = Jkr.HLayout:New(0)
     NumericHLayout_6:AddComponents({ cpbf("."), cpbf("0"), spbf("Submit", function()
         local function afunction()
-            gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, Engine.e)
             net = Engine.net
             net.Client(string.sub(DisplayText, 2, #DisplayText))
         end
         if pcall(afunction) then
             Jkr.ShowToastNotification("Connection Succeeded")
-            glisten_continous = true
+            gnetworkloop = true
         else
             Jkr.ShowToastNotification("Connection Failed")
-            grun = false
         end
     end), }, NRatioTable)
 
@@ -116,11 +115,40 @@ function Main()
         ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
     end
 
-    grun = true
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    Update = function()
+        gwr:Update()
+    end
 
-    while not e:ShouldQuit() and grun do
-        e:ProcessEventsEXT(w)
-        if glisten_continous then
+    Dispatch = function()
+        gwr:Dispatch()
+    end
+
+    UIDraw = function()
+        gwr:Draw()
+    end
+
+    Draw = function()
+        w:BeginDraws(0, 0, 0, 1, 1)
+        w:ExecuteUIs()
+        w:EndDraws()
+    end
+
+    while not e:ShouldQuit() and gdisplayloop do
+        if gnetworkloop then
             gnetwork_value = net.listenOnce()
             if type(gnetwork_value) == "function" then
                 if not pcall(gnetwork_value) then
@@ -129,25 +157,27 @@ function Main()
             end
             if type(gnetwork_value) == "string" then
                 Jkr.ShowToastNotification("M:" .. gnetwork_value)
+                if gnetwork_value == "JkrGUIv2Start" then
+                    net.SendToServer("JkrGUIv2Start")
+                    gnetwork_value = nil
+                end
             end
         end
-
+        e:ProcessEventsEXT(w)
         w:BeginUpdates()
         gWindowDimension = w:GetWindowDimension()
-        gwr:Update()
+        Update()
         w:EndUpdates()
 
         w:BeginDispatches()
-        gwr:Dispatch()
+        Dispatch()
         w:EndDispatches()
 
         w:BeginUIs()
-        gwr:Draw()
+        UIDraw()
         w:EndUIs()
 
-        w:BeginDraws(0, 0, 0, 1, 1)
-        w:ExecuteUIs()
-        w:EndDraws()
+        Draw()
         w:Present()
     end
 end

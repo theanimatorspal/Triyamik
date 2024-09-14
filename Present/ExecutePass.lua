@@ -33,6 +33,14 @@ function TextInterop(inText1, inText2, t)
                               interm = interm .. char
                     end
                     return string.sub(interm, 1, math.int(glerp(inText2_length, inText1_length, t)))
+          else
+                    for i = 1, inText1_length do
+                              local x1 = byte(sub(inText1, i, i))
+                              local x2 = byte(sub(inText2, i, i))
+                              local char = string.char(math.int(glerp(x1, x2, t)))
+                              interm = interm .. char
+                    end
+                    return string.sub(interm, 1, math.int(glerp(inText2_length, inText1_length, t)))
           end
 end
 

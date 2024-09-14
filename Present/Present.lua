@@ -25,11 +25,44 @@ PresentationEventFunction = function(inJumpToFrame,
     return inJumpToFrame, inDirection, shouldRun, int, inanimate
 end
 
-Presentation = function(inPresentation)
-    local Log = function(inContent)
-        -- print(string.format("[JkrGUI Present: ] %s", inContent))
+ProcessFrames = function(inPresentation)
+    --[[
+                    Presentation {
+                              {Frame = table}
+                    }
+                    ]]
+
+    local FrameIndex = 1
+    for _, elements in ipairs(inPresentation) do
+        for __, value in pairs(elements) do
+            if (__ == "Frame") then
+                gFrameKeys[FrameIndex] = {}
+                local frameElements = value
+                --[[==================================================]]
+                for felementName, felement in pairs(frameElements) do
+                    if type(felement) == "table" then
+                        for processFunctionIndex, ElementValue in pairs(felement) do
+                            ProcessFunctions[processFunctionIndex](
+                                inPresentation, ElementValue,
+                                FrameIndex, felementName)
+                        end
+                    else
+                        ProcessLiterals(felementName, felement)
+                    end
+                end
+                --[[==================================================]]
+                FrameIndex = FrameIndex + 1
+            end
+        end
     end
-    local shouldRun = true
+    gFrameCount = FrameIndex
+end
+
+local Log = function(inContent)
+    -- print(string.format("[JkrGUI Present: ] %s", inContent))
+end
+
+CreateEngineHandles = function()
     local Validation = true
 
     -- If already initialized, don't again
@@ -43,8 +76,21 @@ Presentation = function(inPresentation)
         gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
     end
 
-    gwindow:Show()
+    if not gworld3d and not gshaper3d then
+        gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, w)
+        gworld3d = Jkr.World3D(gshaper3d)
+    end
 
+    if not gobjects3d then
+        gobjects3d = gworld3d:MakeExplicitObjectsVector()
+    end
+
+    gwindow:Show()
+end
+
+Presentation = function(inPresentation)
+    CreateEngineHandles()
+    local shouldRun = true
     if inPresentation.Config then
         local conf = inPresentation.Config
         gFontMap.Tiny = gwid.CreateFont(conf.Font.Tiny[1], conf.Font.Tiny[2])
@@ -61,36 +107,7 @@ Presentation = function(inPresentation)
     end
 
     if shouldRun then
-        --[[
-                    Presentation {
-                              {Frame = table}
-                    }
-                    ]]
-
-        local FrameIndex = 1
-        for _, elements in ipairs(inPresentation) do
-            for __, value in pairs(elements) do
-                if (__ == "Frame") then
-                    gFrameKeys[FrameIndex] = {}
-                    local frameElements = value
-                    --[[==================================================]]
-                    for felementName, felement in pairs(frameElements) do
-                        if type(felement) == "table" then
-                            for processFunctionIndex, ElementValue in pairs(felement) do
-                                ProcessFunctions[processFunctionIndex](
-                                    inPresentation, ElementValue,
-                                    FrameIndex, felementName)
-                            end
-                        else
-                            ProcessLiterals(felementName, felement)
-                        end
-                    end
-                    --[[==================================================]]
-                    FrameIndex = FrameIndex + 1
-                end
-            end
-        end
-        gFrameCount = FrameIndex
+        ProcessFrames(inPresentation)
 
         local oldTime = 0.0
         local frameCount = 0
@@ -267,7 +284,7 @@ function DefaultPresentation()
         Animation {
             Interpolation = "Constant",
         },
-        insert = table.insert,
+        insert = table.insert
     }
     return o
 end

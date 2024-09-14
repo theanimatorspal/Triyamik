@@ -17,8 +17,6 @@ end
 
 TitlePage = function(inTable) return { TitlePage = inTable } end
 
-Enumerate = function(inTable) return { Enumerate = inTable } end
-
 Animation = function(inStyle) return { Style = inStyle } end
 
 Item = function(inStr)
@@ -74,6 +72,16 @@ ButtonText = function(inButtonTextTable)
     return { ButtonText = Default(inButtonTextTable, t) }
 end
 
+GLTFView = function(inGLTFViewTable)
+    local t = {
+        filename = "",
+        renderer = "NORMAL",
+        p = vec3(0, 0, 0),
+        d = vec3(1, 1, 1)
+    }
+    return { GLTFView = Default(inGLTFViewTable, t) }
+end
+
 local Shaders = {
     Plotter = {
         cs = Engine.Shader()
@@ -106,4 +114,14 @@ Shader = function(inTable, inBuiltinShaderOpt)
         return { Shader = Shaders[inBuiltinShaderOpt] }
     end
     return { Shader = inTable }
+end
+
+--
+-- COMPOUND STATEMENTS
+--
+
+Enumerate = function(inTable) return { Enumerate = inTable } end
+
+EnableNumbering = function(inTable)
+    return { EnableNumbering = inTable }
 end
