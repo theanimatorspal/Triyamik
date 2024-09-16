@@ -8,7 +8,7 @@ FancyButton = function(inButtonTable)
                     onclick = nil,        -- onclick function
                     c = vec4(0, 0, 0, 1), -- text color
                     bc = vec4(1),         -- background color
-                    interpolate_t = true,
+                    interpolate_t = -1,
                     f = "Normal",
                     _push_constant = -1
           }
@@ -23,6 +23,9 @@ gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElem
           end
           if inValue._push_constant == -1 then
                     inValue._push_constant = nil
+          end
+          if inValue.interpolate_t == -1 then
+                    inValue.interpolate_t = true
           end
           if not gscreenElements[ElementName] then
                     gscreenElements[ElementName] = gwid.CreatePressButton(
@@ -51,10 +54,14 @@ ExecuteFunctions["*FB*"] = function(inPresentation, inElement, inFrameIndex, t, 
                     local interc = glerp_4f(prev.c, new.c, t)
                     local interbc = glerp_4f(prev.bc, new.bc, t)
                     local intert
-                    if prev.interpolate_t == true then
+                    if new.interpolate_t == true then
                               intert = TextInterop(prev.t, new.t, t)
                     else
-                              intert = new.t
+                              if inDirection == -1 then
+                                        intert = prev.t
+                              else
+                                        intert = new.t
+                              end
                     end
                     inElement.handle:Update(interp, interd, gFontMap[inElement.value.f], intert, interc, interbc)
           else

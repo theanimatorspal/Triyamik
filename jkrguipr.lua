@@ -14,7 +14,37 @@ local titlepage = {
 P = {
           Frame {},
           Frame {
-                    FancyTitlePage(titlepage)
+                    FancyStructure {},
+                    FancyTitlePage(titlepage),
+                    FancyNumbering {},
+          },
+          Frame {
+                    FancyTableOfContents {}
+          },
+          Frame {
+                    s1 = FancySection { t = "Introduction" },
+          },
+          Frame {
+                    s1 = FancySection {},
+          },
+          Frame {
+                    s1 = FancySection {},
+          },
+          Frame {
+                    s1 = FancySection {}
+          },
+          Frame {
+                    s2 = FancySection { t = "Explaination" },
+          },
+          Frame {
+                    s2 = FancySection {}
+          },
+          Frame {
+                    s2 = FancySection {},
+                    thank_you = FancyButton { t = "The it is", p = "OUT_OUT" }
+          },
+          Frame {
+                    thank_you = FancyButton { t = "Thank You", p = "CENTER_CENTER" }
           }
 }
 

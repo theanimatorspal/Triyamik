@@ -1,5 +1,5 @@
 require "Present.Present"
-local background_color = vec4(0.02, 0.4 * 2, 0.5 * 2, 1)
+local background_color = vec4(0.4 * 2, 0.2 * 1, 0.3 * 1, 1)
 local accent_color = vec4(0.6, 0.4, 0.5, 0.7)
 local inverse_text_color = vec4(1)
 local transparent_color = vec4(1, 1, 1, 0.8)
@@ -25,6 +25,16 @@ local GetFromReuseText = function(inname, inT, inFrameIndex)
             end
         end
     end
+end
+
+local AddToReuseText = function(inname, inT, inFrameIndex)
+    if TextLibrary[inname] then
+        FUCKYOU()
+    else
+        inT.__frame_index = inFrameIndex
+        TextLibrary[inname] = inT
+    end
+    return inname
 end
 
 local function CR(inelements, intotal_1)
@@ -129,8 +139,9 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                 U(),
                 V():AddComponents(names, namesratio),
             },
-            { 0.5, 0.5 })
-    }, { 0.1, 0.2, 0.1, 0.5 }
+            { 0.5, 0.5 }),
+        U()
+    }, { 0.1, 0.2, 0.1, 0.4, 0.1 }
     ):Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
 
     gprocess.FancyButton(inPresentation, FancyButton(t).FancyButton, inFrameIndex,
@@ -144,13 +155,113 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
     end
 end
 
+
+FancySection = function(inFancySectionTable)
+    local t = {
+        t = "A section"
+    }
+    return { FancySection = Default(inFancySectionTable, t) }
+end
+
 FancyStructure = function(inFancyStructureTable)
     local t = {}
     return { FancyStructure = Default(inFancyStructureTable, t) }
 end
 
-FancySection = function()
-    local t = {
-        t = "A section"
-    }
+
+FancyTableOfContents = function(inFancyStructureTable)
+    local t = {}
+    return { FancyTableOfContents = Default(inFancyStructureTable, t) }
+end
+
+FancyNumbering = function(inFancyNumbering)
+    return { FancyNumbering = {} }
+end
+
+gprocess.FancyStructure = function(inPresentation, inValue, inFrameIndex, inElementName)
+    local frames_of_each_sections = {}
+    local fancy_section_elementnames = {}
+    local fancy_section_titles = {}
+    local fanncy_section_element_names_linear = {}
+    IterateEachFrame(inPresentation, function(eachFrameIndex, values)
+        for elementname, value in pairs(values) do
+            if values[elementname]["FancySection"] then
+                if not fancy_section_elementnames[elementname] then
+                    fancy_section_elementnames[elementname] = true
+                    fancy_section_titles[#fancy_section_titles + 1] = value.FancySection.t
+                    frames_of_each_sections[elementname] = {}
+                    fanncy_section_element_names_linear[#fanncy_section_element_names_linear + 1] = elementname
+                    table.insert(frames_of_each_sections[elementname], eachFrameIndex)
+                else
+                    table.insert(frames_of_each_sections[elementname], eachFrameIndex)
+                end
+            end
+        end
+        print(inspect(values), "--->", eachFrameIndex)
+    end)
+
+    print(inspect(gFrameKeys))
+
+    local fff = function(eachFrameIndex, _)
+        local topSectionElements = {}
+        for i = 1, #fancy_section_titles, 1 do
+            local element = U {
+                t = fancy_section_titles[i],
+                bc = vec4(0.1, 1, 1, 0.8)
+            }
+            for key, value in pairs(frames_of_each_sections) do -- {s1 = {1, 2, 3}, s2 = {3, 4, 5}}
+                if key == fanncy_section_element_names_linear[i] then
+                    for _, frame_index in ipairs(value) do
+                        if eachFrameIndex == value then
+                            element.bc = vec4(0.5, 1, 1, 0.9)
+                        end
+                    end
+                end
+            end
+            topSectionElements[#topSectionElements + 1] = element
+        end
+
+        H():AddComponents(
+            V():AddComponents(
+                topSectionElements,
+                CR(topSectionElements, 1)
+            ),
+            U {},
+            { 0.1, 0.9 }
+        ):Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
+
+        for i, value in ipairs(topSectionElements) do
+            print(inspect(value), "fi:", eachFrameIndex)
+            gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, eachFrameIndex,
+                "__fancy_title" .. fanncy_section_element_names_linear[i])
+        end
+    end
+
+    IterateEachFrame(inPresentation, fff)
+end
+
+gprocess.FancySection = function(inPresentation, inValue, inFrameIndex, inElementName)
+end
+
+gprocess.FancyTableOfContents = function(inPresentation, inValue, inFrameIndex, inElementName)
+end
+
+gprocess.FancyNumbering = function(inPresentation, inValue, inFrameIndex, inElementName)
+    local totalframecount = 0
+    IterateEachFrame(inPresentation, function(eachFrameIndex, _)
+        if eachFrameIndex >= inFrameIndex then
+            totalframecount = totalframecount + 1
+        end
+    end)
+
+    IterateEachFrame(inPresentation, function(eachFrameIndex, value)
+        local index = eachFrameIndex - inFrameIndex + 1
+        if eachFrameIndex >= inFrameIndex then
+            value.__fancy_numbering = FancyButton {
+                t = index .. "/" .. totalframecount,
+                p = "BOTTOM_RIGHT",
+                interpolate_t = false
+            }
+        end
+    end)
 end

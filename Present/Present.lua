@@ -145,6 +145,9 @@ Presentation = function(inPresentation)
         local e = Engine.e
         local w = gwindow
         local mt = Engine.mt
+        if inPresentation.Config.FullScreen then
+            w:ToggleWindowFullScreen()
+        end
 
         WindowClearColor = vec4(1)
 
@@ -166,26 +169,29 @@ Presentation = function(inPresentation)
         local residualTime = 0
         local direction = 1
         local animate = true
+        local receive_events = true
 
         local Event = function()
-            if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
-                if (hasNextFrame) then
-                    t = 0.0
-                    currentFrame = currentFrame + 1
-                    direction = 1
-                    animate = true
+            if receive_events then
+                if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
+                    if (hasNextFrame) then
+                        t = 0.0
+                        currentFrame = currentFrame + 1
+                        direction = 1
+                        animate = true
+                    end
+                    print("currentFrame: ", currentFrame)
                 end
-                print("currentFrame: ", currentFrame)
-            end
 
-            if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
-                if (currentFrame > 1) then
-                    t = 1.0
-                    currentFrame = currentFrame - 1
-                    direction = -1
-                    animate = true
+                if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
+                    if (currentFrame > 1) then
+                        t = 1.0
+                        currentFrame = currentFrame - 1
+                        direction = -1
+                        animate = true
+                    end
+                    print("currentFrame: ", currentFrame)
                 end
-                print("currentFrame: ", currentFrame)
             end
 
             ---
@@ -234,11 +240,14 @@ Presentation = function(inPresentation)
                     t = t + direction * (stepTime + residualTime)
                     if t <= 0.0 or t >= 1.0 then
                         animate = false
+                        receive_events = true
                         if t <= 0.0 then
                             t = 0.0
                         else
                             t = 1.0
                         end
+                    else
+                        receive_events = false
                     end
                 end
                 residualTime = (w:GetWindowCurrentTime() - currentTime) / 1000
@@ -303,6 +312,7 @@ end
 function DefaultPresentation()
     local o = {
         Config = {
+            FullScreen = true,
             Font = {
                 Tiny = { "res/fonts/font.ttf", 10 },     -- \tiny
                 Small = { "res/fonts/font.ttf", 12 },    -- \small

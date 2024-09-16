@@ -7,6 +7,9 @@ function Default(inTable, def)
         end
         return inTable
     else
+        if type(inTable) == "boolean" then
+            return inTable
+        end
         return inTable or def
     end
 end
