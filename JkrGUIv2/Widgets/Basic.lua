@@ -10,6 +10,9 @@ Jkr.HLayout = {
         local Obj = {
             mPadding = inPadding
         }
+        if not inPadding then
+            Obj.mPadding = 0
+        end
         setmetatable(Obj, self)
         self.__index = self
 
@@ -18,6 +21,7 @@ Jkr.HLayout = {
     AddComponents = function(self, inComponentListTable, inRatioTable)
         self.mComponents = inComponentListTable
         self.mRatioTable = inRatioTable
+        return self
     end,
     Update = function(self, inPosition_3f, inDimension_3f)
         local position = vec3(inPosition_3f.x, inPosition_3f.y, inPosition_3f.z)
@@ -62,13 +66,18 @@ Jkr.VLayout = {
         local Obj = {
             mPadding = inPadding
         }
+        if not inPadding then
+            Obj.mPadding = 0
+        end
         setmetatable(Obj, self)
         self.__index = self
+        self.__call = Jkr.HLayout.New
         return Obj
     end,
     AddComponents = function(self, inComponentListTable, inRatioTable)
         self.mComponents = inComponentListTable
         self.mRatioTable = inRatioTable
+        return self
     end,
     Update = function(self, inPosition_3f, inDimension_3f)
         local position = vec3(inPosition_3f.x, inPosition_3f.y, inPosition_3f.z)
@@ -214,6 +223,10 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         SampledImage.CopyToCompute = function(inComputeImage)
             o.s:CopyFromImage(SampledImage.mId, inComputeImage.mId)
         end
+
+        SampledImage.CopyDeferredImageFromWindow = function(inWindow)
+            Jkr.CopyWindowDeferredImageToShapeImage(inWindow, o.s.handle, SampledImage.mId)
+        end
         return SampledImage
     end
 
@@ -233,8 +246,9 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
                 math.int(inDimension_3f.y))
         end
 
-        ComputeImage.RegisterPainter = function(inPainter)
-            ComputeImage.mId:Register(o.i, inPainter.handle)
+        ComputeImage.RegisterPainter = function(inPainter, inIndex)
+            if not inIndex then inIndex = 0 end
+            ComputeImage.mId:Register(o.i, inPainter.handle, inIndex)
         end
         ComputeImage.BindPainter = function(inPainter)
             inPainter:Bind(o.w, Jkr.CmdParam.None)

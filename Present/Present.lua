@@ -63,7 +63,7 @@ local Log = function(inContent)
 end
 
 CreateEngineHandles = function()
-    local Validation = true
+    local Validation = false
 
     -- If already initialized, don't again
     if not Engine.i then
@@ -73,12 +73,43 @@ CreateEngineHandles = function()
     if not gwindow then
         gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, gFrameDimension)
         gWindowDimension = gwindow:GetWindowDimension()
-        gwid = Jkr.CreateWidgetRenderer(Engine.i, gwindow, Engine.e)
+        gwid = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, gwindow, Engine.e)
     end
 
     if not gworld3d and not gshaper3d then
-        gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, w)
+        gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
         gworld3d = Jkr.World3D(gshaper3d)
+        gcamera3d = Jkr.Camera3D()
+        gcamera3d:SetAttributes(vec3(0, 0, 0), vec3(0, -10, 10))
+        gcamera3d:SetPerspective(0.3, 16 / 9, 0.1, 10000)
+        gworld3d:AddCamera(gcamera3d)
+        gdummypiplineindex = gworld3d:AddSimple3D(Engine.i, gwindow);
+        gdummypipline = gworld3d:GetSimple3D(gdummypiplineindex)
+        local light0 = {
+            pos = vec4(-1, -2, 2, 4),
+            dir = Jmath.Normalize(vec4(0, 0, 0, 0) - vec4(10, 10, -10, 1))
+        }
+        gworld3d:AddLight3D(light0.pos, light0.dir)
+
+        local vshader, fshader = Engine.GetAppropriateShader("CONSTANT_COLOR",
+            Jkr.CompileContext.Default
+        )
+
+        gdummypipline:CompileEXT(
+            Engine.i,
+            gwindow,
+            "cache/dummyshader.glsl",
+            vshader.str,
+            fshader.str,
+            "",
+            false,
+            Jkr.CompileContext.Default
+        )
+
+        local globaluniformindex = gworld3d:AddUniform3D(Engine.i)
+        local globaluniformhandle = gworld3d:GetUniform3D(globaluniformindex)
+        globaluniformhandle:Build(gdummypipline) -- EUTA PIPELINE BANAUNU PRXA
+        gworld3d:AddWorldInfoToUniform3D(globaluniformindex)
     end
 
     if not gobjects3d then
@@ -115,7 +146,7 @@ Presentation = function(inPresentation)
         local w = gwindow
         local mt = Engine.mt
 
-        WindowClearColor = vec4(0)
+        WindowClearColor = vec4(1)
 
 
 
@@ -196,6 +227,7 @@ Presentation = function(inPresentation)
 
         local function Update()
             gwid:Update()
+            gworld3d:Update(e)
             hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
             if w:GetWindowCurrentTime() - currentTime > stepTime then
                 if animate then
@@ -222,7 +254,9 @@ Presentation = function(inPresentation)
         end
 
         local function Draw()
+            gworld3d:DrawObjectsExplicit(gwindow, gobjects3d, Jkr.CmdParam.UI)
             gwid:Draw()
+            gobjects3d:clear()
         end
 
         local function MultiThreadedDraws()
@@ -284,7 +318,11 @@ function DefaultPresentation()
         Animation {
             Interpolation = "Constant",
         },
-        insert = table.insert
+        insert = function(self, inTable)
+            for _, value in pairs(inTable) do
+                table.insert(self, value)
+            end
+        end
     }
     return o
 end

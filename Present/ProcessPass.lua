@@ -3,7 +3,7 @@ require("Present.inspect")
 local inspect = require("Present.inspect")
 
 local index = 0
-local Unique = function(inElementName) -- Generate Unique Name
+Unique = function(inElementName) -- Generate Unique Name
     if type(inElementName) == "number" then
         index = index + 1
         return index
@@ -14,6 +14,13 @@ end
 
 local AddFrameKey = function(inKey, inFrameIndex)
     gFrameKeys[inFrameIndex][#gFrameKeys[inFrameIndex] + 1] = inKey
+end
+
+AddFrameKeyElement = function(inFrameIndex, inElements)
+    AddFrameKey({
+        FrameIndex = inFrameIndex,
+        Elements = inElements,
+    }, inFrameIndex)
 end
 
 
@@ -141,7 +148,6 @@ ProcessFunctions = {
                 }
             end
         end)
-        print(inspect(inPresentation))
     end
 }
 

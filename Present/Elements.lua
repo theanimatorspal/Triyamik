@@ -72,15 +72,6 @@ ButtonText = function(inButtonTextTable)
     return { ButtonText = Default(inButtonTextTable, t) }
 end
 
-GLTFView = function(inGLTFViewTable)
-    local t = {
-        filename = "",
-        renderer = "NORMAL",
-        p = vec3(0, 0, 0),
-        d = vec3(1, 1, 1)
-    }
-    return { GLTFView = Default(inGLTFViewTable, t) }
-end
 
 local Shaders = {
     Plotter = {

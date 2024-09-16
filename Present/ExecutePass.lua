@@ -44,7 +44,7 @@ function TextInterop(inText1, inText2, t)
           end
 end
 
-local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
+GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
           local PreviousFrame = gFrameKeys[inFrameIndex - 1]
           -- print("FrameKeys", inspect(gFrameKeys))
           if PreviousFrame then
@@ -64,7 +64,7 @@ local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIn
           end
 end
 
-local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex, inDirection)
+GetPreviousFrameKeyElementD = function(inPresentation, inElement, inFrameIndex, inDirection)
           local PreviousElement = 0
           if inDirection == 1 then
                     PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
@@ -79,9 +79,9 @@ local GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIn
           return PreviousElement, inElement
 end
 
-local ExecuteFunction = {
+ExecuteFunctions = {
           TEXT = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement,
+                    local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
                               inFrameIndex, inDirection)
 
                     local new = inElement.value
@@ -102,7 +102,8 @@ local ExecuteFunction = {
                     end
           end,
           BUTTON = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex,
+                    local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
+                              inFrameIndex,
                               inDirection)
                     local new = inElement.value
                     if PreviousElement then
@@ -121,7 +122,8 @@ local ExecuteFunction = {
                     end
           end,
           CIMAGE = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-                    local PreviousElement, inElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex,
+                    local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
+                              inFrameIndex,
                               inDirection)
                     local new = inElement.value
                     local shader_parameters
@@ -176,7 +178,8 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
                     for i = 1, CurrentFrameKeyCount, 1 do
                               local Key = CurrentFrame[i]
                               for _, element in pairs(Key.Elements) do
-                                        ExecuteFunction[element[1]](inPresentation, element, inFrameIndex, t, inDirection)
+                                        ExecuteFunctions[element[1]](inPresentation, element, inFrameIndex, t,
+                                                  inDirection)
                               end
                     end
                     tracy.ZoneEnd()

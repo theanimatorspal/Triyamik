@@ -612,51 +612,59 @@ Engine.AddObject = function(modObjectsVector, inId, inAssociatedModel, inUniform
     return #modObjectsVector
 end
 
-Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, ingltfmodelname, inshadertype)
-    local materialindex = 0
-    local shouldload = false
-
+Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmodelname, inshadertype, incompilecontext,
+                                             inskinning)
+    if not incompilecontext then incompilecontext = Jkr.CompileContext.Default end
     local gltfmodelindex = inworld3d:AddGLTFModel(ingltfmodelname)
     local gltfmodel = inworld3d:GetGLTFModel(gltfmodelindex)
-    local uniform3dindex = inworld3d:AddUniform3D()
-    local uniform = inworld3d:GetUniform3D(uniform3dindex)
+    local shapeindex = inshape3d:Add(gltfmodel) -- this ACUTALLY loads the GLTF Model
+    local Meshes = gltfmodel:GetMeshesRef()
+    Engine.GetGLTFInfo(gltfmodel, true)
+    local Objects = {}
 
-    local shaderindex = inworld3d:AddSimple3D(Engine.i, w)
-    local shader = inworld3d:GetSimple3D(shaderindex)
+    for MeshIndex = 1, #Meshes, 1 do
+        local meshindex = MeshIndex
+        local shouldload = false
+        local primitives = Meshes[MeshIndex].mPrimitives
 
-    if inshadertype == "CONSTANT_COLOR" then
-        local vshader = Basics.GetVertexWithTangent()
-        local fshader = Basics.GetConstantFragmentHeader()
-            .gltfPutMaterialTextures(gltfmodel, materialindex)
-            .GlslMainBegin()
-        if fshader.gltfMaterialTextures.mBaseColorTexture == true then
-            fshader.Append [[
-                    outFragColor = texture(uBaseColorTexture, vUV);
-                    ]]
+        for PrimitiveIndex = 1, #primitives, 1 do
+            local inprimitive = primitives[PrimitiveIndex]
+            local materialindex = inprimitive.mMaterialIndex
+
+            -- [[[[[[[[[[[[[[[[[[[[[[[[[[THIS IS NOT OPTIMAL]]]]]]]]]]]]]]]]]]]]]]]]]]
+            local uniform3dindex = inworld3d:AddUniform3D(Engine.i)
+            local uniform = inworld3d:GetUniform3D(uniform3dindex)
+            local shaderindex = inworld3d:AddSimple3D(Engine.i, w)
+            local shader = inworld3d:GetSimple3D(shaderindex)
+            local vshader, fshader = Engine.GetAppropriateShader(inshadertype, incompilecontext, gltfmodel, materialindex,
+                inskinning)
+            shader:CompileEXT(
+                Engine.i,
+                w,
+                "cache/constant_color.glsl",
+                vshader.Print().str,
+                fshader.Print().str,
+                "",
+                shouldload,
+                incompilecontext
+            )
+            local skinning = false
+            if inskinning then skinning = true end
+            uniform:Build(shader, gltfmodel, 0, skinning, true, true)
+            -- [[[[[[[[[[[[[[[[[[[[[[[[[[CHANGE THIS LATER]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+            local object = Jkr.Object3D()
+            object.mId = shapeindex;
+            object.mAssociatedModel = gltfmodelindex;
+            object.mAssociatedUniform = uniform3dindex;
+            object.mAssociatedSimple3D = shaderindex;
+            object.mFirstIndex = inprimitive.mFirstIndex
+            object.mIndexCount = inprimitive.mIndexCount
+            local NodeIndices = gltfmodel:GetNodeIndexByMeshIndex(meshindex - 1) --@lua indexes from one
+            object.mMatrix = gltfmodel:GetNodeMatrixByIndex(NodeIndices[1])
+
+            Objects[#Objects + 1] = object
         end
-        shader:CompileEXT(
-            Engine.i,
-            w,
-            "cache/constant_color.glsl",
-            vshader.str,
-            fshader.str,
-            "",
-            shouldload,
-            Jkr.CompileContext.Default
-        )
     end
-
-    -- make all the required uniforms
-    -- make all the required simple3d
-    -- get and upload the GLTF model to shit
-    -- local objects = {}
-    -- for i = 0, meshindices do
-    --     local object = Jkr.Object3D()
-    --     object.mId = 0;
-    --     object.mAssociatedModel = 0;
-    --     object.mAssociatedUniform = 0;
-    --     object.mAssociatedSimple3D = 0;
-    --     local NodeIndices = gltf:GetNodeIndexByMeshIndex(meshindex)
-    --     object.mMatrix = gltf:GetNodeMatrixByIndex(NodeIndices[1])
-    -- end
+    return Objects
 end

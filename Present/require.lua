@@ -1,5 +1,6 @@
 require("JkrGUIv2.Engine.Engine")
 require("JkrGUIv2.Widgets.Basic")
+require("JkrGUIv2.Widgets.General")
 
 ---@diagnostic disable: lowercase-global
 --
@@ -19,9 +20,9 @@ gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
 
 -- 3d Stuffs
-gworld3d = {}
-gshaper3d = {}
-gobjects3d = {}
+gworld3d = nil
+gshaper3d = nil
+gobjects3d = nil
 
 
 --[============================================================[
@@ -49,6 +50,12 @@ end
 glerp_4f = function(a, b, t)
           return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
 end
+
+-- Test for performance
+glerp = Jmath.Lerp
+glerp_2f = Jmath.Lerp
+glerp_3f = Jmath.Lerp
+glerp_4f = Jmath.Lerp
 
 ComputePositionByName = function(inPositionName, inDimension)
           tracy.ZoneBeginN("ComputePositionByName")
