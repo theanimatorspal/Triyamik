@@ -4,7 +4,7 @@ FancyGLTF = function(inGLTFViewTable)
           local t = {
                     filename = "",
                     renderer = "CONSTANT_COLOR",
-                    skinning = false,
+                    skinning = -1,
                     animation = vec2(-1, -1), --(index, deltatime)
                     p = vec3(0, 0, 0),
                     r = vec4(1, 1, 1, 0),
@@ -13,9 +13,13 @@ FancyGLTF = function(inGLTFViewTable)
           return { FancyGLTF = Default(inGLTFViewTable, t) }
 end
 
-ProcessFunctions["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
                     inValue = vec4(1, 1, 1, 0)
+          end
+          print(inValue.skinning)
+          if inValue.skinning == -1 then
+                    inValue.skinning = false
           end
           if not gscreenElements[inElementName] then
                     local GLTFObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d, inValue.filename,
@@ -43,6 +47,13 @@ ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t
           gobjects3d:add(inElement.handle) -- gobjects3d is erased at each frame
           if PreviousElement then
                     local prev = PreviousElement.value
+                    if new.skinning and prev.skinning then
+                              local intera = glerp(prev.animation.y, new.animation.y, t)
+                              local gltf = gworld3d:GetGLTFModel(inElement.handle.mAssociatedModel)
+                              local uniform = gworld3d:GetUniform3D(inElement.handle.mAssociatedUniform)
+                              gltf:UpdateAnimationNormalizedTime(math.int(new.animation.x), intera, true)
+                              uniform:UpdateByGLTFAnimation(gltf)
+                    end
                     local interp = glerp_3f(prev.p, new.p, t)
                     local interr = glerp_4f(prev.r, new.r, t)
                     local interd = glerp_3f(prev.d, new.d, t)
@@ -57,14 +68,13 @@ ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t
                     -- translate
                     Matrix = Jmath.Translate(Matrix, interp)
                     gobjects3d[#gobjects3d].mMatrix = Matrix
-                    if new.skinning and prev.skinning then
-                              print("SKINNING")
-                              local intera = glerp(prev.animation.y, new.animation.y)
-                              inElement.handle:UpdateAnimation(intera.x, intera.y, true)
-                              inElement.handle:UpdateByGLTFAnimation(gworld3d:GetGLTFModel(inElement.handle
-                                        .mAssociatedModel))
-                    end
           else
+                    if new.skinning then
+                              local gltf = gworld3d:GetGLTFModel(inElement.handle.mAssociatedModel)
+                              local uniform = gworld3d:GetUniform3D(inElement.handle.mAssociatedUniform)
+                              gltf:UpdateAnimationNormalizedTime(math.int(new.animation.x), new.animation.y, true)
+                              uniform:UpdateByGLTFAnimation(gltf)
+                    end
                     local interp = new.p
                     local interr = new.r
                     local interd = new.d
@@ -78,11 +88,5 @@ ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t
                     -- translate
                     Matrix = Jmath.Translate(Matrix, interp)
                     gobjects3d[#gobjects3d].mMatrix = Matrix
-                    if new.skinning then
-                              print("SKINNING")
-                              inElement.handle:UpdateAnimation(new.animation.x, new.animation.y, true)
-                              inElement.handle:UpdateByGLTFAnimation(gworld3d:GetGLTFModel(inElement.handle
-                                        .mAssociatedModel))
-                    end
           end
 end

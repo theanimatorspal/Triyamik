@@ -42,7 +42,7 @@ ProcessFrames = function(inPresentation)
                 for felementName, felement in pairs(frameElements) do
                     if type(felement) == "table" then
                         for processFunctionIndex, ElementValue in pairs(felement) do
-                            ProcessFunctions[processFunctionIndex](
+                            gprocess[processFunctionIndex](
                                 inPresentation, ElementValue,
                                 FrameIndex, felementName)
                         end

@@ -24,7 +24,7 @@ AddFrameKeyElement = function(inFrameIndex, inElements)
 end
 
 
-ProcessFunctions = {
+gprocess = {
     TitlePage = function(inPresentation, inValue, inFrameIndex, inElementName)
         local title = inPresentation.Title
         local date = inPresentation.Date
@@ -97,8 +97,8 @@ ProcessFunctions = {
         }, inFrameIndex)
     end,
     ButtonText = function(inPresentation, inValue, inFrameIndex, inElementName)
-        ProcessFunctions.Button(inPresentation, inValue, inFrameIndex, inElementName .. "button")
-        ProcessFunctions.Text(inPresentation, inValue, inFrameIndex, inElementName .. "text")
+        gprocess.Button(inPresentation, inValue, inFrameIndex, inElementName .. "button")
+        gprocess.Text(inPresentation, inValue, inFrameIndex, inElementName .. "text")
     end,
     Shader = function(inPresentation, inValue, inFrameIndex, inElementName)
         local ElementName = Unique(inElementName)

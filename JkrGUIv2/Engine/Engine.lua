@@ -642,8 +642,8 @@ Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmode
                 Engine.i,
                 w,
                 "cache/constant_color.glsl",
-                vshader.Print().str,
-                fshader.Print().str,
+                vshader.str,
+                fshader.str,
                 "",
                 shouldload,
                 incompilecontext

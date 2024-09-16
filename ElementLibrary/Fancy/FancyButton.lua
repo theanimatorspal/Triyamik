@@ -15,7 +15,7 @@ FancyButton = function(inButtonTable)
           return { FancyButton = Default(inButtonTable, t) }
 end
 
-ProcessFunctions["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = Unique(inElementName)
           if inValue.d == -1 then
                     local d = gFontMap[inValue.f]:GetTextDimension(inValue.t) * 1.5
