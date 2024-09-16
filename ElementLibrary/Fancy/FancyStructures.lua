@@ -71,6 +71,22 @@ local function PC(a, b, c, d)
 end
 
 
+local StrechedPC =
+    PC(
+        vec4(0.0, 0.0, 0.95, 0.8),
+        vec4(1),
+        vec4(0.05, 0.5, 0.5, 0.0),
+        vec4(0)
+    )
+
+local FullPC =
+    PC(
+        vec4(0.0, 0.0, 1, 1),
+        vec4(1),
+        vec4(0.5, 0.5, 0.5, 0.0),
+        vec4(0)
+    )
+
 FancyTitlePage = function(inTitlePage)
     local t = {
         t = "JkrGUIv2",
@@ -120,12 +136,7 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
         names[#names + 1] = U({
             t = value,
             bc = transparent_color,
-            _push_constant = PC(
-                vec4(0.0, 0.0, 0.95, 0.8),
-                vec4(1),
-                vec4(0.05, 0.5, 0.5, 0.0),
-                vec4(0)
-            )
+            _push_constant = StrechedPC
         })
     end
     local namesratio = { 0.3, UPK(CR(names, 1 - 0.3)) }
@@ -158,7 +169,7 @@ end
 
 FancySection = function(inFancySectionTable)
     local t = {
-        t = "A section"
+        t = "Untitled"
     }
     return { FancySection = Default(inFancySectionTable, t) }
 end
@@ -197,46 +208,81 @@ gprocess.FancyStructure = function(inPresentation, inValue, inFrameIndex, inElem
                 end
             end
         end
-        print(inspect(values), "--->", eachFrameIndex)
     end)
 
-    print(inspect(gFrameKeys))
 
     local fff = function(eachFrameIndex, _)
-        local topSectionElements = {}
-        for i = 1, #fancy_section_titles, 1 do
-            local element = U {
-                t = fancy_section_titles[i],
-                bc = vec4(0.1, 1, 1, 0.8)
-            }
-            for key, value in pairs(frames_of_each_sections) do -- {s1 = {1, 2, 3}, s2 = {3, 4, 5}}
-                if key == fanncy_section_element_names_linear[i] then
-                    for _, frame_index in ipairs(value) do
-                        if eachFrameIndex == value then
-                            element.bc = vec4(0.5, 1, 1, 0.9)
+        if eachFrameIndex >= inFrameIndex then
+            local topSectionElements = {}
+            for i = 1, #fancy_section_titles, 1 do
+                local element = U {
+                    t = fancy_section_titles[i],
+                    bc = vec4(1, 1, 1, 0.5),
+                    _push_constant = StrechedPC
+                }
+                for key, value in pairs(frames_of_each_sections) do -- {s1 = {1, 2, 3}, s2 = {3, 4, 5}}
+                    if key == fanncy_section_element_names_linear[i] then
+                        for _, frame_index in ipairs(value) do
+                            if eachFrameIndex == frame_index then
+                                element.bc = vec4(1, 1, 1, 1)
+                                break;
+                            end
                         end
                     end
                 end
+                topSectionElements[#topSectionElements + 1] = element
             end
-            topSectionElements[#topSectionElements + 1] = element
-        end
 
-        H():AddComponents(
-            V():AddComponents(
-                topSectionElements,
-                CR(topSectionElements, 1)
-            ),
-            U {},
-            { 0.1, 0.9 }
-        ):Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
+            V():AddComponents({
+                    H():AddComponents(
+                        topSectionElements,
+                        CR(topSectionElements, 1)
+                    ),
+                    U {}
+                },
+                { 0.06, 0.9 }
+            ):Update(vec3(0, 0, gbaseDepth),
+                vec3(gFrameDimension.x, gFrameDimension.y, 1))
 
-        for i, value in ipairs(topSectionElements) do
-            print(inspect(value), "fi:", eachFrameIndex)
-            gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, eachFrameIndex,
-                "__fancy_title" .. fanncy_section_element_names_linear[i])
+            local horizontal_indicators = {}
+            local subelements_ko_subelements = {}
+            for i, value in ipairs(topSectionElements) do
+                local element_name = fanncy_section_element_names_linear[i]
+                gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, eachFrameIndex,
+                    "__fancy_section" .. element_name)
+                local subelements = {}
+                for _, frame in ipairs(frames_of_each_sections[element_name]) do
+                    local element = U {
+                        t = "",
+                        bc = vec4(1, 1, 1, 0.5),
+                        _push_constant = StrechedPC
+                    }
+                    if frame == eachFrameIndex then
+                        element.bc = vec4(1, 1, 1, 1)
+                    end
+                    subelements[#subelements + 1] = element
+                end
+                subelements_ko_subelements[#subelements_ko_subelements + 1] = subelements
+                local horizontal = H():AddComponents(subelements, CR(subelements))
+                horizontal_indicators[#horizontal_indicators + 1] = horizontal
+            end
+            V():AddComponents({
+                    U {},
+                    H():AddComponents(horizontal_indicators, CR(horizontal_indicators))
+                },
+                { 0.06, 0.02 }
+            ):Update(vec3(0, 0, gbaseDepth),
+                vec3(gFrameDimension.x, gFrameDimension.y, 1))
+
+            for i, subelements in ipairs(subelements_ko_subelements) do
+                for j, element in ipairs(subelements) do
+                    gprocess.FancyButton(inPresentation, FancyButton(element).FancyButton,
+                        eachFrameIndex,
+                        "__fancy_frame_indicators" .. i .. ":" .. j)
+                end
+            end
         end
     end
-
     IterateEachFrame(inPresentation, fff)
 end
 

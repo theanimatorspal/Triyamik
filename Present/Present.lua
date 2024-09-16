@@ -26,17 +26,15 @@ PresentationEventFunction = function(inJumpToFrame,
 end
 
 ProcessFrames = function(inPresentation)
-    --[[
-                    Presentation {
-                              {Frame = table}
-                    }
-                    ]]
+    IterateEachFrame(inPresentation,
+        function(eachFrameIndex, _)
+            gFrameKeys[eachFrameIndex] = {}
+        end)
 
     local FrameIndex = 1
     for _, elements in ipairs(inPresentation) do
         for __, value in pairs(elements) do
             if (__ == "Frame") then
-                gFrameKeys[FrameIndex] = {}
                 local frameElements = value
                 --[[==================================================]]
                 for felementName, felement in pairs(frameElements) do

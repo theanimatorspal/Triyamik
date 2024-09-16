@@ -9,6 +9,9 @@ local sub = string.sub
 local byte = string.byte
 
 function TextInterop(inText1, inText2, t)
+          if (inText1 == inText2) then
+                    return inText1
+          end
           local inText1_length = #inText1
           local inText2_length = #inText2
           local interm = ""

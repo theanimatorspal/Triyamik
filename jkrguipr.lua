@@ -14,12 +14,15 @@ local titlepage = {
 P = {
           Frame {},
           Frame {
-                    FancyStructure {},
                     FancyTitlePage(titlepage),
+                    FancyStructure {},
                     FancyNumbering {},
           },
           Frame {
-                    FancyTableOfContents {}
+                    FancyTableOfContents {},
+          },
+          Frame {
+                    s1 = FancySection { t = "Introduction" },
           },
           Frame {
                     s1 = FancySection { t = "Introduction" },
@@ -34,20 +37,24 @@ P = {
                     s1 = FancySection {}
           },
           Frame {
-                    s2 = FancySection { t = "Explaination" },
-          },
-          Frame {
-                    s2 = FancySection {}
+                    s2 = FancySection { t = "Demonstration" },
           },
           Frame {
                     s2 = FancySection {},
+          },
+          Frame {
+                    s3 = FancySection { t = "Remaining Works" },
+          },
+          Frame {
+                    s3 = FancySection {}
+          },
+          Frame {
                     thank_you = FancyButton { t = "The it is", p = "OUT_OUT" }
           },
           Frame {
                     thank_you = FancyButton { t = "Thank You", p = "CENTER_CENTER" }
           }
 }
-
 
 Pr:insert(P)
 Presentation(Pr)
