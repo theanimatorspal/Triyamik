@@ -1,5 +1,5 @@
 {
-          "workbench.colorTheme": "3fbd90c3-859d-4618-8e31-90461ac7a556",
+          "workbench.colorTheme": "GitHub Light",
           "git.enableSmartCommit": true,
           "git.confirmSync": false,
           "gitlens.currentLine.enabled": false,
@@ -12,7 +12,7 @@
                     "-header-insertion=never",
           ],
           /*CMAKE*/
-          "window.zoomLevel": -2,
+          "window.zoomLevel": -1,
           "cmake.allowCommentsInPresetsFile": true,
           "cmake.useCMakePresets": "always",
           "cmake.configureOnOpen": true,
@@ -20,12 +20,20 @@
           "cmake.parallelJobs": 8,
           "cmake.clearOutputBeforeBuild": true,
           "cmake.debugConfig": {
-                    "cwd": "C:\\Users\\sansk\\OneDrive\\Desktop\\Present",
-                    "visualizerFile": "${workspaceFolder}/Visualizers/glm.natvis"
+                    "console": "externalTerminal",
+                    "cwd": "C:\\Users\\sansk\\OneDrive\\Desktop\\ufri",
+                    "visualizerFile": "${workspaceFolder}/Visualizers/glm.natvis",
+                    "args": [
+                              // "--android-environment",
+                              // "--appname \"tester\"",
+                              // "--dirname \"android\"",
+                              // "--repl",
+                              "--generate-run"
+                    ]
           },
           /* EDITOR */
           "editor.matchBrackets": "near",
-          "editor.fontFamily": "Cascadia Code",
+          "editor.fontFamily": "Fira Code",
           "editor.fontWeight": "normal",
           "editor.fontSize": 20,
           "editor.tabSize": 10,
@@ -34,21 +42,19 @@
                               {
                                         "scope": "keyword",
                                         "settings": {
-                                                  "fontStyle": "italic",
+                                                  "fontStyle": "underline",
                                                   "foreground": "#8850ff"
                                         }
                               },
                               {
                                         "scope": "'variable.parameter",
                                         "settings": {
-                                                  "fontStyle": "italic",
                                                   "foreground": "#00aa09"
                                         }
                               },
                               {
                                         "scope": "variable.language",
                                         "settings": {
-                                                  "fontStyle": "italic",
                                                   "foreground": "#0f09ff"
                                         }
                               },
@@ -61,13 +67,25 @@
                               {
                                         "scope": "entity.name.function",
                                         "settings": {
-                                                  "fontStyle": "italic",
+                                                  "fontStyle": "bold",
                                                   "foreground": "#0f89ff"
+                                        }
+                              },
+                              {
+                                        "scope": [
+                                                  "comment.block",
+                                                  "comment.line",
+                                                  "comment.block.documentation"
+                                        ],
+                                        "settings": {
+                                                  "foreground": "#FF0000",
+                                                  "fontStyle": "bold"
                                         }
                               }
                     ]
           },
           "editor.renderLineHighlight": "none",
+          "editor.semanticHighlighting.enabled": false,
           "editor.stickyScroll.enabled": false,
           "editor.guides.indentation": false,
           "editor.formatOnSave": true,
@@ -81,7 +99,7 @@
           "editor.lineNumbers": "on",
           "editor.foldingHighlight": true,
           "editor.foldingImportsByDefault": false,
-          "workbench.sideBar.location": "right",
+          "workbench.sideBar.location": "left",
           "[cpp]": {
                     "editor.wordBasedSuggestions": "allDocuments",
                     "editor.suggest.insertMode": "replace",
@@ -97,7 +115,7 @@
           },
           "[log][Log]": {
                     "editor.fontSize": 13, // whatever value you want
-                    "editor.fontFamily": "Consolas, 'Courier New', monospace"
+                    "editor.fontFamily": "Fira Code"
           },
           /* WORKBENCH */
           "workbench.iconTheme": "material-icon-theme",
@@ -116,11 +134,10 @@
                     "indent_size": "10"
           },
           "Lua.diagnostics.globals": [
-                    "gWindowDimension",
-                    "gwindow",
-                    "gwid",
-                    "Keyboard",
-                    "tracy"
+                    "StateId"
           ],
-          "editor.occurrencesHighlight": "off"
+          "cmake.pinnedCommands": [
+                    "workbench.action.tasks.configureTaskRunner",
+                    "workbench.action.tasks.runTask"
+          ],
 }

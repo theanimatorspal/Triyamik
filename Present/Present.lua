@@ -310,7 +310,7 @@ end
 function DefaultPresentation()
     local o = {
         Config = {
-            FullScreen = true,
+            -- FullScreen = true,
             Font = {
                 Tiny = { "res/fonts/font.ttf", 10 },     -- \tiny
                 Small = { "res/fonts/font.ttf", 12 },    -- \small

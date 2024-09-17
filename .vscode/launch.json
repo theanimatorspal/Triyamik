@@ -2,10 +2,15 @@
           "version": "0.2.0",
           "configurations": [
                     {
-                              "type": "LuaHelper-Debug",
+                              "type": "lua-local",
                               "request": "launch",
-                              "name": "Launch",
-                              "program": "${workspaceFolder}/app.lua"
+                              "name": "Debug Custom Executable",
+                              "program": {
+                                        "command": "jkrgui"
+                              },
+                              "args": [
+                                        "--run jkrguipr"
+                              ]
                     }
           ]
 }
