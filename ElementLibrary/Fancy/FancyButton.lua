@@ -1,4 +1,5 @@
-require "Present.Present"
+require "ElementLibrary.Fancy.FancyRequire"
+
 
 FancyButton = function(inButtonTable)
           local t = {
@@ -63,7 +64,14 @@ ExecuteFunctions["*FB*"] = function(inPresentation, inElement, inFrameIndex, t, 
                                         intert = new.t
                               end
                     end
-                    inElement.handle:Update(interp, interd, gFontMap[new.f], intert, interc, interbc)
+
+                    local interf
+                    if inDirection == 1 then
+                              interf = new.f
+                    else
+                              interf = prev.f
+                    end
+                    inElement.handle:Update(interp, interd, gFontMap[interf], intert, interc, interbc)
           else
                     inElement.handle:Update(ComputePositionByName(new.p, new.d), new.d, gFontMap[new.f], new.t, new.c,
                               new.bc)

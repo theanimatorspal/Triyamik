@@ -148,21 +148,22 @@ function Main()
     end
 
     while not e:ShouldQuit() and gdisplayloop do
-        if gnetworkloop then
-            gnetwork_value = net.listenOnce()
-            if type(gnetwork_value) == "function" then
-                if not pcall(gnetwork_value) then
-                    Jkr.ShowToastNotification("Error Calling the function")
-                end
-            end
-            if type(gnetwork_value) == "string" then
-                Jkr.ShowToastNotification("M:" .. gnetwork_value)
-                if gnetwork_value == "JkrGUIv2Start" then
-                    net.SendToServer("JkrGUIv2Start")
-                    gnetwork_value = nil
-                end
-            end
-        end
+        -- if gnetworkloop then
+        --     gnetwork_value = net.listenOnce()
+        --     if type(gnetwork_value) == "function" then
+        --         if not pcall(gnetwork_value) then
+        --             Jkr.ShowToastNotification("Error Calling the function")
+        --         end
+        --     end
+        --     if type(gnetwork_value) == "string" then
+        --         Jkr.ShowToastNotification("M:" .. gnetwork_value)
+        --         if gnetwork_value == "JkrGUIv2Start" then
+        --             net.SendToServer("JkrGUIv2Start")
+        --             gnetwork_value = nil
+        --         end
+        --     end
+        -- end
+        print("FUCK")
         e:ProcessEventsEXT(w)
         w:BeginUpdates()
         gWindowDimension = w:GetWindowDimension()

@@ -7,51 +7,41 @@ local inspect = require("Present.inspect")
 ]============================================================]
 local sub = string.sub
 local byte = string.byte
+local char = string.char
+local max = math.max
+local rep = string.rep
 
 function TextInterop(inText1, inText2, t)
-          if (inText1 == inText2) then
+          if inText1 == inText2 then
                     return inText1
           end
+
           local inText1_length = #inText1
           local inText2_length = #inText2
-          local interm = ""
-          local inText1 = "" .. inText1
-          local inText2 = "" .. inText2
+          local max_length = max(inText1_length, inText2_length)
 
-          if inText2_length > inText1_length then
-                    inText1 = inText1 .. string.rep(" ", inText2_length - inText1_length)
-                    for i = 1, inText2_length do
-                              local x1 = byte(sub(inText1, i, i))
-                              local x2 = byte(sub(inText2, i, i))
-                              local char = string.char(math.int(glerp(x1, x2, t)))
-                              interm = interm .. char
-                    end
-                    return string.sub(interm, 1, math.int(glerp(inText1_length, inText2_length, t)))
-          elseif inText2_length < inText1_length then
-                    inText2 = inText2 .. string.rep(" ", inText1_length - inText2_length)
-                    for i = 1, inText1_length do
-                              local x1 = byte(sub(inText1, i, i))
-                              local x2 = byte(sub(inText2, i, i))
-                              local char = string.char(math.int(glerp(x1, x2, t)))
-                              interm = interm .. char
-                    end
-                    return string.sub(interm, 1, math.int(glerp(inText2_length, inText1_length, t)))
-          else
-                    for i = 1, inText1_length do
-                              local x1 = byte(sub(inText1, i, i))
-                              local x2 = byte(sub(inText2, i, i))
-                              local char = string.char(math.int(glerp(x1, x2, t)))
-                              interm = interm .. char
-                    end
-                    return string.sub(interm, 1, math.int(glerp(inText2_length, inText1_length, t)))
+          inText1 = inText1 .. rep(" ", max_length - inText1_length)
+          inText2 = inText2 .. rep(" ", max_length - inText2_length)
+
+          local interm = {}
+
+          for i = 1, max_length do
+                    local x1 = byte(inText1, i)
+                    local x2 = byte(inText2, i)
+                    local char = char(math.floor(glerp(x1, x2, t)))
+                    interm[i] = char
           end
+
+          local final_length = math.floor(glerp(inText1_length, inText2_length, t))
+
+          return table.concat(interm):sub(1, final_length)
 end
 
 GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
           local PreviousFrame = gFrameKeys[inFrameIndex - 1]
           -- print("FrameKeys", inspect(gFrameKeys))
           if PreviousFrame then
-                    tracy.ZoneBeginN("GetPreviousFrameKeyElement")
+                    -- tracy.ZoneBeginN("GetPreviousFrameKeyElement")
                     local keysCount = #PreviousFrame
                     for i = 1, keysCount, 1 do
                               local Key = PreviousFrame[i]
@@ -63,7 +53,7 @@ GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
                                         end
                               end
                     end
-                    tracy.ZoneEnd()
+                    -- tracy.ZoneEnd()
           end
 end
 
@@ -175,7 +165,7 @@ ExecuteFunctions = {
 
 ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
           if (gFrameKeys[inFrameIndex]) then
-                    tracy.ZoneBeginN("ExecuteFrame")
+                    -- tracy.ZoneBeginN("ExecuteFrame")
                     local CurrentFrame = gFrameKeys[inFrameIndex]
                     local CurrentFrameKeyCount = #CurrentFrame
                     for i = 1, CurrentFrameKeyCount, 1 do
@@ -185,7 +175,7 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
                                                   inDirection)
                               end
                     end
-                    tracy.ZoneEnd()
+                    -- tracy.ZoneEnd()
                     return true
           end
 end

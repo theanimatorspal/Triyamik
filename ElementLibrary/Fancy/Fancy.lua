@@ -1,4 +1,6 @@
 require "ElementLibrary.Fancy.FancyButton"
 require "ElementLibrary.Fancy.FancyEnumerate"
 require "ElementLibrary.Fancy.FancyGLTF"
+require "ElementLibrary.Fancy.FancyTitlePage"
+require "ElementLibrary.Fancy.FancyStructure"
 require "ElementLibrary.Fancy.FancyStructures"

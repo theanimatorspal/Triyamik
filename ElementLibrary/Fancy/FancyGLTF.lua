@@ -1,4 +1,4 @@
-require "Present.Present"
+require "ElementLibrary.Fancy.FancyRequire"
 
 FancyGLTF = function(inGLTFViewTable)
           local t = {

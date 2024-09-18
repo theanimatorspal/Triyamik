@@ -14,6 +14,22 @@ function Default(inTable, def)
     end
 end
 
+function Copy(inTable)
+    if type(inTable) == "table" then
+        local t = {}
+        for key, value in pairs(inTable) do
+            t[key] = Copy(value) -- copy all
+        end
+        return t
+    elseif type(inTable) == "string" then
+        local s = ""
+        s = s .. inTable
+        return s
+    else
+        return inTable
+    end
+end
+
 Frame = function(inTable)
     return { Frame = inTable }
 end

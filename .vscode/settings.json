@@ -1,5 +1,5 @@
 {
-          "workbench.colorTheme": "GitHub Light",
+          "workbench.colorTheme": "355d711c-2fa6-4df2-9504-dd44d8f5e350",
           "git.enableSmartCommit": true,
           "git.confirmSync": false,
           "gitlens.currentLine.enabled": false,
@@ -131,7 +131,7 @@
           "workbench.panel.defaultLocation": "right",
           "Lua.format.defaultConfig": {
                     "indent_style": "space",
-                    "indent_size": "10"
+                    "indent_size": "5",
           },
           "Lua.diagnostics.globals": [
                     "StateId"

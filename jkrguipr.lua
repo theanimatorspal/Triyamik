@@ -15,14 +15,12 @@ P = {
           Frame {},
           Frame {
                     FancyTitlePage(titlepage),
-                    FancyStructure {},
                     FancyNumbering {},
+                    FancyStructure {},
           },
           Frame {
-                    FancyTableOfContents {},
-          },
-          Frame {
-                    s1 = FancySection { t = "Introduction" },
+                    -- s1 = FancySection { t = "Introduction" },
+                    FancyTitlePage { act = "structure" }
           },
           Frame {
                     s1 = FancySection { t = "Introduction" },
@@ -31,30 +29,38 @@ P = {
                     s1 = FancySection {},
           },
           Frame {
-                    s1 = FancySection {},
+                    s2 = FancySection { t = "Tasks Completed" }
           },
           Frame {
-                    s1 = FancySection {}
+                    s2 = FancySection {}
           },
           Frame {
-                    s2 = FancySection { t = "Demonstration" },
+                    s2 = FancySection {}
           },
           Frame {
-                    s2 = FancySection {},
+                    s2 = FancySection {}
           },
           Frame {
-                    s3 = FancySection { t = "Remaining Works" },
+                    s3 = FancySection { t = "Demonstration" },
           },
           Frame {
-                    s3 = FancySection {}
+                    s3 = FancySection {},
           },
           Frame {
-                    thank_you = FancyButton { t = "The it is", p = "OUT_OUT" }
+                    s4 = FancySection { t = "Remaining Works" },
           },
           Frame {
-                    thank_you = FancyButton { t = "Thank You", p = "CENTER_CENTER" }
+                    s4 = FancySection {}
+          },
+          Frame {
+                    thank_you = Text { t = "Thank You", p = "CENTER_CENTER", f = "Huge", c = vec4(1, 1, 1, 0) }
+          },
+          Frame {
+                    thank_you = Text { t = "Thank You, Any Questions ?", p = "CENTER_CENTER", f = "Huge", c = vec4(0, 0, 0, 1) }
           }
 }
 
 Pr:insert(P)
 Presentation(Pr)
+
+-- print(inspect(gFrameKeys))
