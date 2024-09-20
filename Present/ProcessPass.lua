@@ -1,6 +1,4 @@
 require("Present.require")
-require("Present.inspect")
-local inspect = require("Present.inspect")
 
 local index = 0
 Unique = function(inElementName) -- Generate Unique Name
@@ -22,7 +20,6 @@ AddFrameKeyElement = function(inFrameIndex, inElements)
         Elements = inElements,
     }, inFrameIndex)
 end
-
 
 gprocess = {
     TitlePage = function(inPresentation, inValue, inFrameIndex, inElementName)

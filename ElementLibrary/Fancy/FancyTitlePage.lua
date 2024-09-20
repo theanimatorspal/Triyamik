@@ -10,7 +10,8 @@ FancyTitlePage = function(inTitlePage)
                               "Name C"
                     },
                     left = "", -- OR "filepath"
-                    act = "add"
+                    act = "add",
+                    logo = -1,
           }
           return { FancyTitlePage = Default(inTitlePage, t) }
 end
@@ -57,19 +58,29 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                     end
                     local namesratio = { 0.3, UPK(CR(names, 1 - 0.3)) }
 
+                    local logo = U({
+                              pic = inValue.logo
+                    })
 
                     V():AddComponents({
                               U(),
                               t,
                               st,
                               H():AddComponents({
-                                                  U(),
+                                                  logo, -- esma logo halne ho
                                                   V():AddComponents(names, namesratio),
                                         },
                                         { 0.5, 0.5 }),
                               U()
                     }, { 0.1, 0.2, 0.1, 0.4, 0.1 }
                     ):Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
+
+                    if logo.pic == -1 then
+                              logo.pic = nil
+                    end
+
+                    gprocess.FancyPicture(inPresentation, FancyPicture(logo).FancyPicture, inFrameIndex,
+                              "__fancy_titlepage_logo")
 
                     gprocess.FancyButton(inPresentation, FancyButton(t).FancyButton, inFrameIndex,
                               "__fancy_titlepage_title")
@@ -115,7 +126,7 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                     end
 
                     local namesratio = CR(#names, 1 - 0.3)
-
+                    local logo = U({})
 
                     V():AddComponents({
                               U(),
@@ -124,7 +135,13 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               vec3(0, 0, gbaseDepth),
                               vec3(gFrameDimension.x, gFrameDimension.y, 1)
                     )
+                    logo.d = vec3(100, 100, 1)
+                    logo.p = ComputePositionByName("BOTTOM_RIGHT", logo.d)
+                    logo.c = vec4(0.1)
+                    logo.bc = vec4(0.4)
 
+                    gprocess.FancyPicture(inPresentation, FancyPicture(logo).FancyPicture, inFrameIndex,
+                              "__fancy_titlepage_logo")
 
                     gprocess.FancyButton(inPresentation,
                               FancyButton(t).FancyButton,
@@ -134,6 +151,8 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               FancyButton(st).FancyButton,
                               inFrameIndex,
                               "__fancy_titlepage_sub_title")
+
+
 
                     for i = 1, #names, 1 do
                               gprocess.FancyButton(inPresentation,

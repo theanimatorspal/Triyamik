@@ -2,7 +2,7 @@ require "ElementLibrary.Fancy.FancyRequire"
 
 FancySection = function(inFancySectionTable)
     local t = {
-        t = "Untitled"
+        t = "__Untitled"
     }
     return { FancySection = Default(inFancySectionTable, t) }
 end
@@ -38,6 +38,21 @@ end
 ]]
 
 gprocess.FancySection = function(inPresentation, inValue, inFrameIndex, inElementName)
+    -- if inValue.t ~= "__Untitled" then
+    --     local value = U(Copy(gTitlePageData.t))
+    --     value.t = inValue.t
+    --     value.f = "Normal"
+    --     V():AddComponents(
+    --         {
+    --             U(),
+    --             value,
+    --             U()
+    --         }, { 0.1, 0.1, 0.85 }):Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
+    --     gprocess.FancyButton(inPresentation,
+    --         FancyButton(value).FancyButton,
+    --         inFrameIndex,
+    --         "__fancy_titlepage_title")
+    -- end
 end
 
 --[[

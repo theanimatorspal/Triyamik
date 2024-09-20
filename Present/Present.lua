@@ -2,26 +2,30 @@ require("Present.require")
 require("Present.ProcessPass")
 require("Present.ExecutePass")
 require("Present.Elements")
+inspect = require "JkrGUIv2.inspect"
 ---@diagnostic disable-next-line: lowercase-global
-inspect = require("Present.inspect")
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
 ---@diagnostic disable-next-line: lowercase-global
 gstate = Jkr.CreateCallBuffers()
+gstate.move_forward = false
+gstate.move_backward = false
 
 PresentationEventFunction = function(inJumpToFrame,
                                      inDirection,
                                      shouldRun,
                                      int,
                                      inanimate)
-    gstate.__forward = function()
+    if gstate.move_forward then
         inJumpToFrame = inJumpToFrame + 1
     end
-    gstate.__backward = function()
+    if gstate.move_backward then
         inJumpToFrame = inJumpToFrame + 1
     end
-    gstate:Update()
+
+    gstate.move_forward = false
+    gstate.move_backward = false
     return inJumpToFrame, inDirection, shouldRun, int, inanimate
 end
 
@@ -40,9 +44,11 @@ ProcessFrames = function(inPresentation)
                 for felementName, felement in pairs(frameElements) do
                     if type(felement) == "table" then
                         for processFunctionIndex, ElementValue in pairs(felement) do
-                            gprocess[processFunctionIndex](
-                                inPresentation, ElementValue,
-                                FrameIndex, felementName)
+                            if type(ElementValue) == "table" then
+                                gprocess[processFunctionIndex](
+                                    inPresentation, ElementValue,
+                                    FrameIndex, felementName)
+                            end
                         end
                     else
                         ProcessLiterals(felementName, felement)
@@ -169,26 +175,34 @@ Presentation = function(inPresentation)
         local animate = true
         local receive_events = true
 
+        gMoveForward = function()
+            if receive_events and (hasNextFrame) then
+                t = 0.0
+                currentFrame = currentFrame + 1
+                direction = 1
+                animate = true
+            end
+            print("currentFrame: ", currentFrame)
+        end
+
+        gMoveBackward = function()
+            if receive_events and (currentFrame > 1) then
+                t = 1.0
+                currentFrame = currentFrame - 1
+                direction = -1
+                animate = true
+            end
+            print("currentFrame: ", currentFrame)
+        end
+
         local Event = function()
             if receive_events then
                 if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
-                    if (hasNextFrame) then
-                        t = 0.0
-                        currentFrame = currentFrame + 1
-                        direction = 1
-                        animate = true
-                    end
-                    print("currentFrame: ", currentFrame)
+                    gMoveForward()
                 end
 
                 if (e:IsKeyPressed(Keyboard.SDLK_LEFT)) then
-                    if (currentFrame > 1) then
-                        t = 1.0
-                        currentFrame = currentFrame - 1
-                        direction = -1
-                        animate = true
-                    end
-                    print("currentFrame: ", currentFrame)
+                    gMoveBackward()
                 end
             end
 
@@ -198,28 +212,28 @@ Presentation = function(inPresentation)
             ---
             ---
 
-            local newcurrentFrame, newdirection, newshouldRun, newt, newanimate =
-                PresentationEventFunction(
-                    currentFrame,
-                    direction,
-                    shouldRun,
-                    t,
-                    animate)
+            -- local newcurrentFrame, newdirection, newshouldRun, newt, newanimate =
+            --     PresentationEventFunction(
+            --         currentFrame,
+            --         direction,
+            --         shouldRun,
+            --         t,
+            --         animate)
 
-            direction = newdirection
-            shouldRun = newshouldRun
-            t = newt
-            animate = newanimate
+            -- direction = newdirection
+            -- shouldRun = newshouldRun
+            -- t = newt
+            -- animate = newanimate
 
-            if newcurrentFrame <= gFrameCount and newcurrentFrame >= 1 then
-                currentFrame = newcurrentFrame
-            end
+            -- if newcurrentFrame <= gFrameCount and newcurrentFrame >= 1 then
+            --     currentFrame = newcurrentFrame
+            -- end
 
-            ---
-            ---
-            --- This is for External State management
-            ---
-            ---
+            -- ---
+            -- ---
+            -- --- This is for External State management
+            -- ---
+            -- ---
 
             if (e:IsCloseWindowEvent()) then
                 shouldRun = false

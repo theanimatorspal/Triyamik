@@ -68,7 +68,7 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
                 math.int(inDimension_3f.y), 1)
         end), 1)
 
-        button.sampledImage = o.CreateSampledImage(inPosition_3f, inDimension_3f, nil, nil, inBackgroundColor)
+        button.sampledImage = o.CreateSampledImage(inPosition_3f, inDimension_3f, inImageFilePath, nil, inBackgroundColor)
         if not inImageFilePath then
             o.c:PushOneTime(Jkr.CreateDispatchable(function()
                 button.roundedRectangle.CopyToSampled(button.sampledImage)
@@ -81,26 +81,49 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
         if button.sampledText then
             button.sampledText.__backupText = ""
         end
+        button.padding = 10
 
-        button.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText, inColor, inBackgroundColor)
+        button.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText, inColor, inBackgroundColor,
+                                 inTextOreintation)
+            button.sampledImage:Update(inPosition_3f, inDimension_3f, inBackgroundColor)
+
             if button.parent then
                 button.parent:Update(inPosition_3f, inDimension_3f)
             end
-            button.sampledImage:Update(inPosition_3f, inDimension_3f, inBackgroundColor)
-            local DelDim = vec3(0, 0, 0)
+
             if not inImageFilePath then
-                local fontDim = button.sampledText.mFont:GetTextDimension(inText or Copy(button.sampledText.mText))
+                local DelDim = vec3(0, 0, 0)
+                local fontDim = button.sampledText.mFont:GetTextDimension(inText or Copy(button.sampledText.mText) or
+                    " ")
                 DelDim = vec3((inDimension_3f.x - fontDim.x) / 2, (inDimension_3f.y - fontDim.y) / 2, 0)
                 local substr = Copy(inText)
-                while DelDim.x < 0.0 do
+                while DelDim.x < 0.0 and substr do
                     substr = string.sub(substr, 1, #substr - 1)
                     fontDim = button.sampledText.mFont:GetTextDimension(substr)
                     DelDim = vec3((inDimension_3f.x - fontDim.x) / 2, (inDimension_3f.y - fontDim.y) / 2, 0)
                 end
                 button.sampledText:Update(inPosition_3f + DelDim, inDimension_3f, inFont, substr, inColor)
+
+                if inTextOreintation then
+                    if inTextOreintation == "LEFT" then
+                        DelDim.x = button.padding
+                        button.sampledText:Update(inPosition_3f + DelDim, inDimension_3f, inFont, substr, inColor)
+                    end
+                    if inTextOreintation == "RIGHT" then
+                        DelDim.x = inPosition_3f.x - fontDim.x - button.padding
+                        DelDim.x = inPosition_3f.x
+                        button.sampledText:Update(inPosition_3f + DelDim, inDimension_3f, inFont, substr, inColor)
+                    end
+                end
+            end
+
+
+
+            if inText then
                 button.sampledText.mText = Copy(inText)
             end
         end
+
         return button
     end
     return o

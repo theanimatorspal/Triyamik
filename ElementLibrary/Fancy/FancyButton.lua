@@ -11,7 +11,9 @@ FancyButton = function(inButtonTable)
                     bc = vec4(1),         -- background color
                     interpolate_t = -1,
                     f = "Normal",
-                    _push_constant = -1
+                    _push_constant = -1,
+                    o = "CENTER",
+                    picture = -1
           }
           return { FancyButton = Default(inButtonTable, t) }
 end
@@ -71,9 +73,9 @@ ExecuteFunctions["*FB*"] = function(inPresentation, inElement, inFrameIndex, t, 
                     else
                               interf = prev.f
                     end
-                    inElement.handle:Update(interp, interd, gFontMap[interf], intert, interc, interbc)
+                    inElement.handle:Update(interp, interd, gFontMap[interf], intert, interc, interbc, new.o)
           else
                     inElement.handle:Update(ComputePositionByName(new.p, new.d), new.d, gFontMap[new.f], new.t, new.c,
-                              new.bc)
+                              new.bc, new.o)
           end
 end

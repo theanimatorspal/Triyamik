@@ -2,17 +2,12 @@ function Main()
     -- Jkr.ShowToastNotification("Fuck you Bro")
     gdisplayloop = true
     Engine:Load(true)
-    local framed = vec2(200, 400)
+    framed = vec2(200, 400)
     w = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, framed)
     e = Engine.e
     gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
     f = gwr.CreateFont("font.ttf", 14)
 
-    e:SetEventCallBack(
-        function()
-            gwr:Event()
-        end
-    )
     local Background = gwr.CreatePressButton(vec3(0, 0, 50), vec3(100, 100, 1),
         function() end,
         false, f,
@@ -22,7 +17,7 @@ function Main()
 
     local DisplayText = " "
     local Display = gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
-        function() end,
+        nil,
         false, f,
         DisplayText,
         vec4(1, 1, 0, 1))
@@ -44,6 +39,7 @@ function Main()
     local cpbf = function(inTextToAppend)
         return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), function()
                 DisplayText = DisplayText .. inTextToAppend
+                print(DisplayText)
                 UpdateDisplay()
             end,
             false, f,
@@ -53,7 +49,8 @@ function Main()
 
     local spbf = function(inText, inFunction)
         if not inFunction then
-            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), function() print(inText) end,
+            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
+                nil,
                 false,
                 f,
                 inText,
@@ -111,9 +108,15 @@ function Main()
     ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
 
     UpdateDisplay = function()
-        Display:Update(vec3(20), vec3(0), f, DisplayText, vec4(0.2, 0.4, 0, 1))
+        Display.sampledText:Update(vec3(20), vec3(0), f, DisplayText, vec4(0.2, 0.4, 0, 1))
         ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
     end
+
+    e:SetEventCallBack(
+        function()
+            gwr:Event()
+        end
+    )
 
     --
     --
@@ -148,22 +151,21 @@ function Main()
     end
 
     while not e:ShouldQuit() and gdisplayloop do
-        -- if gnetworkloop then
-        --     gnetwork_value = net.listenOnce()
-        --     if type(gnetwork_value) == "function" then
-        --         if not pcall(gnetwork_value) then
-        --             Jkr.ShowToastNotification("Error Calling the function")
-        --         end
-        --     end
-        --     if type(gnetwork_value) == "string" then
-        --         Jkr.ShowToastNotification("M:" .. gnetwork_value)
-        --         if gnetwork_value == "JkrGUIv2Start" then
-        --             net.SendToServer("JkrGUIv2Start")
-        --             gnetwork_value = nil
-        --         end
-        --     end
-        -- end
-        print("FUCK")
+        if gnetworkloop then
+            gnetwork_value = net.listenOnce()
+            if type(gnetwork_value) == "function" then
+                if not pcall(gnetwork_value) then
+                    Jkr.ShowToastNotification("Error Calling the function")
+                end
+            end
+            if type(gnetwork_value) == "string" then
+                Jkr.ShowToastNotification("M:" .. gnetwork_value)
+                if gnetwork_value == "JkrGUIv2Start" then
+                    net.SendToServer("JkrGUIv2Start")
+                    gnetwork_value = nil
+                end
+            end
+        end
         e:ProcessEventsEXT(w)
         w:BeginUpdates()
         gWindowDimension = w:GetWindowDimension()
