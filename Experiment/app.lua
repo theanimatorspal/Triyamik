@@ -11,7 +11,7 @@ function Main()
     local Background = gwr.CreatePressButton(vec3(0, 0, 50), vec3(100, 100, 1),
         function() end,
         false, f,
-        "", vec4(0),
+        "", vec4(vec3(1), 0),
         vec4(0.5, 0.8, 0.95, 1))
     Background:Update(vec3(-20, -20, 50), vec3(framed.x + 40, framed.y + 40, 1))
 

@@ -25,7 +25,7 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               vec4(0.0, 0.0, 0.5, 0.5),
                               vec4(1),
                               vec4(0.8, 0.5, 0.5, 0.0),
-                              vec4(0)
+                              vec4(vec3(1), 0)
                     )
                     local background = {
                               t = " ",

@@ -47,12 +47,18 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
                               it.o = "LEFT"
                     end
 
-                    if table.contains(inValue.hide, i) then
-                              itb.bc = vec4(0)
-                              itb.c = vec4(0)
-                              it.bc = vec4(0)
-                              it.c = vec4(0)
+                    local shouldHide = (type(inValue.hide) == "table"
+                                  and table.contains(inValue.hide, i)) or
+                        (type(inValue.hide) == "string"
+                                  and inValue.hide == "all")
+
+                    if shouldHide then
+                              itb.bc = vec4(vec3(1), 0)
+                              itb.c = vec4(vec3(1), 0)
+                              it.bc = vec4(vec3(1), 0)
+                              it.c = vec4(vec3(1), 0)
                     end
+
 
                     items[#items + 1] = it
                     item_bullets[#item_bullets + 1] = itb
@@ -67,10 +73,10 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
           if inValue.view ~= -1 then
                     for i = 1, #items, 1 do
                               if i ~= inValue.view then
-                                        items[i].bc = vec4(0)
-                                        item_bullets[i].bc = vec4(0)
-                                        items[i].c = vec4(0)
-                                        item_bullets[i].c = vec4(0)
+                                        items[i].bc = vec4(vec3(1), 0)
+                                        item_bullets[i].bc = vec4(vec3(1), 0)
+                                        items[i].c = vec4(vec3(1), 0)
+                                        item_bullets[i].c = vec4(vec3(1), 0)
                               end
                     end
                     V():Add(
