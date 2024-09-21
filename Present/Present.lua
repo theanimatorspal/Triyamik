@@ -102,20 +102,40 @@ local CreateEngineHandles = function()
     gwindow:Show()
 end
 
+local function getFileNameWithoutExtension(filePath)
+    local fileName = filePath:match("^.+/(.+)$") or filePath       -- Extract file name
+    local nameWithoutExt = fileName:match("(.+)%..+$") or fileName -- Remove extension
+    return nameWithoutExt
+end
 gPresentation = function(inPresentation)
     CreateEngineHandles()
     local shouldRun = true
     if inPresentation.Config then
         local conf = inPresentation.Config
-        gFontMap.Tiny = gwid.CreateFont(conf.Font.Tiny[1], conf.Font.Tiny[2])
-        gFontMap.Small = gwid.CreateFont(conf.Font.Small[1], conf.Font.Small[2])
-        gFontMap.Normal = gwid.CreateFont(conf.Font.Normal[1], conf.Font.Normal[2])
-        gFontMap.large = gwid.CreateFont(conf.Font.large[1], conf.Font.large[2])
-        gFontMap.Large = gwid.CreateFont(conf.Font.Large[1], conf.Font.Large[2])
-        gFontMap.huge = gwid.CreateFont(conf.Font.huge[1], conf.Font.huge[2])
-        gFontMap.Huge = gwid.CreateFont(conf.Font.Huge[1], conf.Font.Huge[2])
-        gFontMap.gigantic = gwid.CreateFont(conf.Font.gigantic[1], conf.Font.gigantic[2])
-        gFontMap.Gigantic = gwid.CreateFont(conf.Font.Gigantic[1], conf.Font.Gigantic[2])
+        gFontMap.SetFont = function(inFontFileName, inShortFontName)
+            gFontMap[inShortFontName] = {}
+            gFontMap[inShortFontName].Tiny = gwid.CreateFont(inFontFileName, conf.FontSizes.Tiny)
+            gFontMap[inShortFontName].Small = gwid.CreateFont(inFontFileName, conf.FontSizes.Small)
+            gFontMap[inShortFontName].Normal = gwid.CreateFont(inFontFileName, conf.FontSizes.Normal)
+            gFontMap[inShortFontName].large = gwid.CreateFont(inFontFileName, conf.FontSizes.large)
+            gFontMap[inShortFontName].Large = gwid.CreateFont(inFontFileName, conf.FontSizes.Large)
+            gFontMap[inShortFontName].huge = gwid.CreateFont(inFontFileName, conf.FontSizes.huge)
+            gFontMap[inShortFontName].Huge = gwid.CreateFont(inFontFileName, conf.FontSizes.Huge)
+            gFontMap[inShortFontName].gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.gigantic)
+            gFontMap[inShortFontName].Gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.Gigantic)
+            gFontMap.__current_selected_font = inShortFontName
+        end
+
+        setmetatable(gFontMap, {
+            __index = function(_, k)
+                return gFontMap[gFontMap.__current_selected_font][k]
+            end
+        })
+
+        for _, value in ipairs(conf.FontFilePaths) do
+            gFontMap.SetFont(value, getFileNameWithoutExtension(value))
+        end
+        print(inspect(gFontMap.Tiny))
     else
         Log("Error: No Config provided.")
     end
@@ -305,17 +325,18 @@ function DefaultPresentation()
     local o = {
         Config = {
             -- FullScreen = true,
-            Font = {
-                Tiny = { "res/fonts/font.ttf", 10 },     -- \tiny
-                Small = { "res/fonts/font.ttf", 12 },    -- \small
-                Normal = { "res/fonts/font.ttf", 16 },   -- \normalsize
-                large = { "res/fonts/font.ttf", 20 },    -- \large
-                Large = { "res/fonts/font.ttf", 24 },    -- \Large
-                huge = { "res/fonts/font.ttf", 28 },     -- \huge
-                Huge = { "res/fonts/font.ttf", 32 },     -- \Huge
-                gigantic = { "res/fonts/font.ttf", 38 }, -- \gigantic
-                Gigantic = { "res/fonts/font.ttf", 42 }, -- \Gigantic
-            }
+            FontSizes = {
+                Tiny = 10,     -- \tiny
+                Small = 12,    -- \small
+                Normal = 16,   -- \normalsize
+                large = 20,    -- \large
+                Large = 24,    -- \Large
+                huge = 28,     -- \huge
+                Huge = 32,     -- \Huge
+                gigantic = 38, -- \gigantic
+                Gigantic = 42, -- \Gigantic
+            },
+            FontFilePaths = { "res/fonts/font.ttf", "res/fonts/Laila.ttf" }
         },
         insert = function(self, inTable)
             for _, value in pairs(inTable) do
