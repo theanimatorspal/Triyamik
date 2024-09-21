@@ -6,16 +6,21 @@ end
 -- TODO Fancy defer listen = false at last,
 -- do this later in execution
 gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElementName)
-          Engine.net.Server(true) -- dont start the server but provide  the functions
+          Engine.net.Server() -- dont start the server but provide  the functions
           Engine.gate[0] = function()
                     Engine = mt:Get("Engine", StateId)
                     Engine:PrepareMultiThreadingAndNetworking()
                     local gate = Engine.gate
                     local net = Engine.net
-                    net.Server()
+                    Engine.net.Server()
+                    net.Start()
                     gate.net = Engine.net
                     local listen = true
                     while listen do
+                              if gate.application_has_ended == true then
+                                        print("OUT")
+                                        listen = false
+                              end
                               net.BroadCast(
                                         function()
                                                   Engine.net.SendToServer("Connection Established")
@@ -59,7 +64,7 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                     end
           end
           IterateEachFrame(inPresentation, function(inEachFrame, _)
-                    AddFrameKeyElement(inEachFrame, {
+                    gAddFrameKeyElement(inEachFrame, {
                               {
                                         "*FANDR*",
                                         handle = nil,
@@ -73,7 +78,7 @@ end
 
 ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           if not Engine.net.listenOnce then
-                    Engine.net.Server(true) -- dont start but provide the functions
+                    Engine.net.Server()
           end
           if Engine.gate.__fancy_android_device_connected then
                     local Message = Engine.net.listenOnce()

@@ -7,29 +7,8 @@ inspect = require "JkrGUIv2.inspect"
 --[============================================================[
           PRESENTATION  FUNCTION
 ]============================================================]
----@diagnostic disable-next-line: lowercase-global
-gstate = Jkr.CreateCallBuffers()
-gstate.move_forward = false
-gstate.move_backward = false
 
-PresentationEventFunction = function(inJumpToFrame,
-                                     inDirection,
-                                     shouldRun,
-                                     int,
-                                     inanimate)
-    if gstate.move_forward then
-        inJumpToFrame = inJumpToFrame + 1
-    end
-    if gstate.move_backward then
-        inJumpToFrame = inJumpToFrame + 1
-    end
-
-    gstate.move_forward = false
-    gstate.move_backward = false
-    return inJumpToFrame, inDirection, shouldRun, int, inanimate
-end
-
-ProcessFrames = function(inPresentation)
+local ProcessFrames = function(inPresentation)
     IterateEachFrame(inPresentation,
         function(eachFrameIndex, _)
             gFrameKeys[eachFrameIndex] = {}
@@ -66,7 +45,7 @@ local Log = function(inContent)
     -- print(string.format("[JkrGUI Present: ] %s", inContent))
 end
 
-CreateEngineHandles = function()
+local CreateEngineHandles = function()
     local Validation = false
 
     -- If already initialized, don't again
@@ -123,7 +102,7 @@ CreateEngineHandles = function()
     gwindow:Show()
 end
 
-Presentation = function(inPresentation)
+gPresentation = function(inPresentation)
     CreateEngineHandles()
     local shouldRun = true
     if inPresentation.Config then
@@ -316,6 +295,7 @@ Presentation = function(inPresentation)
             end
             frameCount = frameCount + 1
         end
+        Engine.gate.application_has_ended = true
         w:Hide()
     end
 end
@@ -336,9 +316,6 @@ function DefaultPresentation()
                 gigantic = { "res/fonts/font.ttf", 38 }, -- \gigantic
                 Gigantic = { "res/fonts/font.ttf", 42 }, -- \Gigantic
             }
-        },
-        Animation {
-            Interpolation = "Constant",
         },
         insert = function(self, inTable)
             for _, value in pairs(inTable) do

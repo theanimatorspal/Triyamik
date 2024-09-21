@@ -39,16 +39,36 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
     local op = o.prebuilts;
 
 
-    o.CreatePressButton = function(inPosition_3f, inDimension_3f, inOnClickFunction, inContinous, inFont, inText,
-                                   inColor, inBackgroundColor, inPushConstantForImagePainter, inImageFilePath)
+    o.CreateGeneralButton = function(inPosition_3f,
+                                     inDimension_3f,
+                                     inOnClickFunction,
+                                     inContinous,
+                                     inFont,
+                                     inText,
+                                     inColor,
+                                     inBackgroundColor,
+                                     inPushConstantForImagePainter,
+                                     inImageFilePath,
+                                     inImagePainter)
         local button = {}
+        if inDimension_3f.x == 0 or inDimension_3f.y == 0 then
+            button.shouldUpdateByDimension = vec3(inDimension_3f.x, inDimension_3f.y, inDimension_3f.z)
+            inDimension_3f = vec3(100, 100, 1)
+        end
+
         if (inOnClickFunction) then
             button.parent = o.CreateButton(inPosition_3f, inDimension_3f, inOnClickFunction, inContinous)
             setmetatable(button, button.parent)
             button.__index = button.parent
         end
+
+        if not inImagePainter then
+            inImagePainter = o.prebuilts.roundedRectanglePainter
+        end
+
+
         button.roundedRectangle = o.CreateComputeImage(inPosition_3f, inDimension_3f)
-        button.roundedRectangle.RegisterPainter(o.prebuilts.roundedRectanglePainter)
+        button.roundedRectangle.RegisterPainter(inImagePainter)
 
         o.c:PushOneTime(Jkr.CreateDispatchable(function()
             button.roundedRectangle.BindPainter(op.roundedRectanglePainter)
@@ -78,9 +98,6 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
 
         end
 
-        if button.sampledText then
-            button.sampledText.__backupText = ""
-        end
         button.padding = 10
 
         button.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText, inColor, inBackgroundColor,
@@ -117,11 +134,13 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
                 end
             end
 
-
-
             if inText then
                 button.sampledText.mText = Copy(inText)
             end
+        end
+
+        if button.shouldUpdateByDimension then
+            button:Update(inPosition_3f, button.shouldUpdateByDimension)
         end
 
         return button

@@ -42,7 +42,7 @@ gprocess.FancySection = function(inPresentation, inValue, inFrameIndex, inElemen
     --     local value = U(Copy(gTitlePageData.t))
     --     value.t = inValue.t
     --     value.f = "Normal"
-    --     V():AddComponents(
+    --     V():Add(
     --         {
     --             U(),
     --             value,

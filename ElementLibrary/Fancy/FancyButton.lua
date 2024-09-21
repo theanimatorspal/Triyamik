@@ -19,7 +19,7 @@ FancyButton = function(inButtonTable)
 end
 
 gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElementName)
-          local ElementName = Unique(inElementName)
+          local ElementName = gUnique(inElementName)
           if inValue.d == -1 then
                     local d = gFontMap[inValue.f]:GetTextDimension(inValue.t) * 1.5
                     inValue.d = vec3(d.x, d.y, 1)
@@ -31,12 +31,12 @@ gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElem
                     inValue.interpolate_t = true
           end
           if not gscreenElements[ElementName] then
-                    gscreenElements[ElementName] = gwid.CreatePressButton(
+                    gscreenElements[ElementName] = gwid.CreateGeneralButton(
                               vec3(math.huge), vec3(inValue.d), inValue.onclick, false, gFontMap[inValue.f],
                               inValue.t, inValue.c, inValue.bc, inValue._push_constant
                     )
           end
-          AddFrameKeyElement(inFrameIndex, {
+          gAddFrameKeyElement(inFrameIndex, {
                     {
                               "*FB*",
                               handle = gscreenElements[ElementName],

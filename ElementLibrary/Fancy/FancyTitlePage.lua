@@ -62,13 +62,13 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               pic = inValue.logo
                     })
 
-                    V():AddComponents({
+                    V():Add({
                               U(),
                               t,
                               st,
-                              H():AddComponents({
+                              H():Add({
                                                   logo, -- esma logo halne ho
-                                                  V():AddComponents(names, namesratio),
+                                                  V():Add(names, namesratio),
                                         },
                                         { 0.5, 0.5 }),
                               U()
@@ -128,9 +128,9 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                     local namesratio = CR(#names, 1 - 0.3)
                     local logo = U({})
 
-                    V():AddComponents({
+                    V():Add({
                               U(),
-                              H():AddComponents(names, namesratio),
+                              H():Add(names, namesratio),
                     }, { 0.93, 0.07 }):Update(
                               vec3(0, 0, gbaseDepth),
                               vec3(gFrameDimension.x, gFrameDimension.y, 1)

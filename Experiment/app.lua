@@ -67,23 +67,23 @@ function Main()
     local ScreenVLayout = Jkr.VLayout:New(0)
 
     local TopInfoHLayout_1 = Jkr.HLayout:New(0)
-    TopInfoHLayout_1:AddComponents({ spbf("Write"), spbf("IP"), Clear }, { 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 })
+    TopInfoHLayout_1:Add({ spbf("Write"), spbf("IP"), Clear }, { 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 })
 
     local DisplayHLayout_2 = Jkr.HLayout:New(0)
-    DisplayHLayout_2:AddComponents({ Display }, { 1 })
+    DisplayHLayout_2:Add({ Display }, { 1 })
 
     local NRatioTable = { 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }
     local NumericHLayout_3 = Jkr.HLayout:New(0)
-    NumericHLayout_3:AddComponents({ cpbf("1"), cpbf("2"), cpbf("3") }, NRatioTable)
+    NumericHLayout_3:Add({ cpbf("1"), cpbf("2"), cpbf("3") }, NRatioTable)
 
     local NumericHLayout_4 = Jkr.HLayout:New(0)
-    NumericHLayout_4:AddComponents({ cpbf("4"), cpbf("5"), cpbf("6"), }, NRatioTable)
+    NumericHLayout_4:Add({ cpbf("4"), cpbf("5"), cpbf("6"), }, NRatioTable)
 
     local NumericHLayout_5 = Jkr.HLayout:New(0)
-    NumericHLayout_5:AddComponents({ cpbf("7"), cpbf("8"), cpbf("9"), }, NRatioTable)
+    NumericHLayout_5:Add({ cpbf("7"), cpbf("8"), cpbf("9"), }, NRatioTable)
 
     local NumericHLayout_6 = Jkr.HLayout:New(0)
-    NumericHLayout_6:AddComponents({ cpbf("."), cpbf("0"), spbf("Submit", function()
+    NumericHLayout_6:Add({ cpbf("."), cpbf("0"), spbf("Submit", function()
         local function afunction()
             net = Engine.net
             net.Client(string.sub(DisplayText, 2, #DisplayText))
@@ -96,7 +96,7 @@ function Main()
         end
     end), }, NRatioTable)
 
-    ScreenVLayout:AddComponents({
+    ScreenVLayout:Add({
         TopInfoHLayout_1,
         DisplayHLayout_2,
         NumericHLayout_3,

@@ -34,14 +34,6 @@ Frame = function(inTable)
     return { Frame = inTable }
 end
 
-TitlePage = function(inTable) return { TitlePage = inTable } end
-
-Animation = function(inStyle) return { Style = inStyle } end
-
-Item = function(inStr)
-    return inStr
-end
-
 Text = function(inText)
     return {
         Text = Default(inText,
@@ -71,26 +63,6 @@ CImage = function(inTable, inP, inD)
     }
     return { CImage = Default(inTable, def) }
 end
-
-Button = function(inButtonTable)
-    local t = {
-        p = "CENTER_CENTER",
-        d = vec3(100, 50, 1)
-    }
-    return { Button = Default(inButtonTable, t) }
-end
-
-ButtonText = function(inButtonTextTable)
-    local t = {
-        t = "Button",
-        p = "CENTER_CENTER",
-        d = vec3(100, 50, 1),
-        f = "Normal",
-        c = vec4(1, 1, 1, 1)
-    }
-    return { ButtonText = Default(inButtonTextTable, t) }
-end
-
 
 local Shaders = {
     Plotter = {
@@ -124,14 +96,4 @@ Shader = function(inTable, inBuiltinShaderOpt)
         return { Shader = Shaders[inBuiltinShaderOpt] }
     end
     return { Shader = inTable }
-end
-
---
--- COMPOUND STATEMENTS
---
-
-Enumerate = function(inTable) return { Enumerate = inTable } end
-
-EnableNumbering = function(inTable)
-    return { EnableNumbering = inTable }
 end

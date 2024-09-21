@@ -15,11 +15,13 @@ local titlepage = {
 
 local architecture_minor = function()
           return V({
+                    U { t = "Application", en = "ping", c = vec4(0), bc = vec4(0) },
                     U { t = "jkrgui", en = "jkrgui" },
                     U { t = "jkrengine (2D)", en = "jkrengine" },
+                    U { t = "jkrjni", en = "jkrjni", bc = vec4(0), c = vec4(0) },
                     H({ U { t = "SDL(Events)", en = "sdl" }, U { t = "ksaivulkan", en = "kvk" } }, { 0.5, 0.5 }),
                     H({ U { t = "Win, Mac", en = "papi" }, U { t = "Vulkan API", en = "vapi" } }, { 0.5, 0.5 })
-          }, { 0.25, 0.25, 0.25, 0.25 })
+          }, { 0, 0.25, 0.25, 0, 0.25, 0.25 })
 end
 
 
@@ -71,26 +73,22 @@ P = {
                               },
                               hide = { 1, 2, 3 }
                     },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
-                    FancyLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
           },
           Frame {
-                    minmaj = FancyEnumerate {
-                              items = {
-                                        "Minor Project Overview",
-                                        "Major Project Overview",
-                                        "Scope"
-                              }
-                    },
+                    minmaj = FancyEnumerate {},
+                    FancyLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
           },
           Frame {
                     s1 = FancySection { t = "Introduction" },
                     minmaj = FancyEnumerate { view = 1 },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
                     FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
           Frame {
                     s1 = FancySection {},
+                    minmaj = FancyEnumerate { view = 2 },
+                    FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+          },
+          Frame {
                     minmaj = FancyEnumerate { view = 2 },
                     FancyLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
                     scope_enum = FancyEnumerate {
@@ -101,20 +99,14 @@ P = {
                               },
                               hide = { 1, 2, 3 }
                     },
-                    it_was_all = Text { t = "It was all ", c = vec4(0) }
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(0) }
           },
           Frame {
                     s1 = FancySection {},
                     minmaj = FancyEnumerate { view = 3 },
+                    scope_enum = FancyEnumerate { items = {} },
+                    it_was_all = Text { t = "It was all ", c = vec4(0) },
                     FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
-                    scope_enum = FancyEnumerate {
-                              items = {
-                                        "2D + 3D Rendering and Presentation",
-                                        "Mobile <-> PC Communication",
-                                        "Research for Android Devices"
-                              }
-                    },
-                    it_was_all = Text { t = "It was all ", c = vec4(0) }
           },
           Frame {
                     s3 = FancySection { t = "Demonstration" },
@@ -147,16 +139,7 @@ P = {
           },
           Frame {
                     s2 = FancySection { t = "Tasks Completed" },
-                    en = FancyEnumerate {
-                              items = {
-                                        "Refactoring Code (C++, Lua, Java) and Interlop C++ <-> Lua <-> Java",
-                                        "Basic PBR with Texture, and IBL",
-                                        "Deferred Rendering",
-                                        "Shadow Mapping",
-                                        "Basic Architecture of Presentation Engine",
-                                        "Basic Networking and RCE",
-                              }
-                    },
+                    en = FancyEnumerate {},
                     it_was_all = Text { t = "Other Demonstrations", c = vec4(0), f = "Huge" },
                     remain_enum = FancyEnumerate {
                               items = {
@@ -169,12 +152,7 @@ P = {
           Frame {
                     s4 = FancySection { t = "Remaining Works" },
                     en = FancyEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
-                    remain_enum = FancyEnumerate {
-                              items = {
-                                        "Architecture Finalization and 3D Integration",
-                                        "Robust Networking Support(Multiple Clients)"
-                              }
-                    }
+                    remain_enum = FancyEnumerate {}
           },
           Frame {
                     s4 = FancySection {},
@@ -188,6 +166,6 @@ P = {
 }
 
 Pr:insert(P)
-Presentation(Pr)
+gPresentation(Pr)
 
 -- print(inspect(gFrameKeys))

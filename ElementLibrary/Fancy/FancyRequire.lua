@@ -75,7 +75,7 @@ function V(inComponents, inComponentsRatio)
         return Jkr.VLayout:New()
     else
         local v = Jkr.VLayout:New()
-        v:AddComponents(inComponents, inComponentsRatio)
+        v:Add(inComponents, inComponentsRatio)
         return v
     end
 end
@@ -85,7 +85,7 @@ function H(inComponents, inComponentsRatio)
         return Jkr.HLayout:New()
     else
         local h = Jkr.HLayout:New()
-        h:AddComponents(inComponents, inComponentsRatio)
+        h:Add(inComponents, inComponentsRatio)
         return h
     end
 end

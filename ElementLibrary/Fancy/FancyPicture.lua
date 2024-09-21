@@ -15,7 +15,7 @@ end
 
 
 gprocess.FancyPicture = function(inPresentation, inValue, inFrameIndex, inElementName)
-          local ElementName = Unique(inElementName)
+          local ElementName = gUnique(inElementName)
           local PrevD = vec3(inValue.d.x, inValue.d.y, inValue.d.z)
           if inValue.ar and inValue.bh then
                     if inValue.bh == "BY_HEIGHT" then
@@ -32,13 +32,13 @@ gprocess.FancyPicture = function(inPresentation, inValue, inFrameIndex, inElemen
           end
           if not gscreenElements[ElementName] then
                     if inValue.pic ~= -1 then
-                              gscreenElements[ElementName] = gwid.CreatePressButton(
+                              gscreenElements[ElementName] = gwid.CreateGeneralButton(
                                         vec3(math.huge), vec3(inValue.d), inValue.onclick, false, nil,
                                         nil, inValue.c, inValue.bc, nil, inValue.pic
                               )
                     end
           end
-          AddFrameKeyElement(inFrameIndex, {
+          gAddFrameKeyElement(inFrameIndex, {
                     {
                               "*FP*",
                               handle = gscreenElements[ElementName],

@@ -37,7 +37,7 @@ gprocess["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElemen
                               name = inElementName .. i
                     }
           end
-          AddFrameKeyElement(inFrameIndex, Elements)
+          gAddFrameKeyElement(inFrameIndex, Elements)
 end
 
 ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)

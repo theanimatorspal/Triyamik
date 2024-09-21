@@ -11,19 +11,12 @@ FancyEnumerate = function(inFancyEnumerateTable)
                     rp = vec2(-0.9, -0.3),
                     rd = vec2(0.6, 0.3)
           }
-          if not inFancyEnumerateTable.rp and not inFancyEnumerateTable.rd then
-                    local outT = Default(inFancyEnumerateTable, t)
-                    outT.rd.y = 0.1 * #outT.items
-                    outT.rp.y = -0.1 * #outT.items
-                    return { FancyEnumerate = outT }
-          else
-                    return { FancyEnumerate = Default(inFancyEnumerateTable, t) }
-          end
+          return { FancyEnumerate = Default(inFancyEnumerateTable, t) }
 end
 
 local gEnums = {}
 gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElementName)
-          local Elementname = Unique(inElementName)
+          local Elementname = gUnique(inElementName)
           local title = U()
           title.t = inValue.t
 
@@ -35,6 +28,8 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
           else
                     gEnums[Elementname] = Copy(inValue)
           end
+          inValue.rd.y = 0.1 * #inValue.items
+          inValue.rp.y = -0.1 * #inValue.items
 
           -- This is the text
           for i = 1, #inValue.items, 1 do
@@ -62,10 +57,10 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
                     items[#items + 1] = it
                     item_bullets[#item_bullets + 1] = itb
           end
-          H():AddComponents(
+          H():Add(
                     {
-                              V():AddComponents(item_bullets, CR(item_bullets)),
-                              V():AddComponents(items, CR(items)),
+                              V():Add(item_bullets, CR(item_bullets)),
+                              V():Add(items, CR(items)),
                     }, { 0.1, 0.9 }
           ):Update(rel_to_abs_p(inValue.rp), rel_to_abs_d(inValue.rd))
 
@@ -78,10 +73,10 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
                                         item_bullets[i].c = vec4(0)
                               end
                     end
-                    V():AddComponents(
+                    V():Add(
                               {
                                         U(),
-                                        H():AddComponents({
+                                        H():Add({
                                                   item_bullets[inValue.view],
                                                   items[inValue.view],
                                         }, { 0.1, 0.8 }),
