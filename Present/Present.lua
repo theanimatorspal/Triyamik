@@ -45,9 +45,7 @@ local Log = function(inContent)
     -- print(string.format("[JkrGUI Present: ] %s", inContent))
 end
 
-local CreateEngineHandles = function()
-    local Validation = false
-
+local CreateEngineHandles = function(Validation)
     -- If already initialized, don't again
     if not Engine.i then
         Engine:Load(Validation)
@@ -107,8 +105,9 @@ local function getFileNameWithoutExtension(filePath)
     local nameWithoutExt = fileName:match("(.+)%..+$") or fileName -- Remove extension
     return nameWithoutExt
 end
-gPresentation = function(inPresentation)
-    CreateEngineHandles()
+gPresentation = function(inPresentation, Validation)
+    if not Validation then Validation = false end
+    CreateEngineHandles(Validation)
     local shouldRun = true
     if inPresentation.Config then
         local conf = inPresentation.Config

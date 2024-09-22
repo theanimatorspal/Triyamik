@@ -183,6 +183,4 @@ P = {
 }
 
 Pr:insert(P)
-gPresentation(Pr)
-
--- print(inspect(gFrameKeys))
+gPresentation(Pr, false)
