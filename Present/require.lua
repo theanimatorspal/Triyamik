@@ -51,11 +51,11 @@ glerp_4f = function(a, b, t)
           return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
 end
 
--- Test for performance
-glerp = Jmath.Lerp
-glerp_2f = Jmath.Lerp
-glerp_3f = Jmath.Lerp
-glerp_4f = Jmath.Lerp
+-- -- Test for performance
+-- glerp = Jmath.Lerp
+-- glerp_2f = Jmath.Lerp
+-- glerp_3f = Jmath.Lerp
+-- glerp_4f = Jmath.Lerp
 
 ComputePositionByName = function(inPositionName, inDimension)
           -- tracy.ZoneBeginN("ComputePositionByName")

@@ -168,7 +168,7 @@ gPresentation = function(inPresentation)
         local hasNextFrame = false
 
         local currentTime = w:GetWindowCurrentTime()
-        local stepTime = 0.01
+        local stepTime = 0.05
         local residualTime = 0
         local direction = 1
         local animate = true
@@ -315,8 +315,9 @@ gPresentation = function(inPresentation)
             end
             frameCount = frameCount + 1
         end
-        Engine.gate.application_has_ended = true
         w:Hide()
+        Engine.gate.application_has_ended = true
+        Engine.mt:Wait()
     end
 end
 

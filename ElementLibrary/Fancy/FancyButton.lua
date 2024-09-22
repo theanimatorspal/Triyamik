@@ -56,6 +56,7 @@ ExecuteFunctions["*FB*"] = function(inPresentation, inElement, inFrameIndex, t, 
                     local interd = glerp_3f(prev.d, new.d, t)
                     local interc = glerp_4f(prev.c, new.c, t)
                     local interbc = glerp_4f(prev.bc, new.bc, t)
+
                     local intert
                     if new.interpolate_t == true then
                               intert = TextInterop(prev.t, new.t, t)

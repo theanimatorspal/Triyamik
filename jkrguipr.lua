@@ -1,5 +1,6 @@
 require "ElementLibrary.Fancy.Fancy"
 Pr = DefaultPresentation()
+Pr.Config.FullScreen = true
 -- todo fancyenumerate hide bug, should write all over again
 
 local titlepage = {
@@ -80,6 +81,7 @@ P = {
                     FancyLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
           },
           Frame {
+                    s1 = FancySection {},
                     minmaj = FancyEnumerate { view = 1 },
                     FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
@@ -100,6 +102,13 @@ P = {
                               },
                               hide = "all"
                     },
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
+          },
+          Frame {
+                    s1 = FancySection {},
+                    minmaj = FancyEnumerate { view = 3 },
+                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
+                    scope_enum = FancyEnumerate { order = { 3, 1, 2 } },
                     it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
           },
           Frame {

@@ -7,26 +7,22 @@ end
 -- do this later in execution
 gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElementName)
           Engine.net.Server() -- dont start the server but provide  the functions
-          Engine.gate[0] = function()
+          Engine.gate[1] = function()
                     Engine = mt:Get("Engine", StateId)
                     Engine:PrepareMultiThreadingAndNetworking()
                     local gate = Engine.gate
                     local net = Engine.net
                     Engine.net.Server()
-                    net.Start()
+                    gate.ip_addresses = net.Start()
                     gate.net = Engine.net
                     local listen = true
-                    while listen do
-                              if gate.application_has_ended == true then
-                                        print("OUT")
-                                        listen = false
-                              end
+                    while listen and (not gate.application_has_ended) and (not gate.__fancy_android_device_connected) do
                               net.BroadCast(
                                         function()
                                                   Engine.net.SendToServer("Connection Established")
                                         end
                               )
-                              Jkr.SleepForMiliSeconds(100000)
+                              Jkr.SleepForMiliSeconds(1000)
                               local msg = net.listenOnce()
                               if type(msg) == "string" and msg == "Connection Established" then
                                         listen = false
@@ -38,7 +34,6 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                                                             vec3(framed.x, framed.y / 2, 1),
                                                             function()
                                                                       Engine.net.SendToServer(function()
-                                                                                print("FUCK THAT")
                                                                                 gMoveForward()
                                                                       end)
                                                             end, false, f, "Next",
@@ -50,7 +45,6 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                                                   REMOVE_PREV_BUTTON = gwr.CreatePressButton(vec3(0, 0, 20),
                                                             vec3(framed.x, framed.y / 2, 1), function()
                                                                       Engine.net.SendToServer(function()
-                                                                                print("FUCK THAT PREV")
                                                                                 gMoveBackward()
                                                                       end)
                                                             end, false, f, "Previous",
@@ -63,6 +57,7 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                               end
                     end
           end
+
           IterateEachFrame(inPresentation, function(inEachFrame, _)
                     gAddFrameKeyElement(inEachFrame, {
                               {
@@ -73,6 +68,24 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                               }
                     })
           end)
+
+          while not Engine.gate.ip_addresses do
+          end
+
+          local layout = {};
+          for i = 1, #Engine.gate.ip_addresses do
+                    layout[#layout + 1] = U({
+                              t = Engine.gate.ip_addresses[i],
+                              f = "Huge"
+                    });
+          end
+          local vlayout = V():Add(layout, CR(layout))
+          vlayout:Update(vec3(0, 0, gbaseDepth),
+                    vec3(gFrameDimension.x, gFrameDimension.y, 1))
+          for i = 1, #layout do
+                    gprocess.FancyButton(inPresentation, FancyButton(layout[i]).FancyButton, inFrameIndex,
+                              "__fancy_ip_address_" .. i)
+          end
 end
 
 

@@ -33,32 +33,10 @@ gGetSectionTables = function(inPresentation)
 end
 
 gprocess.FancyStructure = function(inPresentation, inValue, inFrameIndex, inElementName)
-    local frames_of_each_sections = {}
-    local fancy_section_elementnames = {}
-    local fancy_section_titles = {}
-    local fanncy_section_element_names_linear = {}
-    frames_of_each_sections,
+    local frames_of_each_sections,
     fancy_section_elementnames,
     fancy_section_titles,
     fanncy_section_element_names_linear = gGetSectionTables(inPresentation)
-
-    -- IterateEachFrame(inPresentation, function(eachFrameIndex, values)
-    --           for elementname, value in pairs(values) do
-    --                     if values[elementname]["FancySection"] then
-    --                               if not fancy_section_elementnames[elementname] then
-    --                                         fancy_section_elementnames[elementname] = true
-    --                                         fancy_section_titles[#fancy_section_titles + 1] = value.FancySection.t
-    --                                         frames_of_each_sections[elementname] = {}
-    --                                         fanncy_section_element_names_linear[#fanncy_section_element_names_linear + 1] =
-    --                                             elementname
-    --                                         table.insert(frames_of_each_sections[elementname], eachFrameIndex)
-    --                               else
-    --                                         table.insert(frames_of_each_sections[elementname], eachFrameIndex)
-    --                               end
-    --                     end
-    --           end
-    -- end)
-
 
     local InsertElements = function(eachFrameIndex, _)
         if eachFrameIndex >= inFrameIndex then
@@ -89,7 +67,7 @@ gprocess.FancyStructure = function(inPresentation, inValue, inFrameIndex, inElem
                     ),
                     U {}
                 },
-                { 0.06, 0.9 }
+                { 0.06, 1 }
             ):Update(vec3(0, 0, gbaseDepth),
                 vec3(gFrameDimension.x, gFrameDimension.y, 1))
 

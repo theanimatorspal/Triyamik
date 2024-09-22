@@ -9,7 +9,8 @@ FancyEnumerate = function(inFancyEnumerateTable)
                     view = -1,
                     hide = {},
                     rp = vec2(-0.9, -0.3),
-                    rd = vec2(0.6, 0.3)
+                    rd = vec2(0.6, 0.3),
+                    order = {}
           }
           return { FancyEnumerate = Default(inFancyEnumerateTable, t) }
 end
@@ -35,7 +36,11 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
           for i = 1, #inValue.items, 1 do
                     local it = U()
                     local itb = U()
-                    it.t = Copy(inValue.items[i])
+                    if #inValue.order ~= 0 and #inValue.order == #inValue.items then
+                              it.t = Copy(inValue.items[inValue.order[i]])
+                    else
+                              it.t = Copy(inValue.items[i])
+                    end
                     itb.t = "" .. i
                     if inValue.indicate > 0 then
                               it.bc = white_color
@@ -97,11 +102,19 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
 
           for i, value in ipairs(items) do
                     value._push_constant = StrechedPC
+                    if #inValue.order ~= 0 and #inValue.order == #inValue.items then
+                              i = inValue.order[i]
+                              -- value = items[inValue.order[i]]
+                    end
                     gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, inFrameIndex,
                               "__fancy__enumeration" .. "__items__" .. inElementName .. i)
           end
 
           for i, value in ipairs(item_bullets) do
+                    if #inValue.order ~= 0 and #inValue.order == #inValue.items then
+                              i = inValue.order[i]
+                              -- value = item_bullets[inValue.order[i]]
+                    end
                     gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, inFrameIndex,
                               "__fancy_enumeration" .. "__bullets__" .. inElementName .. i)
           end
