@@ -168,16 +168,12 @@ P = {
           Frame {
                     s4 = FancySection { t = "Remaining Works" },
                     en = FancyEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
-                    remain_enum = FancyEnumerate {}
-          },
-          Frame {
-                    s4 = FancySection {},
-                    remain_enum = FancyEnumerate { hide = "all" }
-          },
-          Frame {
+                    remain_enum = FancyEnumerate {},
                     thank_you = Text { t = "Thank You", p = "CENTER_CENTER", f = "Huge", c = vec4(1, 1, 1, 0) }
           },
           Frame {
+                    s4 = FancySection {},
+                    remain_enum = FancyEnumerate { hide = "all" },
                     thank_you = Text { t = "Thank You, Any Questions ?", p = "CENTER_CENTER", f = "Huge", c = vec4(0, 0, 0, 1) }
           }
 }
