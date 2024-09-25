@@ -1,6 +1,6 @@
 require "ElementLibrary.Fancy.Fancy"
 Pr = DefaultPresentation()
-Pr.Config.FullScreen = true
+Pr.Config.FullScreen = false
 -- todo fancyenumerate hide bug, should write all over again
 
 local titlepage = {
