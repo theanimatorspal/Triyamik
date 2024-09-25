@@ -31,30 +31,6 @@ function U(inValue)
     return inValue
 end
 
-TextLibrary = {}
-GetFromReuseText = function(inname, inT, inFrameIndex)
-    if TextLibrary[inname] then
-        FUCKYOU()
-    else
-        for key, value in pairs(TextLibrary) do
-            if TextLibrary[key].f == inT.f and TextLibrary[key].__frame_index ~= inFrameIndex then
-                TextLibrary[key] = nil
-                return key
-            end
-        end
-    end
-end
-
-AddToReuseText = function(inname, inT, inFrameIndex)
-    if TextLibrary[inname] then
-        FUCKYOU()
-    else
-        inT.__frame_index = inFrameIndex
-        TextLibrary[inname] = inT
-    end
-    return inname
-end
-
 function CR(inelements, intotal_1)
     if not intotal_1 then intotal_1 = 1 end
     local namesratio = {}
