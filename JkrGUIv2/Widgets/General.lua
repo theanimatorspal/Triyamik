@@ -81,7 +81,7 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
                     vec4(0.0, 0.0, 0.85, 0.85),
                     vec4(1),
                     vec4(0.1, 0.5, 0.5, 0.0),
-                    vec4(vec3(1), 0)
+                    vec4(0)
                 )
             end
             button.roundedRectangle.DrawPainter(op.roundedRectanglePainter, PushConstant, math.int(inDimension_3f.x),

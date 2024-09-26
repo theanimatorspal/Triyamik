@@ -24,7 +24,6 @@ local architecture_minor = function()
           }, { 0, 0.25, 0.25, 0, 0.25, 0.25 })
 end
 
-
 local minor_layout = function()
           return V({
                     U(),

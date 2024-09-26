@@ -179,4 +179,4 @@ P = {
 }
 
 Pr:insert(P)
-gPresentation(Pr, false)
+gPresentation(Pr, true)
