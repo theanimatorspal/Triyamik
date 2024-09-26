@@ -82,10 +82,10 @@ gprocess.PRO_Image = function(inPresentation, inValue, inFrameIndex, inElementNa
                     ), 1)
                     gwid.c:PushOneTime(Jkr.CreateDispatchable(
                         function()
-                            -- ImagePainter:Bind(gwindow, Jkr.CmdParam.None)
-                            -- ImagePainter:BindImageFromImage(gwindow, InputComputeImage, Jkr.CmdParam.None)
-                            -- ImagePainter:Draw(gwindow, inValue.push, math.int(InputSampledImage.mActualSize.x / 16),
-                            --     math.int(InputSampledImage.mActualSize.y / 16), 1, Jkr.CmdParam.None)
+                            ImagePainter:Bind(gwindow, Jkr.CmdParam.None)
+                            ImagePainter:BindImageFromImage(gwindow, InputComputeImage, Jkr.CmdParam.None)
+                            ImagePainter:Draw(gwindow, inValue.push, math.int(InputSampledImage.mActualSize.x / 16),
+                                math.int(InputSampledImage.mActualSize.y / 16), 1, Jkr.CmdParam.None)
                             OutputComputeImage.CopyToSampled(OutputSampledImage)
                         end
                     ), 2)
@@ -156,21 +156,7 @@ local Header = function()
 
        vec4 LoadExtentImage(ivec2 inAt, in ivec2 inImageSize)
        {
-            if(inAt.x <= 0) {
-                inAt.x = 0;
-            }
-            if(inAt.y <= 0) {
-                inAt.y = 0;
-            }
-            if (inAt.x >= inImageSize.x)
-            {
-                inAt.x = inImageSize.x - 1;
-            }
-            if (inAt.y >= inImageSize.y)
-            {
-                inAt.x = inImageSize.y - 1;
-            }
-            return imageLoad(storageImage, inAt);
+            return imageLoad(storageImage, clamp(inAt, ivec2(0, 0), inImageSize - ivec2(1, 1)));
        }
         ]]
 end
@@ -195,25 +181,31 @@ function convolve_image(M::AbstractMatrix, K::AbstractMatrix)
 	return out_M
 end
 ]]
+
 FilterShaders.BLUR = Header()
     .uImage2D(1, "outputImage")
     .ImagePainterAssistMatrix2()
     .GlslMainBegin().Append [[
-    SetKernel(1.0f);
-    vec4 sum = vec4(0, 0, 0, 1);
+    SetKernel(0.0f);
+    vec4 sum = vec4(0, 0, 0, 0);
     const int rows = (KernelSizeY - 1) / 2;
     const int columns = (KernelSizeX - 1) / 2;
-    int total = 0;
-    for(int y = -rows; y < rows; ++y)
+
+    float sigma = 2;
+    float pisigmasq = 2 * 3.14159 * sigma * sigma;
+    float twosigmasq = 2 * sigma * sigma;
+    float totalWeight = 0;
+
+    for(int y = -rows; y <= rows; ++y)
     {
-        for(int x = -columns; x < columns; ++x)
+        for(int x = -columns; x <= columns; ++x)
         {
-            //SetKernel(x + columns, y + rows,  1 - );
-            sum += GetKernel(x + columns, y + rows) * LoadExtentImage(to_draw_at + ivec2(x, y), image_size); //* imageLoad(storageImage, to_draw_at + ivec2(x, y));
-            ++total;
+            float weight = (1.0f / pisigmasq) * exp(- (x * x + y * y) / twosigmasq);
+            sum += weight * LoadExtentImage(to_draw_at + ivec2(x, y), image_size);
+            totalWeight += weight;
         }
     }
-    imageStore(outputImage, to_draw_at, sum / total);
+    imageStore(outputImage, to_draw_at, vec4(sum / totalWeight));
 
 
 ]]
