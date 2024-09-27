@@ -21,6 +21,17 @@ gAddFrameKeyElement = function(inFrameIndex, inElements)
     }, inFrameIndex)
 end
 
+local AddFrameKeyCompute = function(inKey, inFrameIndex)
+    gFrameKeysCompute[inFrameIndex][#gFrameKeysCompute[inFrameIndex] + 1] = inKey
+end
+
+gAddFrameKeyElementCompute = function(inFrameIndex, inElements)
+    AddFrameKeyCompute({
+        FrameIndex = inFrameIndex,
+        Elements = inElements,
+    }, inFrameIndex)
+end
+
 gprocess = {
     TitlePage = function(inPresentation, inValue, inFrameIndex, inElementName)
         local title = inPresentation.Title

@@ -14,6 +14,7 @@ gFontMap = {}
 gCurrentKey = 1
 gWindowDimension = vec2(0)
 gFrameKeys = {}
+gFrameKeysCompute = {}
 gbaseDepth = 50
 gFrameCount = 0
 gPresentationUseArrowToSwitchSlides = true

@@ -71,6 +71,8 @@ GetPreviousFrameKeyElementD = function(inPresentation, inElement, inFrameIndex, 
           return PreviousElement, inElement
 end
 
+DispatchFunctions = {}
+
 ExecuteFunctions = {
           TEXT = function(inPresentation, inElement, inFrameIndex, t, inDirection)
                     local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
@@ -172,6 +174,25 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
                               for _, element in pairs(Key.Elements) do
                                         ExecuteFunctions[element[1]](inPresentation, element, inFrameIndex, t,
                                                   inDirection)
+                              end
+                    end
+                    -- tracy.ZoneEnd()
+                    return true
+          end
+end
+
+DispatchFrame = function(inPresentation, inFrameIndex, t, inDirection)
+          if gFrameKeysCompute[inFrameIndex] and #gFrameKeysCompute[inFrameIndex] > 0 then
+                    -- tracy.ZoneBeginN("ExecuteFrame")
+                    local CurrentFrame = gFrameKeysCompute[inFrameIndex]
+                    local CurrentFrameKeyCount = #CurrentFrame
+                    for i = 1, CurrentFrameKeyCount, 1 do
+                              local Key = CurrentFrame[i]
+                              for _, element in pairs(Key.Elements) do
+                                        if DispatchFunctions[element[1]] then
+                                                  DispatchFunctions[element[1]](inPresentation, element, inFrameIndex, t,
+                                                            inDirection)
+                                        end
                               end
                     end
                     -- tracy.ZoneEnd()
