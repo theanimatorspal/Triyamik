@@ -40,6 +40,30 @@ gprocess["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElemen
           gAddFrameKeyElement(inFrameIndex, Elements)
 end
 
+local function CameraControl()
+          local e = Engine.e
+          local cam = gworld3d:GetCurrentCamera()
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_W)) then
+                    cam:MoveForward(1)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_S)) then
+                    cam:MoveBackward(1)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_A)) then
+                    cam:MoveLeft(1)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_D)) then
+                    cam:MoveRight(1)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_UP)) then
+                    cam:Pitch(0.5)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_DOWN)) then
+                    cam:Pitch(-0.5)
+          end
+          cam:SetPerspective()
+end
+
 ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
                     inFrameIndex, inDirection)
@@ -88,5 +112,9 @@ ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t
                     -- translate
                     Matrix = Jmath.Translate(Matrix, interp)
                     gobjects3d[#gobjects3d].mMatrix = Matrix
+          end
+
+          if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
+                    gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
           end
 end

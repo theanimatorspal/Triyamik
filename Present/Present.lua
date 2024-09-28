@@ -48,6 +48,10 @@ end
 
 local CreateEngineHandles = function(Validation)
     -- If already initialized, don't again
+    if not Validation then
+        print("=========WARNING============")
+        print("=========NO VALIDATION============")
+    end
     if not Engine.i then
         Engine:Load(Validation)
     end
@@ -74,7 +78,7 @@ local CreateEngineHandles = function(Validation)
         gworld3d:AddLight3D(light0.pos, light0.dir)
 
         local vshader, fshader = Engine.GetAppropriateShader("CONSTANT_COLOR",
-            Jkr.CompileContext.Default
+            Jkr.CompileContext.Default, nil, nil, false, false
         )
 
         gdummypipline:CompileEXT(

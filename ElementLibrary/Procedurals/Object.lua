@@ -56,7 +56,7 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
     inElement.handle.Painter:Draw(gwindow, PC_Mats(
         mat4(
             vec4(inElement.handle.ShapeVertexOffsetId, inElement.handle.ShapeIndexOffsetId, 0.0, 0.0), -- p1
-            vec4(5, 5, -1, 0),                                                                         -- p2
+            vec4(7, 7, 1, 0),                                                                          -- p2
             vec4(0.0),
             vec4(0.0)
         ),
@@ -66,21 +66,7 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
             vec4(0.0),
             vec4(0.0)
         )
-    ), 2, 2, 1, Jkr.CmdParam.None)
-    inElement.handle.Painter:Draw(gwindow, PC_Mats(
-        mat4(
-            vec4(inElement.handle.ShapeVertexOffsetId, inElement.handle.ShapeIndexOffsetId, 0.0, 0.0), -- p1
-            vec4(5, 5, 1, 0),                                                                          -- p2
-            vec4(0.0),
-            vec4(0.0)
-        ),
-        mat4(
-            vec4(0.0),
-            vec4(0.0),
-            vec4(0.0),
-            vec4(0.0)
-        )
-    ), 2, 2, 1, Jkr.CmdParam.None)
+    ), 2, 2, 30, Jkr.CmdParam.None)
 end
 
 Shaders.ComputeShader = Engine.Shader()
@@ -97,20 +83,28 @@ Shaders.ComputeShader = Engine.Shader()
     // p2 ma vako jati sappai height + width
     int height = int(p2.y);
     int width = int(p2.x);
-
-    uint j = gID.y;
-    uint i = gID.x;
+    uint y = gID.y;
+    uint x = gID.x;
+    uint z = gID.z;
     uint v0_index = inIndices[startingIndex].mId;
-    uint index = v0_index + j * width + i;
-    if (p2.z < 0)
+    int p1x = int(p1.x);
+    if(y < height && x < width && z % 6 == 0)
     {
-        inVertices[index].mPosition = vec3(i * 2.0f, 5, j * 2.0f);
-    } else {
-        if(j < float(height))
-        {
-            // inIndices[startingIndex + j * width + i + 0].mId =  j + width * (i + 0);
-            // inIndices[startingIndex + j * width + i + 1].mId =  j + width * (i + 1);
-        }
+            uint bottomLeft = y * width + x;
+            uint bottomRight = y * width + x + 1;
+            uint topLeft = (y + 1) * width + x;
+            uint topRight = (y + 1) * width + x + 1;
+            if(bottomLeft == startingIndex + z)
+            {
+                inIndices[startingIndex + z + 0].mId = p1x + bottomLeft;
+                inIndices[startingIndex + z + 1].mId = p1x + topRight;
+                inIndices[startingIndex + z + 2].mId = p1x + topLeft;
+
+                inIndices[startingIndex + z + 3].mId = p1x + bottomLeft;
+                inIndices[startingIndex + z + 4].mId = p1x + bottomRight;
+                inIndices[startingIndex + z + 5].mId = p1x + topRight;
+            }
+            debugPrintfEXT("xyz(%d, %d, %d), bl:%d, br:%d, tl:%d, tr:%d, p1x:%d", x, y, z, bottomLeft, bottomRight, topLeft, topRight, p1x);
     }
     ]]
     .GlslMainEnd()
