@@ -142,6 +142,24 @@ Engine.Load = function(self, inEnableValidation)
                     end
                 end
             end,
+
+            --@warning you have to use TCP connection as above to set the UDP's Buffer,
+            --using Jkr.SetBufferSizeUDP() call before receiving or sending anything
+            UDP = function()
+                self.net.StartUDP = function(inPort)
+                    Jkr.StartUDP(inPort)
+                end
+                self.net.SendUDP = function(inMessage, inDestination, inPort)
+                    local msg = Jkr.ConvertToVChar(inMessage)
+                    Jkr.SendUDP(msg, inDestination, inPort)
+                end
+                self.net.listenOnce = function()
+                    if not Jkr.IsMessagesBufferEmptyUDP() then
+                        local msg = Jkr.PopFrontMessagesBufferUDP()
+                        return Jkr.ConvertFromVChar(msg)
+                    end
+                end
+            end
         }
     end
 
@@ -460,14 +478,14 @@ Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmode
     local gltfmodelindex = inworld3d:AddGLTFModel(ingltfmodelname)
     local gltfmodel = inworld3d:GetGLTFModel(gltfmodelindex)
     local shapeindex = inshape3d:Add(gltfmodel) -- this ACUTALLY loads the GLTF Model
+    local Nodes = gltfmodel:GetNodesRef()
     local Meshes = gltfmodel:GetMeshesRef()
     Engine.GetGLTFInfo(gltfmodel)
     local Objects = {}
 
-    for MeshIndex = 1, #Meshes, 1 do
-        local meshindex = MeshIndex
+    for NodeIndex = 1, #Nodes, 1 do
         local shouldload = false
-        local primitives = Meshes[MeshIndex].mPrimitives
+        local primitives = Nodes[NodeIndex].mMesh.mPrimitives
 
         for PrimitiveIndex = 1, #primitives, 1 do
             local inprimitive = primitives[PrimitiveIndex]
@@ -504,10 +522,35 @@ Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmode
             object.mAssociatedSimple3D = shaderindex;
             object.mFirstIndex = inprimitive.mFirstIndex
             object.mIndexCount = inprimitive.mIndexCount
-            local NodeIndices = gltfmodel:GetNodeIndexByMeshIndex(meshindex - 1) --@lua indexes from one
-            object.mMatrix = gltfmodel:GetNodeMatrixByIndex(NodeIndices[1])
+            object.mMatrix = Nodes[NodeIndex]:GetLocalMatrix()
+            object.mP1 = NodeIndex
 
             Objects[#Objects + 1] = object
+        end
+
+        if #primitives == 0 and #Nodes[NodeIndex].mChildren ~= 0 then
+            local object = Jkr.Object3D()
+            object.mId = shapeindex;
+            object.mAssociatedModel = gltfmodelindex;
+            object.mAssociatedUniform = -1;
+            object.mAssociatedSimple3D = -1;
+            object.mFirstIndex = -1
+            object.mIndexCount = -1
+            object.mDrawable = 0
+            object.mMatrix = Nodes[NodeIndex]:GetLocalMatrix()
+            object.mP1 = NodeIndex
+        end
+    end
+
+    -- @warning You've to store this Objects {} table somewhere
+    for i = 1, #Objects, 1 do
+        for j = 1, #Objects, 1 do
+            if i ~= j then
+                if gltfmodel:IsNodeParentOfByIndex(Objects[i].mP1, Objects[j].mP1) then
+                    print("PARENT")
+                    Objects[i]:SetParent(Objects[j])
+                end
+            end
         end
     end
     return Objects

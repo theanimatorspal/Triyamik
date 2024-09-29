@@ -65,6 +65,9 @@ local function CameraControl()
 end
 
 ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+          if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
+                    gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
+          end
           local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
                     inFrameIndex, inDirection)
           local new = inElement.value
@@ -112,9 +115,5 @@ ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t
                     -- translate
                     Matrix = Jmath.Translate(Matrix, interp)
                     gobjects3d[#gobjects3d].mMatrix = Matrix
-          end
-
-          if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
-                    gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
           end
 end

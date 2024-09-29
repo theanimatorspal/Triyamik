@@ -13,7 +13,7 @@ gprocess.PRO_Object = function(inPresentation, inValue, inFrameIndex, inElementN
     local ElementName = gUnique(inElementName)
     --- @warning MESHES SHOULD BE ADDED BEFORE COMPUTE OPERATIONS
     --- @todo Precompute this afterwards
-    local GeneratedObject = Jkr.Generator(Jkr.Shapes.Triangles3D, vec2(30, 30))
+    local GeneratedObject = Jkr.Generator(Jkr.Shapes.Zeros3D, vec2(72, 72 * 3))
     local ui = gshaper3d:Add(GeneratedObject, vec3(0, 0, 0))
     if inValue.type == "TEST" and not gscreenElements[ElementName] then
         local CustomImagePainter = Jkr.CreateCustomImagePainter("cache2/Test3D.glsl", Shaders.ComputeShader.Print().str)
@@ -56,7 +56,7 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
     inElement.handle.Painter:Draw(gwindow, PC_Mats(
         mat4(
             vec4(inElement.handle.ShapeVertexOffsetId, inElement.handle.ShapeIndexOffsetId, 0.0, 0.0), -- p1
-            vec4(7, 7, 1, 0),                                                                          -- p2
+            vec4(6, 6, 1, 0),                                                                          -- p2
             vec4(0.0),
             vec4(0.0)
         ),
@@ -66,7 +66,7 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
             vec4(0.0),
             vec4(0.0)
         )
-    ), 2, 2, 30, Jkr.CmdParam.None)
+    ), 2, 2, 1, Jkr.CmdParam.None)
 end
 
 Shaders.ComputeShader = Engine.Shader()
@@ -86,25 +86,31 @@ Shaders.ComputeShader = Engine.Shader()
     uint y = gID.y;
     uint x = gID.x;
     uint z = gID.z;
-    uint v0_index = inIndices[startingIndex].mId;
-    int p1x = int(p1.x);
-    if(y < height && x < width && z % 6 == 0)
-    {
-            uint bottomLeft = y * width + x;
-            uint bottomRight = y * width + x + 1;
-            uint topLeft = (y + 1) * width + x;
-            uint topRight = (y + 1) * width + x + 1;
-            if(bottomLeft == startingIndex + z)
-            {
-                inIndices[startingIndex + z + 0].mId = p1x + bottomLeft;
-                inIndices[startingIndex + z + 1].mId = p1x + topRight;
-                inIndices[startingIndex + z + 2].mId = p1x + topLeft;
 
-                inIndices[startingIndex + z + 3].mId = p1x + bottomLeft;
-                inIndices[startingIndex + z + 4].mId = p1x + bottomRight;
-                inIndices[startingIndex + z + 5].mId = p1x + topRight;
-            }
-            debugPrintfEXT("xyz(%d, %d, %d), bl:%d, br:%d, tl:%d, tr:%d, p1x:%d", x, y, z, bottomLeft, bottomRight, topLeft, topRight, p1x);
+    if (y < height && x < width)
+    {
+        uint v0_index = inIndices[startingIndex].mId;
+        int p1x = int(p1.x);
+
+        uint bottomLeft = y * width + x;
+        uint bottomRight = y * width + x + 1;
+        uint topLeft = (y + 1) * width + x;
+        uint topRight = (y + 1) * width + x + 1;
+        inVertices[p1x + bottomLeft].mPosition = vec3(0.0f);
+
+        uint stiplusbl = startingIndex + bottomLeft * 6;
+        if(x < width - 1 && y < height - 1)
+        {
+            inIndices[stiplusbl + 0].mId = p1x + bottomLeft;
+            inIndices[stiplusbl + 1].mId = p1x + topRight;
+            inIndices[stiplusbl + 2].mId = p1x + topLeft;
+
+            inIndices[stiplusbl + 3].mId = p1x + bottomLeft;
+            inIndices[stiplusbl + 4].mId = p1x + bottomRight;
+            inIndices[stiplusbl + 5].mId = p1x + topRight;
+        }
+
+        inVertices[p1x + bottomLeft].mPosition = vec3(x, 0.0f, y);
     }
     ]]
     .GlslMainEnd()
