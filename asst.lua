@@ -20,8 +20,8 @@ Pr:insert({
           -- },
           Frame {
                     gltf = FancyGLTF {
-                              -- filename = "res/models/Lantern/Lantern.gltf",
-                              filename = "C:/Users/sansk/OneDrive/Documents/check.glb",
+                              filename = "res/models/Lantern/Lantern.gltf",
+                              -- filename = "C:/Users/sansk/OneDrive/Documents/check.glb",
                               camera_control = "FLYCAM_KEYBOARD"
                     }
                     -- Three = Object {},
@@ -34,4 +34,4 @@ Pr:insert({
           }
 })
 
-gPresentation(Pr, false)
+gPresentation(Pr, true)

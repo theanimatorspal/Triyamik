@@ -13,7 +13,7 @@ gprocess.PRO_Object = function(inPresentation, inValue, inFrameIndex, inElementN
     local ElementName = gUnique(inElementName)
     --- @warning MESHES SHOULD BE ADDED BEFORE COMPUTE OPERATIONS
     --- @todo Precompute this afterwards
-    local GeneratedObject = Jkr.Generator(Jkr.Shapes.Zeros3D, vec2(72, 72 * 3))
+    local GeneratedObject = Jkr.Generator(Jkr.Shapes.Zeros3D, vec2(512 * 3, 512 * 3))
     local ui = gshaper3d:Add(GeneratedObject, vec3(0, 0, 0))
     if inValue.type == "TEST" and not gscreenElements[ElementName] then
         local CustomImagePainter = Jkr.CreateCustomImagePainter("cache2/Test3D.glsl", Shaders.ComputeShader.Print().str)
@@ -29,6 +29,7 @@ gprocess.PRO_Object = function(inPresentation, inValue, inFrameIndex, inElementN
         Object.mAssociatedModel = -1
         Object.mAssociatedSimple3D = 0
         Object.mIndexCount = gshaper3d:GetIndexCount(ui)
+        print(gshaper3d:GetIndexCount(ui))
 
         Objects[ElementName] = {
             Painter = CustomImagePainter,
@@ -56,7 +57,7 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
     inElement.handle.Painter:Draw(gwindow, PC_Mats(
         mat4(
             vec4(inElement.handle.ShapeVertexOffsetId, inElement.handle.ShapeIndexOffsetId, 0.0, 0.0), -- p1
-            vec4(6, 6, 1, 0),                                                                          -- p2
+            vec4(9, 9, 1, 0),                                                                          -- p2
             vec4(0.0),
             vec4(0.0)
         ),
@@ -66,21 +67,20 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
             vec4(0.0),
             vec4(0.0)
         )
-    ), 2, 2, 1, Jkr.CmdParam.None)
+    ), math.int(2), math.int(2), 1, Jkr.CmdParam.None)
 end
 
 Shaders.ComputeShader = Engine.Shader()
     .Header(450)
     .CInvocationLayout(16, 16, 1)
     .uImage2D(0) -- "storageImage"
+    .Random()
     .ImagePainterPushMatrix2()
     .ImagePainterVIStorageLayout()
     .GlslMainBegin()
     .ImagePainterAssistMatrix2()
     .Append [[
-    // p1 ma vako jati sappai starting stuff
     int startingIndex = int(p1.y);
-    // p2 ma vako jati sappai height + width
     int height = int(p2.y);
     int width = int(p2.x);
     uint y = gID.y;
@@ -111,6 +111,7 @@ Shaders.ComputeShader = Engine.Shader()
         }
 
         inVertices[p1x + bottomLeft].mPosition = vec3(x, 0.0f, y);
+        debugPrintfEXT("xyz: %d, %d, %d ==== <%d>", x, y, z, p1x + bottomLeft);
     }
     ]]
     .GlslMainEnd()

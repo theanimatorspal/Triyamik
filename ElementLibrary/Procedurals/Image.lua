@@ -209,4 +209,4 @@ FilterShaders.BLUR = Header()
 
 
 ]]
-    .GlslMainEnd().Print()
+    .GlslMainEnd()

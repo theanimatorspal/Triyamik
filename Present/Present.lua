@@ -66,7 +66,7 @@ local CreateEngineHandles = function(Validation)
         gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
         gworld3d = Jkr.World3D(gshaper3d)
         gcamera3d = Jkr.Camera3D()
-        gcamera3d:SetAttributes(vec3(0, 0, 0), vec3(0, -30, 10))
+        gcamera3d:SetAttributes(vec3(0, 0, 0), vec3(0, 30, 30))
         gcamera3d:SetPerspective(0.3, 16 / 9, 0.1, 10000)
         gworld3d:AddCamera(gcamera3d)
         gdummypiplineindex = gworld3d:AddSimple3D(Engine.i, gwindow);
