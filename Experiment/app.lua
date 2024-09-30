@@ -8,7 +8,7 @@ function Main()
     gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
     f = gwr.CreateFont("font.ttf", 14)
 
-    local Background = gwr.CreatePressButton(vec3(0, 0, 50), vec3(100, 100, 1),
+    local Background = gwr.CreateGeneralButton(vec3(0, 0, 50), vec3(100, 100, 1),
         function() end,
         false, f,
         "", vec4(vec3(1), 0),
@@ -16,7 +16,7 @@ function Main()
     Background:Update(vec3(-20, -20, 50), vec3(framed.x + 40, framed.y + 40, 1))
 
     local DisplayText = " "
-    local Display = gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
+    local Display = gwr.CreateGeneralButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
         nil,
         false, f,
         DisplayText,
@@ -27,7 +27,7 @@ function Main()
     end
 
 
-    local Clear = gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
+    local Clear = gwr.CreateGeneralButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
         function()
             DisplayText = " "
             UpdateDisplay()
@@ -37,7 +37,7 @@ function Main()
         vec4(0.2, 0.4, 0, 1))
 
     local cpbf = function(inTextToAppend)
-        return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), function()
+        return gwr.CreateGeneralButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), function()
                 DisplayText = DisplayText .. inTextToAppend
                 print(DisplayText)
                 UpdateDisplay()
@@ -49,14 +49,14 @@ function Main()
 
     local spbf = function(inText, inFunction)
         if not inFunction then
-            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
+            return gwr.CreateGeneralButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
                 nil,
                 false,
                 f,
                 inText,
                 vec4(0, 0, 0, 1), vec4(1, 1, 1, 0.8))
         else
-            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), inFunction,
+            return gwr.CreateGeneralButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), inFunction,
                 false,
                 f,
                 inText,
