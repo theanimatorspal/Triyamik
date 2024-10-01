@@ -9,19 +9,24 @@ end
 
 local Shaders = {}
 local Objects = {}
+local Compile
+
+
 gprocess.PRO_Object = function(inPresentation, inValue, inFrameIndex, inElementName)
+    Compile()
     local ElementName = gUnique(inElementName)
     --- @warning MESHES SHOULD BE ADDED BEFORE COMPUTE OPERATIONS
+    --- @warning @todo Create "Multiple VertexBuffers" for this later if needed, but lot to change
+    --- @ in code for this one
     --- @todo Precompute this afterwards
     local GeneratedObject = Jkr.Generator(Jkr.Shapes.Zeros3D, vec2(512 * 3, 512 * 3))
     local ui = gshaper3d:Add(GeneratedObject, vec3(0, 0, 0))
+
     if inValue.type == "TEST" and not gscreenElements[ElementName] then
-        local CustomImagePainter = Jkr.CreateCustomImagePainter("cache2/Test3D.glsl", Shaders.ComputeShader.Print().str)
-        CustomImagePainter:Store(Engine.i, gwindow)
         local CustomPainterImage = gwid.CreateComputeImage(vec3(0), vec3(50, 50, 1))
-        CustomPainterImage.RegisterPainter(CustomImagePainter, 0)
+        CustomPainterImage.RegisterPainter(Shaders.TerrainGenerate.handle, 0)
         Jkr.RegisterShapeRenderer3DToCustomPainterImage(Engine.i, gshaper3d, CustomPainterImage.handle,
-            Shaders.ComputeShader.vertexStorageBufferIndex, Shaders.ComputeShader.indexStorageBufferIndex)
+            Shaders.TerrainGenerate.vertexStorageBufferIndex, Shaders.TerrainGenerate.indexStorageBufferIndex)
 
         local Object = Jkr.Object3D()
         Object.mId = ui
@@ -29,13 +34,33 @@ gprocess.PRO_Object = function(inPresentation, inValue, inFrameIndex, inElementN
         Object.mAssociatedModel = -1
         Object.mAssociatedSimple3D = 0
         Object.mIndexCount = gshaper3d:GetIndexCount(ui)
-        print(gshaper3d:GetIndexCount(ui))
+        local ShapeVertexOffsetId = gshaper3d:GetVertexOffsetAbsolute(ui)
+        local ShapeIndexOffsetId = gshaper3d:GetIndexOffsetAbsolute(ui)
+        gwid.c:PushOneTime(Jkr.CreateDispatchable(function()
+            CustomPainterImage.handle:SyncBefore(gwindow, Jkr.CmdParam.None)
+            TwoDimensionalIPs.Circle.handle:BindImageFromImage(gwindow, CustomPainterImage, Jkr.CmdParam.None)
+            TwoDimensionalIPs.Circle.handle:Bind(gwindow, Jkr.CmdParam.None)
+
+            TwoDimensionalIPs.Circle.handle:Draw(gwindow, PC_Mats(
+                mat4(
+                    vec4(0, 0, 0.7, 1), -- p1
+                    vec4(1),            -- p2
+                    vec4(1, 0, 0, 0),   -- p3
+                    vec4(1)             -- p4
+                ),
+                mat4(
+                    vec4(0.0),
+                    vec4(0.0),
+                    vec4(0.0),
+                    vec4(0.0)
+                )
+            ), math.int(4), math.int(4), 1, Jkr.CmdParam.None)
+        end), 1)
 
         Objects[ElementName] = {
-            Painter = CustomImagePainter,
             Image = CustomPainterImage,
-            ShapeVertexOffsetId = gshaper3d:GetVertexOffsetAbsolute(ui),
-            ShapeIndexOffsetId = gshaper3d:GetIndexOffsetAbsolute(ui),
+            ShapeVertexOffsetId = ShapeVertexOffsetId,
+            ShapeIndexOffsetId = ShapeIndexOffsetId,
             Object = Object
         }
     end
@@ -52,9 +77,10 @@ end
 
 DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDirection)
     gobjects3d:add(inElement.handle.Object) -- gobjects3d is erased at each frame
-    inElement.handle.Painter:Bind(gwindow, Jkr.CmdParam.None)
-    inElement.handle.Painter:BindImageFromImage(gwindow, inElement.handle.Image, Jkr.CmdParam.None)
-    inElement.handle.Painter:Draw(gwindow, PC_Mats(
+    Shaders.TerrainGenerate.handle:Bind(gwindow, Jkr.CmdParam.None)
+    Shaders.TerrainGenerate.handle:BindImageFromImage(gwindow, inElement.handle.Image, Jkr.CmdParam.None)
+    inElement.handle.Image.handle:SyncBefore(gwindow, Jkr.CmdParam.None)
+    Shaders.TerrainGenerate.handle:Draw(gwindow, PC_Mats(
         mat4(
             vec4(inElement.handle.ShapeVertexOffsetId, inElement.handle.ShapeIndexOffsetId, 0.0, 0.0), -- p1
             vec4(9, 9, 1, 0),                                                                          -- p2
@@ -68,15 +94,22 @@ DispatchFunctions["*PRO_Object*"] = function(inPresentation, inElement, t, inDir
             vec4(0.0)
         )
     ), math.int(2), math.int(2), 1, Jkr.CmdParam.None)
+    -- inElement.handle.Image.handle:SyncAfter(gwindow, Jkr.CmdParam.None)
 end
 
-Shaders.ComputeShader = Engine.Shader()
+Shaders.TerrainGenerate = Engine.Shader()
     .Header(450)
     .CInvocationLayout(16, 16, 1)
     .uImage2D(0) -- "storageImage"
     .Random()
     .ImagePainterPushMatrix2()
     .ImagePainterVIStorageLayout()
+    .Append [[
+       vec4 LoadExtentImage(ivec2 inAt, in ivec2 inImageSize)
+       {
+            return imageLoad(storageImage, clamp(inAt, ivec2(0, 0), inImageSize - ivec2(1, 1)));
+       }
+    ]]
     .GlslMainBegin()
     .ImagePainterAssistMatrix2()
     .Append [[
@@ -110,8 +143,48 @@ Shaders.ComputeShader = Engine.Shader()
             inIndices[stiplusbl + 5].mId = p1x + topRight;
         }
 
-        inVertices[p1x + bottomLeft].mPosition = vec3(x, 0.0f, y);
-        debugPrintfEXT("xyz: %d, %d, %d ==== <%d>", x, y, z, p1x + bottomLeft);
+        vec3 pos = vec3(-width / 2.0f + x, 0.0f, -height / 2.0f + y);
+        vec2 height_pos = vec2(
+            image_size.x * x / float(width),
+            image_size.y * y / float(height)
+        );
+        ivec2 height_pos_int = ivec2(int(height_pos.x), int(height_pos.y));
+        vec4 heightmap = imageLoad(storageImage, height_pos_int);
+        pos.y = heightmap.y;
+
+        // Normal Calculation
+        ivec2 height_pos_xdir1 = ivec2(height_pos_int.x + 1, height_pos_int.y);
+        ivec2 height_pos_xdir2 = ivec2(height_pos_int.x - 1, height_pos_int.y);
+
+        ivec2 height_pos_ydir1 = ivec2(height_pos_int.x, height_pos_int.y + 1);
+        ivec2 height_pos_ydir2 = ivec2(height_pos_int.x, height_pos_int.y - 1);
+
+        vec3 v1 = vec3(1, LoadExtentImage(height_pos_xdir1, image_size).y, 0);
+        vec3 v2 = vec3(0, LoadExtentImage(height_pos_ydir1, image_size).y, 1);
+        vec3 Normal = normalize(cross(v2, v1));
+        debugPrintfEXT("xyz: %d, %d, %d ==== <%d>, %d, %d heightmap: %f", x, y, z, p1x + bottomLeft, int(height_pos.x), int(height_pos.y), heightmap.y);
+
+        inVertices[p1x + bottomLeft].mPosition = pos;
+        inVertices[p1x + bottomLeft].mColor = Normal;//vec3(1, heightmap.y, 1);
     }
     ]]
     .GlslMainEnd()
+
+
+Compile = function()
+    if not Shaders.all_compiled then
+        local sh = Jkr.CreateCustomImagePainter
+        Shaders.TerrainGenerate.handle = sh("cache2/PRO_ObjectTest3D.glsl", Shaders.TerrainGenerate.str)
+        Shaders.TerrainGenerate.handle:Store(Engine.i, gwindow)
+
+        TwoDimensionalIPs.ConstantColor.handle = sh("cache2/PRO_ObjectConstantColor.glsl",
+            TwoDimensionalIPs.ConstantColor.str)
+        TwoDimensionalIPs.ConstantColor.handle:Store(Engine.i, gwindow)
+
+        TwoDimensionalIPs.Circle.handle = sh("cache2/PRO_ObjectTwoDimensionalIPs.glsl",
+            TwoDimensionalIPs.Circle.str)
+        TwoDimensionalIPs.Circle.handle:Store(Engine.i, gwindow)
+
+        Shaders.all_compiled = true
+    end
+end

@@ -25,12 +25,13 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                               Jkr.SleepForMiliSeconds(1000)
                               local msg = net.listenOnce()
                               if type(msg) == "string" and msg == "Connection Established" then
+                                        print("HERE")
                                         listen = false
                                         gate.__fancy_android_device_connected = true
                                         net.BroadCast(function()
                                                   gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
                                                   f = gwr.CreateFont("font.ttf", 14)
-                                                  REMOTE_NEXT_BUTTON = gwr.CreatePressButton(vec3(0, 0, 20),
+                                                  REMOTE_NEXT_BUTTON = gwr.CreateGeneralButton(vec3(0, 0, 20),
                                                             vec3(framed.x, framed.y / 2, 1),
                                                             function()
                                                                       Engine.net.SendToServer(function()
@@ -42,7 +43,7 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
                                                             vec3(framed.x, framed.y / 2, 1))
 
 
-                                                  REMOVE_PREV_BUTTON = gwr.CreatePressButton(vec3(0, 0, 20),
+                                                  REMOVE_PREV_BUTTON = gwr.CreateGeneralButton(vec3(0, 0, 20),
                                                             vec3(framed.x, framed.y / 2, 1), function()
                                                                       Engine.net.SendToServer(function()
                                                                                 gMoveBackward()
