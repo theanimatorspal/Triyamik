@@ -150,7 +150,7 @@ Shaders.TerrainGenerate = Engine.Shader()
         );
         ivec2 height_pos_int = ivec2(int(height_pos.x), int(height_pos.y));
         vec4 heightmap = imageLoad(storageImage, height_pos_int);
-        pos.y = heightmap.y;
+        pos.y = heightmap.y * 10;
 
         // Normal Calculation
         ivec2 height_pos_xdir1 = ivec2(height_pos_int.x + 1, height_pos_int.y);
@@ -159,13 +159,20 @@ Shaders.TerrainGenerate = Engine.Shader()
         ivec2 height_pos_ydir1 = ivec2(height_pos_int.x, height_pos_int.y + 1);
         ivec2 height_pos_ydir2 = ivec2(height_pos_int.x, height_pos_int.y - 1);
 
-        vec3 v1 = vec3(1, LoadExtentImage(height_pos_xdir1, image_size).y, 0);
-        vec3 v2 = vec3(0, LoadExtentImage(height_pos_ydir1, image_size).y, 1);
+        vec3 v1 = vec3(2,
+                       (LoadExtentImage(height_pos_xdir1, image_size).y -
+                       LoadExtentImage(height_pos_xdir2, image_size).y) * 10,
+                       0);
+        vec3 v2 = vec3(0,
+                       (LoadExtentImage(height_pos_ydir1, image_size).y -
+                       LoadExtentImage(height_pos_ydir2, image_size).y) * 10,
+                       2);
+
         vec3 Normal = normalize(cross(v2, v1));
-        debugPrintfEXT("xyz: %d, %d, %d ==== <%d>, %d, %d heightmap: %f", x, y, z, p1x + bottomLeft, int(height_pos.x), int(height_pos.y), heightmap.y);
+        debugPrintfEXT("Normal: %f, %f, %f", Normal.x, Normal.y, Normal.z);
 
         inVertices[p1x + bottomLeft].mPosition = pos;
-        inVertices[p1x + bottomLeft].mColor = Normal;//vec3(1, heightmap.y, 1);
+        inVertices[p1x + bottomLeft].mColor = Normal;
     }
     ]]
     .GlslMainEnd()

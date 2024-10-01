@@ -1479,7 +1479,8 @@ TwoDimensionalIPs.Circle = Engine.Shader()
         float radius = p1.z;
         vec2 Q = abs(xy - center);
         float color = length(Q) - radius;
-        color = smoothstep(-0.05, 0.05, -color);
+        //color = smoothstep(-0.05, 0.05, -color);
+        color = -color;
 
         vec4 old_color = imageLoad(storageImage, to_draw_at);
         vec4 final_color = vec4(p2.x * color, p2.y * color, p2.z * color, p2.w * color);
