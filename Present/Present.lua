@@ -271,7 +271,8 @@ gPresentation = function(inPresentation, Validation)
                 residualTime = residualTime / 1000 + stepTime -
                     (w:GetWindowCurrentTime() - currentTime) / 1000
             end
-            -- collectgarbage()
+            print(collectgarbage("count"))
+            collectgarbage("collect")
         end
 
         local function Dispatch()

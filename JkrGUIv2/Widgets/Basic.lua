@@ -151,6 +151,28 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     o.e = Jkr.CreateCallExecutor(o.c)
     o.WindowDimension = o.w:GetWindowDimension()
 
+    o.shape2dShaders = {}
+    o.shape2dShaders.roundedRectangle = Jkr.Simple3D(i, w)
+    o.shape2dShaders.roundedRectangle:Compile(
+        i,
+        w,
+        "cache2/o.shape2dShaders.roundedRectangle.glsl",
+        Shape2DShaders.GeneralVShader.str,
+        Shape2DShaders.RoundedRectangleFShader.str,
+        "",
+        false
+    )
+    o.shape2dShaders.showImage = Jkr.Simple3D(i, w)
+    o.shape2dShaders.showImage:Compile(
+        i,
+        w,
+        "cache2/o.shape2dShaders.showImage.glsl",
+        Shape2DShaders.GeneralVShader.str,
+        Shape2DShaders.ShowImageFShader.str,
+        "",
+        false
+    )
+
     o.CreateFont = function(inFontFileName, inFontSize)
         local font = {}
         font.mId = o.t:AddFontFace(inFontFileName, inFontSize)
@@ -160,10 +182,36 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         return font
     end
 
+    -- @warning inShape2DShader refers to the STRING value of o.shape2dShaders.<shader>
+    -- e.g. for rounded rectangle use "roundedRectangle"
+    -- @warning the second matrix in the push constant cannot be used for anything because it will be sent with the UIMatrix
+    o.CreateQuad = function(inPosition_3f, inDimension_3f, inPushConstant, inShape2DShader, inSampledImageId)
+        local quad = {}
+        local Rectangle = Jkr.Generator(Jkr.Shapes.RectangleFill, uvec2(inDimension_3f.x, inDimension_3f.y))
+        quad.rect = o.s:Add(Rectangle, inPosition_3f)
+        quad.mColor = vec4(1, 1, 1, 1)
+
+        -- @warning This might not be batchable @todo create a parameter or do something else about it
+        quad.DrawId = o.c:Push(Jkr.CreateDrawable(quad.rect, true,
+            inShape2DShader,
+            inSampledImageId,
+            nil, inPushConstant))
+
+        quad.Update = function(self, inPosition_3f, inDimension_3f, inPushConstant)
+            local Rectangle = Jkr.Generator(Jkr.Shapes.RectangleFill,
+                uvec2(inDimension_3f.x, inDimension_3f.y))
+            o.s:Update(quad.rect, Rectangle, inPosition_3f)
+            if inPushConstant then
+                o.c.mDrawables[self.DrawId].mPush = inPushConstant
+            end
+        end
+
+        return quad
+    end
+
     --[============================================================[
                     TEXT LABEL
           ]============================================================]
-    -- Here for each widget we have to follow function(inPosition, inDimension) style
     o.CreateTextLabel = function(inPosition_3f, inDimension_3f, inFont, inText, inColor)
         local textLabel = {}
         textLabel.mText = inText
@@ -330,16 +378,50 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     o.Draw = function(self)
         -- Optimize this
         self.s:BindShapes(self.w, Jkr.CmdParam.UI)
-        for i = 1, #self.c.mDrawables, 1 do
-            local drawable = self.c.mDrawables[i]
-            self.s:BindFillMode(Jkr.FillType.Image, self.w, Jkr.CmdParam.UI)
-            if drawable.mDrawType == "IMAGE" then
-                self.s:BindImage(self.w, drawable.mImageId, Jkr.CmdParam.UI)
-                self.s:Draw(self.w, drawable.mColor, drawable.mId, drawable.mId, self.UIMatrix,
-                    Jkr.CmdParam.UI)
+
+        for key, value in pairs(self.c.mDrawTypeToDrawablesMap) do
+            if key ~= "TEXT" and key ~= "IMAGE" then
+                local shader = o.shape2dShaders[key]
+                shader:Bind(self.w, Jkr.CmdParam.UI)
+                local drawables = value
+                local drawables_count = #value
+                for i = 1, drawables_count, 1 do
+                    local drawable = drawables[i]
+                    if drawable.mImageId then
+                        self.s:BindFillMode(Jkr.FillType.Image, self.w, Jkr.CmdParam.UI)
+                        self.s:BindImage(self.w, drawable.mImageId, Jkr.CmdParam.UI)
+                    else
+                        self.s:BindFillMode(Jkr.FillType.Fill, self.w, Jkr.CmdParam.UI)
+                    end
+                    drawable.mPush.b = self.UIMatrix
+                    Jkr.DrawShape2DWithSimple3D(self.w, shader, self.s.handle, drawable.mPush, drawable.mId, drawable
+                        .mId,
+                        Jkr.CmdParam.UI)
+                end
             end
-            if drawable.mDrawType == "TEXT" then
-                self.t:Draw(drawable.mId, self.w, drawable.mColor, self.UIMatrix, Jkr.CmdParam.UI)
+        end
+
+        self.s:BindFillMode(Jkr.FillType.Image, self.w, Jkr.CmdParam.UI)
+        do
+            local drawables = self.c.mDrawTypeToDrawablesMap["IMAGE"]
+            if drawables then
+                local drawables_count = #drawables
+                for i = 1, drawables_count, 1 do
+                    local drawable = drawables[i]
+                    self.s:BindImage(self.w, drawable.mImageId, Jkr.CmdParam.UI)
+                    self.t:Draw(drawable.mId, self.w, drawable.mColor, self.UIMatrix, Jkr.CmdParam.UI)
+                end
+            end
+        end
+
+        do
+            local drawables = self.c.mDrawTypeToDrawablesMap["TEXT"]
+            if drawables then
+                local drawables_count = #drawables
+                for i = 1, drawables_count, 1 do
+                    local drawable = drawables[i]
+                    self.t:Draw(drawable.mId, self.w, drawable.mColor, self.UIMatrix, Jkr.CmdParam.UI)
+                end
             end
         end
     end

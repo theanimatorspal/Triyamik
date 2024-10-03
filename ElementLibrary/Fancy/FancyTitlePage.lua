@@ -29,7 +29,7 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                     )
                     local background = {
                               t = " ",
-                              p = vec3(0, 0, gbaseDepth),
+                              p = vec3(-40, -40, gbaseDepth),
                               d = vec3(gFrameDimension.x + 80, gFrameDimension.y + 80, 1),
                               bc = background_color,
                               _push_constant = FullPC
