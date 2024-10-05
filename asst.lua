@@ -19,12 +19,13 @@ Pr:insert({
           --           }
           -- },
           Frame {
-                    -- gltf = FancyGLTF {
-                    --           filename = "res/models/Lantern/Lantern.gltf",
-                    --           -- filename = "C:/Users/sansk/OneDrive/Documents/check.glb",
-                    --           camera_control = "FLYCAM_KEYBOARD"
-                    -- }
-                    Three = Object {},
+                    gltf = FancyGLTF {
+                              -- filename = "res/models/Lantern/Lantern.gltf",
+                              filename = "C:/Users/sansk/OneDrive/Desktop/PBR/res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
+                              -- filename = "C:/Users/sansk/OneDrive/Documents/check.glb",
+                              camera_control = "FLYCAM_KEYBOARD"
+                    }
+                    -- Three = Object {},
           },
           -- Frame {
           -- gltf = FancyGLTF {

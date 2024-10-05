@@ -18,8 +18,17 @@ FancyButton = function(inButtonTable)
           return { FancyButton = Default(inButtonTable, t) }
 end
 
+local static_has_created_viewport = false
+local viewport_id
 gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
+          if not static_has_created_viewport then
+                    static_has_created_viewport = true
+                    -- viewport_id = gwid.CreateScissor(vec3(80, 80, 1),
+                    --           vec3(gFrameDimension.x - 160, gFrameDimension.y - 160, 1),
+                    --           true)
+          end
+          gwid.SetCurrentScissor(viewport_id)
           if inValue.d == -1 then
                     local d = gFontMap[inValue.f]:GetTextDimension(inValue.t) * 1.5
                     inValue.d = vec3(d.x, d.y, 1)

@@ -1,5 +1,4 @@
 {
-          "workbench.colorTheme": "GitHub Light",
           "git.enableSmartCommit": true,
           "git.confirmSync": false,
           "gitlens.currentLine.enabled": false,
@@ -33,7 +32,7 @@
           },
           /* EDITOR */
           "editor.matchBrackets": "near",
-          "editor.fontFamily": "Fira Code",
+          "editor.fontFamily": "JetBrains Mono",
           "editor.fontWeight": "normal",
           "editor.fontSize": 20,
           "editor.tabSize": 10,
@@ -118,7 +117,6 @@
                     "editor.fontFamily": "Fira Code"
           },
           /* WORKBENCH */
-          "workbench.iconTheme": "material-icon-theme",
           "workbench.editor.showTabs": "none",
           "explorer.confirmDelete": false,
           "cmake.showOptionsMovedNotification": false,
