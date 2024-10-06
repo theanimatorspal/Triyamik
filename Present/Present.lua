@@ -209,35 +209,6 @@ gPresentation = function(inPresentation, Validation)
                 end
             end
 
-            ---
-            ---
-            --- This is for External State management
-            ---
-            ---
-
-            -- local newcurrentFrame, newdirection, newshouldRun, newt, newanimate =
-            --     PresentationEventFunction(
-            --         currentFrame,
-            --         direction,
-            --         shouldRun,
-            --         t,
-            --         animate)
-
-            -- direction = newdirection
-            -- shouldRun = newshouldRun
-            -- t = newt
-            -- animate = newanimate
-
-            -- if newcurrentFrame <= gFrameCount and newcurrentFrame >= 1 then
-            --     currentFrame = newcurrentFrame
-            -- end
-
-            -- ---
-            -- ---
-            -- --- This is for External State management
-            -- ---
-            -- ---
-
             if (e:IsCloseWindowEvent()) then
                 shouldRun = false
             end
@@ -249,7 +220,9 @@ gPresentation = function(inPresentation, Validation)
         local function Update()
             gwid:Update()
             gworld3d:Update(e)
+            --tracy.ZoneBeginN("luaExecuteFrame")
             hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
+            --tracy.ZoneEnd()
             if w:GetWindowCurrentTime() - currentTime > stepTime then
                 if animate then
                     t = t + direction * (stepTime + residualTime)
@@ -297,17 +270,23 @@ gPresentation = function(inPresentation, Validation)
             oldTime = w:GetWindowCurrentTime()
             e:ProcessEventsEXT(gwindow)
             w:BeginUpdates()
+            --tracy.ZoneBeginN("luaUpdate")
             Update()
+            --tracy.ZoneEnd()
             gWindowDimension = w:GetWindowDimension()
             w:EndUpdates()
 
             w:BeginDispatches()
+            --tracy.ZoneBeginN("luaDispatch")
             Dispatch()
+            --tracy.ZoneEnd()
             w:EndDispatches()
 
             MultiThreadedDraws()
             w:BeginUIs()
+            --tracy.ZoneBeginN("luaDraw")
             Draw()
+            --tracy.ZoneEnd()
             w:EndUIs()
 
             w:BeginDraws(WindowClearColor.x, WindowClearColor.y, WindowClearColor.z,

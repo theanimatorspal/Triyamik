@@ -59,7 +59,7 @@ end
 -- glerp_4f = Jmath.Lerp
 
 ComputePositionByName = function(inPositionName, inDimension)
-          -- tracy.ZoneBeginN("ComputePositionByName")
+          -- --tracy.ZoneBeginN("ComputePositionByName")
           if type(inPositionName) ~= "string" then
                     return inPositionName
           end
@@ -91,7 +91,7 @@ ComputePositionByName = function(inPositionName, inDimension)
                     print("Unsupported LEFTRIGHT Type")
           end
 
-          -- tracy.ZoneEnd()
+          -- --tracy.ZoneEnd()
           return vec3(xPos, yPos, gbaseDepth)
 end
 

@@ -11,7 +11,9 @@ local max = math.max
 local rep = string.rep
 
 function TextInterop(inText1, inText2, t)
+          --tracy.ZoneBeginN("luaTextInterop")
           if inText1 == inText2 then
+                    --tracy.ZoneEnd()
                     return inText1
           end
 
@@ -33,6 +35,7 @@ function TextInterop(inText1, inText2, t)
 
           local final_length = math.floor(glerp(inText1_length, inText2_length, t))
 
+          --tracy.ZoneEnd()
           return table.concat(interm):sub(1, final_length)
 end
 
@@ -40,7 +43,7 @@ GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
           local PreviousFrame = gFrameKeys[inFrameIndex - 1]
           -- print("FrameKeys", inspect(gFrameKeys))
           if PreviousFrame then
-                    -- tracy.ZoneBeginN("GetPreviousFrameKeyElement")
+                    -- --tracy.ZoneBeginN("GetPreviousFrameKeyElement")
                     local keysCount = #PreviousFrame
                     for i = 1, keysCount, 1 do
                               local Key = PreviousFrame[i]
@@ -52,11 +55,12 @@ GetPreviousFrameKeyElement = function(inPresentation, inElement, inFrameIndex)
                                         end
                               end
                     end
-                    -- tracy.ZoneEnd()
+                    -- --tracy.ZoneEnd()
           end
 end
 
 GetPreviousFrameKeyElementD = function(inPresentation, inElement, inFrameIndex, inDirection)
+          --tracy.ZoneBeginN("luaGetPreviousFrameKeyElementD")
           local PreviousElement = 0
           if inDirection == 1 then
                     PreviousElement = GetPreviousFrameKeyElement(inPresentation, inElement, inFrameIndex)
@@ -68,6 +72,7 @@ GetPreviousFrameKeyElementD = function(inPresentation, inElement, inFrameIndex, 
                               inElement = newel
                     end
           end
+          --tracy.ZoneEnd()
           return PreviousElement, inElement
 end
 
@@ -166,7 +171,7 @@ ExecuteFunctions = {
 
 ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
           if (gFrameKeys[inFrameIndex]) then
-                    -- tracy.ZoneBeginN("ExecuteFrame")
+                    -- --tracy.ZoneBeginN("ExecuteFrame")
                     local CurrentFrame = gFrameKeys[inFrameIndex]
                     local CurrentFrameKeyCount = #CurrentFrame
                     for i = 1, CurrentFrameKeyCount, 1 do
@@ -176,14 +181,14 @@ ExecuteFrame = function(inPresentation, inFrameIndex, t, inDirection)
                                                   inDirection)
                               end
                     end
-                    -- tracy.ZoneEnd()
+                    -- --tracy.ZoneEnd()
                     return true
           end
 end
 
 DispatchFrame = function(inPresentation, inFrameIndex, t, inDirection)
           if gFrameKeysCompute[inFrameIndex] and #gFrameKeysCompute[inFrameIndex] > 0 then
-                    -- tracy.ZoneBeginN("ExecuteFrame")
+                    -- --tracy.ZoneBeginN("ExecuteFrame")
                     local CurrentFrame = gFrameKeysCompute[inFrameIndex]
                     local CurrentFrameKeyCount = #CurrentFrame
                     for i = 1, CurrentFrameKeyCount, 1 do
@@ -195,7 +200,7 @@ DispatchFrame = function(inPresentation, inFrameIndex, t, inDirection)
                                         end
                               end
                     end
-                    -- tracy.ZoneEnd()
+                    -- --tracy.ZoneEnd()
                     return true
           end
 end

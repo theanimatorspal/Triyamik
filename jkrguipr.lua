@@ -57,7 +57,7 @@ end
 
 P = {
           Frame {
-                    FancyAndroid {},
+                    -- FancyAndroid {},
           },
           Frame {
                     FancyTitlePage(titlepage),
