@@ -1,4 +1,5 @@
 ginspect = require "JkrGUIv2.inspect"
+require "ElementLibrary.Fancy.FancySlider"
 require "ElementLibrary.Fancy.FancyButton"
 require "ElementLibrary.Fancy.FancyPicture"
 require "ElementLibrary.Fancy.FancyEnumerate"

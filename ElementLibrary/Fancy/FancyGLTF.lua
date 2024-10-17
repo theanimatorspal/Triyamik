@@ -116,6 +116,12 @@ CameraControl = function()
           if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_D)) then
                     cam:MoveRight(1)
           end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_Q)) then
+                    cam:Yaw(0.5)
+          end
+          if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_E)) then
+                    cam:Yaw(-0.5)
+          end
           if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_UP)) then
                     cam:Pitch(0.5)
           end

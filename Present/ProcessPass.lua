@@ -33,12 +33,6 @@ gAddFrameKeyElementCompute = function(inFrameIndex, inElements)
 end
 
 gprocess = {
-    TitlePage = function(inPresentation, inValue, inFrameIndex, inElementName)
-        local title = inPresentation.Title
-        local date = inPresentation.Date
-        local author = inPresentation.Author
-        -- TODO title page
-    end,
     Text = function(inPresentation, inValue, inFrameIndex, inElementName)
         local ElementName = gUnique(inElementName)
         if not gscreenElements[ElementName] then
@@ -61,70 +55,5 @@ gprocess = {
                 name = ElementName
             } }
         }, inFrameIndex)
-    end,
-    CImage = function(inPresentation, inValue, inFrameIndex, inElementName)
-        local ElementName = gUnique(inElementName)
-        if not gscreenElements[ElementName] then
-            local image = {
-                computeImage = gwid.CreateComputeImage(vec3(math.huge), vec3(inValue.d.x, inValue.d.y, 1)),
-                sampledImage = gwid.CreateSampledImage(vec3(math.huge), vec3(inValue.d.x, inValue.d.y, 1))
-            }
-            gscreenElements[ElementName] = image
-            image.computeImage.RegisterPainter(gscreenElements[inValue.shader])
-        end
-        AddFrameKey({
-            FrameIndex = inFrameIndex,
-            Elements = {
-                {
-                    "CIMAGE",
-                    handle = gscreenElements[ElementName],
-                    value = inValue,
-                    name = ElementName
-                }
-            }
-        }, inFrameIndex)
-    end,
-    Button = function(inPresentation, inValue, inFrameIndex, inElementName)
-        local ElementName = gUnique(inElementName)
-        if not gscreenElements[ElementName] then
-            local Button = gwid.CreateButton(ComputePositionByName(inValue.p, inValue.d),
-                vec3(inValue.d.x, inValue.d.y, 1),
-                inValue.onclick)
-            gscreenElements[ElementName] = Button
-        end
-        AddFrameKey({
-            FrameIndex = inFrameIndex,
-            Elements = {
-                {
-                    "BUTTON",
-                    handle = gscreenElements[ElementName],
-                    value = inValue,
-                    name = ElementName
-                }
-            }
-        }, inFrameIndex)
-    end,
-    ButtonText = function(inPresentation, inValue, inFrameIndex, inElementName)
-        gprocess.Button(inPresentation, inValue, inFrameIndex, inElementName .. "button")
-        gprocess.Text(inPresentation, inValue, inFrameIndex, inElementName .. "text")
-    end,
-    Shader = function(inPresentation, inValue, inFrameIndex, inElementName)
-        local ElementName = gUnique(inElementName)
-        if not gscreenElements[ElementName] then
-            local painter = Jkr.CreateCustomImagePainter(
-                ElementName .. ".glsl", inValue.cs
-            )
-            painter:Store(Engine.i, gwindow)
-            gscreenElements[ElementName] = painter
-        end
-    end,
-    GLTFView = function(inPresentation, inValue, inFrameIndex, inElementName)
-        local ElementName = gUnique(inElementName)
-        if not gscreenElements[ElementName] then
-            -- make all the required uniforms
-            -- make all the required simple3d
-            -- get and upload the GLTF model to shit
-            -- Make the Object3D and Upload to gobjects3d
-        end
     end,
 }

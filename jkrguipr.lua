@@ -74,6 +74,12 @@ P = {
                               },
                               hide = "all"
                     },
+                    fslider = FancySlider {},
+                    FancyButton {
+                              onclick = function()
+                                        gMoveToParicular(13)
+                              end
+                    }
           },
           Frame {
                     s1 = FancySection { t = "Introduction" },
@@ -179,4 +185,4 @@ P = {
 }
 
 Pr:insert(P)
-gPresentation(Pr, false)
+gPresentation(Pr, true)

@@ -19,6 +19,7 @@ gbaseDepth = 50
 gFrameCount = 0
 gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
+gCurrentScissorsTobeDrawn = Jkr.Table(100, 0)
 
 -- 3d Stuffs
 gworld3d = nil

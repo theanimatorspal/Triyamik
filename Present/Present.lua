@@ -198,6 +198,24 @@ gPresentation = function(inPresentation, Validation)
             print("currentFrame: ", currentFrame)
         end
 
+        gMoveToParicular = function(inFrameNumber)
+            local hasNextFrame = true
+            if currentFrame > inFrameNumber then
+                local frame = currentFrame
+                while hasNextFrame and frame >= inFrameNumber do
+                    hasNextFrame = ExecuteFrame(inPresentation, frame, 1, -1)
+                    frame = frame - 1
+                end
+            elseif currentFrame < inFrameNumber then
+                local frame = currentFrame
+                while hasNextFrame and frame <= inFrameNumber do
+                    hasNextFrame = ExecuteFrame(inPresentation, frame, 1, 1)
+                    frame = frame + 1
+                end
+            end
+            currentFrame = inFrameNumber
+        end
+
         local Event = function()
             if receive_events then
                 if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
@@ -215,13 +233,10 @@ gPresentation = function(inPresentation, Validation)
             gwid:Event()
         end
 
-
-
         local function Update()
             gwid:Update()
             gworld3d:Update(e)
             --tracy.ZoneBeginN("luaExecuteFrame")
-            hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
             --tracy.ZoneEnd()
             if w:GetWindowCurrentTime() - currentTime > stepTime then
                 if animate then
@@ -229,12 +244,15 @@ gPresentation = function(inPresentation, Validation)
                     if t <= 0.0 or t >= 1.0 then
                         animate = false
                         receive_events = true
-                        if t <= 0.0 then
+                        if t < 0.0 then
                             t = 0.0
-                        else
+                            hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
+                        elseif t > 1.0 then
                             t = 1.0
+                            hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                         end
                     else
+                        hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                         receive_events = false
                     end
                 end

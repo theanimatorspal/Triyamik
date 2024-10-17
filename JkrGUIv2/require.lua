@@ -832,3 +832,10 @@ function IterateEachElementRecursively(inElement, inFunc_val)
         end
     end
 end
+
+function FillTable(inTable, inValue)
+    local count = #inTable
+    for i = 1, count, 1 do
+        inTable[i] = nil
+    end
+end

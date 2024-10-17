@@ -18,17 +18,8 @@ FancyButton = function(inButtonTable)
           return { FancyButton = Default(inButtonTable, t) }
 end
 
-local static_has_created_viewport = false
-local viewport_id
 gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
-          if not static_has_created_viewport then
-                    static_has_created_viewport = true
-                    -- viewport_id = gwid.CreateScissor(vec3(80, 80, 1),
-                    --           vec3(gFrameDimension.x - 160, gFrameDimension.y - 160, 1),
-                    --           true)
-          end
-          gwid.SetCurrentScissor(viewport_id)
           if inValue.d == -1 then
                     local d = gFontMap[inValue.f]:GetTextDimension(inValue.t) * 1.5
                     inValue.d = vec3(d.x, d.y, 1)
@@ -41,7 +32,8 @@ gprocess["FancyButton"] = function(inPresentation, inValue, inFrameIndex, inElem
           end
           if not gscreenElements[ElementName] then
                     gscreenElements[ElementName] = gwid.CreateGeneralButton(
-                              vec3(math.huge), vec3(inValue.d), inValue.onclick, false, gFontMap[inValue.f],
+                              vec3(math.huge, math.huge, gbaseDepth), vec3(inValue.d), inValue.onclick, false,
+                              gFontMap[inValue.f],
                               inValue.t, inValue.c, inValue.bc, inValue._push_constant
                     )
           end
@@ -62,6 +54,7 @@ ExecuteFunctions["*FB*"] = function(inPresentation, inElement, inFrameIndex, t, 
           if PreviousElement then
                     local prev = PreviousElement.value
                     local interp = glerp_3f(ComputePositionByName(prev.p, prev.d), ComputePositionByName(new.p, new.d), t)
+                    interp.z = ComputePositionByName(new.p, new.d).z
                     local interd = glerp_3f(prev.d, new.d, t)
                     local interc = glerp_4f(prev.c, new.c, t)
                     local interbc = glerp_4f(prev.bc, new.bc, t)

@@ -203,6 +203,12 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         end
     end
 
+    o.UpdateScissor = function(inScissorId, inPosition_3f, inDimension_3f, inShouldSetViewport)
+        o.c.mSVs[inScissorId].mImageId = inPosition_3f
+        o.c.mSVs[inScissorId].mColor = inDimension_3f
+        o.c.mSVs[inScissorId].mPush = inShouldSetViewport
+    end
+
 
     -- @warning inShape2DShader refers to the STRING value of o.shape2dShaders.<shader>
     -- e.g. for rounded rectangle use "roundedRectangle"
@@ -233,7 +239,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
 
     --[============================================================[
                     TEXT LABEL
-    ]============================================================]
+          ]============================================================]
     o.CreateTextLabel = function(inPosition_3f, inDimension_3f, inFont, inText, inColor)
         local textLabel = {}
         textLabel.mText = inText
@@ -341,44 +347,43 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
 
     o.CreateButton = function(inPosition_3f, inDimension_3f, inOnClickFunction, inContinous)
         local Button = {}
-        Button.mBoundedRect = {}
-        Button.mBoundedRect.mDepthValue = math.int(inPosition_3f.z)
-        Button.mBoundedRect.mId = e:SetBoundedRect(vec2(inPosition_3f.x, inPosition_3f.y),
+        Button.mDepthValue = math.int(inPosition_3f.z)
+        Button.mId = e:SetBoundedRect(vec2(inPosition_3f.x, inPosition_3f.y),
             vec2(inDimension_3f.x, inDimension_3f.y), math.int(inPosition_3f.z))
         Button.mOnClickFunction = function() end
         Button.mOnHoverFunction = function() end
         if (inOnClickFunction) then
             Button.mOnClickFunction = inOnClickFunction
-        end
-        if inContinous then
-            Button.mBoundedRect.mPushId = o.c:Push(Jkr.CreateUpdatable(
-                function()
-                    local over = e:IsMouseWithinAtTopOfStack(
-                        Button.mBoundedRect.mId,
-                        Button.mBoundedRect.mDepthValue
-                    )
-                    if e:IsLeftButtonPressedContinous() and over then
-                        Button.mOnClickFunction()
+            if inContinous then
+                Button.mPushId = o.c:Push(Jkr.CreateUpdatable(
+                    function()
+                        local over = e:IsMouseWithinAtTopOfStack(
+                            Button.mId,
+                            Button.mDepthValue
+                        )
+                        if e:IsLeftButtonPressedContinous() and over then
+                            Button.mOnClickFunction()
+                        end
                     end
-                end
-            ))
-        else
-            Button.mBoundedRect.mPushId = o.c:Push(Jkr.CreateEventable(
-                function()
-                    local over = e:IsMouseWithinAtTopOfStack(
-                        Button.mBoundedRect.mId,
-                        Button.mBoundedRect.mDepthValue
-                    )
-                    if e:IsLeftButtonPressed() and over then
-                        Button.mOnClickFunction()
+                ))
+            else
+                Button.mPushId = o.c:Push(Jkr.CreateEventable(
+                    function()
+                        local over = e:IsMouseWithinAtTopOfStack(
+                            Button.mId,
+                            Button.mDepthValue
+                        )
+                        if e:IsLeftButtonPressed() and over then
+                            Button.mOnClickFunction()
+                        end
                     end
-                end
-            ))
+                ))
+            end
         end
         Button.Update = function(self, inPosition_3f, inDimension_3f)
-            Button.mBoundedRect.mDepthValue = math.int(inPosition_3f.z)
-            e:UpdateBoundedRect(Button.mBoundedRect.mId, vec2(inPosition_3f.x, inPosition_3f.y),
-                vec2(inDimension_3f.x, inDimension_3f.y), Button.mBoundedRect.mDepthValue)
+            Button.mDepthValue = math.int(inPosition_3f.z)
+            e:UpdateBoundedRect(Button.mId, vec2(inPosition_3f.x, inPosition_3f.y),
+                vec2(inDimension_3f.x, inDimension_3f.y), Button.mDepthValue)
         end
         return Button
     end
@@ -436,8 +441,8 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
         end
 
 
-        st:BindShapes(w, cmdparam)
         st:BindFillMode(image_filltype, w, cmdparam)
+        st:BindShapes(w, cmdparam)
         do
             local drawables = inMap["TEXT"]
             if drawables then
@@ -474,6 +479,26 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
             o.w:SetDefaultScissor(cmdparam)
         end
         tracy.ZoneEnd()
+    end
+
+    o.DrawExplicit = function(self, inScissorIds)
+        local DrawablesInSVs = o.c.mDrawablesInSVs
+        local count = #inScissorIds
+        for i = 1, count, 1 do
+            local sv = inScissorIds[i]
+
+            ---@note SetScissor + Viewport
+            if sv.mPush then
+                o.w:SetViewport(sv.mImageId, sv.mColor, cmdparam)
+            end
+            o.w:SetScissor(sv.mImageId, sv.mColor, cmdparam)
+
+            o:DrawAll(DrawablesInSVs[i])
+
+            ---@note ResetScissor + Viewport
+            o.w:SetDefaultViewport(cmdparam)
+            o.w:SetDefaultScissor(cmdparam)
+        end
     end
 
     o.Dispatch = function(self)

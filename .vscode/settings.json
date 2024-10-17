@@ -138,4 +138,7 @@
                     "workbench.action.tasks.configureTaskRunner",
                     "workbench.action.tasks.runTask"
           ],
+          "Lua.diagnostics.disable": [
+                    "lowercase-global"
+          ],
 }
