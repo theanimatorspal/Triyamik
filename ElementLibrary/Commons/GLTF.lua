@@ -1,6 +1,6 @@
-require "ElementLibrary.Fancy.FancyRequire"
+require "ElementLibrary.C.CRequire"
 
-FancyGLTF = function(inGLTFViewTable)
+CGLTF = function(inGLTFViewTable)
           local t = {
                     filename = "",
                     renderer = "CONSTANT_COLOR",
@@ -10,15 +10,14 @@ FancyGLTF = function(inGLTFViewTable)
                     r = vec4(1, 1, 1, 0),
                     d = vec3(1, 1, 1)
           }
-          return { FancyGLTF = Default(inGLTFViewTable, t) }
+          return { CGLTF = Default(inGLTFViewTable, t) }
 end
 
-gprocess["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess["CGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
           if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
                     inValue = vec4(1, 1, 1, 0)
           end
-          print(inValue.skinning)
           if inValue.skinning == -1 then
                     inValue.skinning = false
           end
@@ -29,7 +28,7 @@ gprocess["FancyGLTF"] = function(inPresentation, inValue, inFrameIndex, inElemen
                     gscreenElements[ElementName] = GLTFObjects
           end
           local Element = {
-                    "*GLTF*",
+                    "*CGLTF*",
                     handle = gscreenElements[ElementName],
                     value = inValue,
                     name = ElementName
@@ -39,7 +38,7 @@ end
 
 local CameraControl
 
-ExecuteFunctions["*GLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+ExecuteFunctions["*CGLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
                     gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
           end

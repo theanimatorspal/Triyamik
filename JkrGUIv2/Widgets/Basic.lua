@@ -416,7 +416,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     local ui_matrix = o.UIMatrix
     local s2ds = o.shape2dShaders
     local DrawAll = function(inMap)
-        tracy.ZoneBeginN("luamainDrawALL")
+        -- tracy.ZoneBeginN("luamainDrawALL")
         s:BindShapes(w, cmdparam)
         for key, value in pairs(inMap) do
             if key ~= "TEXT" and key ~= "IMAGE" and key ~= "SCISSOR_VIEWPORT" then
@@ -453,7 +453,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
                 end
             end
         end
-        tracy.ZoneEnd()
+        -- tracy.ZoneEnd()
     end
 
     o.Draw = function(self)
@@ -472,7 +472,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
             end
             o.w:SetScissor(sv.mImageId, sv.mColor, cmdparam)
 
-            o:DrawAll(DrawablesInSVs[i])
+            DrawAll(DrawablesInSVs[i])
 
             ---@note ResetScissor + Viewport
             o.w:SetDefaultViewport(cmdparam)
@@ -493,7 +493,7 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
             end
             o.w:SetScissor(sv.mImageId, sv.mColor, cmdparam)
 
-            o:DrawAll(DrawablesInSVs[i])
+            DrawAll(DrawablesInSVs[i])
 
             ---@note ResetScissor + Viewport
             o.w:SetDefaultViewport(cmdparam)

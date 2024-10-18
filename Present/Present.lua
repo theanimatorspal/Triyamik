@@ -178,9 +178,9 @@ gPresentation = function(inPresentation, Validation)
         local animate = true
         local receive_events = true
 
-        gMoveForward = function()
+        gMoveForward = function(inT)
             if receive_events and (hasNextFrame) then
-                t = 0.0
+                if inT then t = inT else t = 0.0 end
                 currentFrame = currentFrame + 1
                 direction = 1
                 animate = true
@@ -188,9 +188,9 @@ gPresentation = function(inPresentation, Validation)
             print("currentFrame: ", currentFrame)
         end
 
-        gMoveBackward = function()
+        gMoveBackward = function(inT)
             if receive_events and (currentFrame > 1) then
-                t = 1.0
+                if inT then t = inT else t = 1.0 end
                 currentFrame = currentFrame - 1
                 direction = -1
                 animate = true
@@ -262,8 +262,6 @@ gPresentation = function(inPresentation, Validation)
                 residualTime = residualTime / 1000 + stepTime -
                     (w:GetWindowCurrentTime() - currentTime) / 1000
             end
-            -- print(collectgarbage("count"))
-            -- collectgarbage("collect")
         end
 
         local function Dispatch()
@@ -284,12 +282,13 @@ gPresentation = function(inPresentation, Validation)
         end
 
         e:SetEventCallBack(Event)
+
         while shouldRun do
             oldTime = w:GetWindowCurrentTime()
             e:ProcessEventsEXT(gwindow)
+            Update()
             w:BeginUpdates()
             --tracy.ZoneBeginN("luaUpdate")
-            Update()
             --tracy.ZoneEnd()
             gWindowDimension = w:GetWindowDimension()
             w:EndUpdates()
@@ -324,6 +323,7 @@ gPresentation = function(inPresentation, Validation)
         Engine.mt:Wait()
     end
 end
+
 
 
 function DefaultPresentation()

@@ -210,12 +210,12 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
                                      inTitlebarBackColor, inContentBackColor, inShouldSetViewport)
         local ws = {}
         local z_difference = 10
-        local titlebarheight = 10
+        local titlebarheight = 20
         local titlebarpos = vec3(inPosition_3f.x, inPosition_3f.y - titlebarheight, inPosition_3f.z + z_difference)
         local titlebardimen = vec3(inDimension_3f.x, titlebarheight, inDimension_3f.z)
         local backgroundpos = vec3(inPosition_3f.x, inPosition_3f.y, inPosition_3f.z + z_difference)
 
-        ws.mTitlebar = o.CreateGeneralButton(titlebarpos,
+        local mTitlebar = o.CreateGeneralButton(titlebarpos,
             titlebardimen,
             nil,
             nil,
@@ -224,21 +224,58 @@ Jkr.CreateGeneralWidgetsRenderer = function(inWidgetRenderer, i, w, e)
             inTitlebarTextColor,
             inTitlebarBackColor, nil, nil)
 
-        ws.mBackground = o.CreateGeneralButton(backgroundpos, inDimension_3f,
-            nil, nil, nil, nil, nil, inContentBackColor, nil, nil)
+        local mTitlebarButton = o.CreateButton(titlebarpos, titlebardimen)
+
+        local mBackground = o.CreateGeneralButton(backgroundpos, inDimension_3f, nil, nil, nil, nil, nil,
+            inContentBackColor, nil, nil
+        )
 
         ---@note
         ---@todo Create a General button here
         ws.mId = o.CreateScissor(inPosition_3f, inDimension_3f, inShouldSetViewport)
-        ws.Update = function(self, inPosition_3f, inDimension_3f, inShouldSetViewport)
-            o.UpdateScissor(ws.mId, inPosition_3f, inDimension_3f, inShouldSetViewport)
-        end
         ws.Set = function()
             o.SetCurrentScissor(ws.mId)
         end
         ws.Reset = function()
             o.SetCurrentScissor(1)
         end
+
+        local isMoving = false
+        local mCurrentPosition = inPosition_3f
+        local mCurrentDimension = inDimension_3f
+        local mShouldSetViewport = inShouldSetViewport
+
+        local mCentralComponent
+        ws.SetCentralComponent = function(inComponent)
+            mCentralComponent = inComponent
+        end
+
+        ws.Update = function(self, inPosition_3f, inDimension_3f)
+            o.UpdateScissor(ws.mId, inPosition_3f, inDimension_3f, mShouldSetViewport)
+            if not mShouldSetViewport then
+                mCentralComponent:Update(inPosition_3f, inDimension_3f)
+            end
+            mCurrentPosition = inPosition_3f
+            mCurrentDimension = inDimension_3f
+        end
+
+        o.c:Push(Jkr.CreateUpdatable(function()
+            local mouseRel = e:GetRelativeMousePos()
+            print(mouseRel.x, mouseRel.y)
+            if e:IsLeftButtonPressedContinous() and (e:IsMouseWithinAtTopOfStack(mTitlebarButton.mId, mTitlebarButton.mDepthValue)) then
+                isMoving = true
+            end
+            if e:IsLeftButtonPressedContinous() and isMoving then
+                ws.Update(nil,
+                    vec3(mCurrentPosition.x + mouseRel.x,
+                        mCurrentPosition.y + mouseRel.y,
+                        mCurrentPosition.z),
+                    mCurrentDimension
+                )
+            else
+                isMoving = false
+            end
+        end))
         return ws
     end
 

@@ -85,7 +85,7 @@ ImportShared = function(inLibName)
         libName = "lib" .. inLibName .. ".so"
     end
     local f = package.loadlib(libName, "luaopen_" .. inLibName)
-    f()
+    return f()
 end
 
 Jkr.GetDefaultResource = function(inRenderer, inShaderType, inX, inY, inZ)

@@ -1,0 +1,30 @@
+{
+          "Custom Function Snippet": {
+                    "prefix": "PresentFrame",
+                    "body": [
+                              "${1} = function(inTable)",
+                              "    local t = {",
+                              "",
+                              "    }",
+                              "    return { ${1} = Default(inTable, t) }",
+                              "end",
+                              "",
+                              "gprocess[\"${1}\"] = function(inP, inValue, inFrameIndex, inElementName)",
+                              "    local ElementName = gUnique(inElementName)",
+                              "    gAddFrameKeyElement(inFrameIndex, {",
+                              "        {",
+                              "            \"${1}\",",
+                              "            handle = nil,",
+                              "            value = inValue,",
+                              "            name = ElementName",
+                              "        }",
+                              "    })",
+                              "end",
+                              "",
+                              "ExecuteFunctions[\"${1}\"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)",
+                              "",
+                              "end"
+                    ],
+                    "description": "Snippet for a custom function where the name is an input"
+          }
+}
