@@ -11,7 +11,6 @@ end
 local now
 gprocess["ThreeDApplication"] = function(inP, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
-          now = Jkr.CreateWindowNoWindow(Engine.i, vec2(256, 256))
           gAddFrameKeyElement(inFrameIndex, {
                     {
                               "ThreeDApplication",
@@ -20,6 +19,7 @@ gprocess["ThreeDApplication"] = function(inP, inValue, inFrameIndex, inElementNa
                               name = ElementName
                     }
           })
+          now = Jkr.CreateWindowNoWindow(Engine.i, vec2(256, 256))
 end
 
 ExecuteFunctions["ThreeDApplication"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
