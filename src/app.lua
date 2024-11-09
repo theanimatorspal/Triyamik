@@ -1,4 +1,5 @@
 require "ElementLibrary.Fancy.Fancy"
+require "ElementLibrary.Contexts.GLTFViewer"
 
 Pr = DefaultPresentation()
 
@@ -10,9 +11,7 @@ Pr:insert({
                     }
           },
           Frame {
-                    TwoDApplication {
-
-                    }
+                    CON.GLTFViewer {}
           }
           -- Frame {
           --           gltf = FancyGLTF {

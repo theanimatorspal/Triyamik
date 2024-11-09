@@ -1,33 +1,33 @@
 require "Present.Present"
 
-FancyLayout = function(inFancyLayoutTable)
+CLayout = function(inCLayoutTable)
           return {
-                    FancyLayout = inFancyLayoutTable,
+                    CLayout = inCLayoutTable,
                     Apply = function(ToApply)
-                              IterateEachElementRecursively(inFancyLayoutTable, function(inValue)
+                              IterateEachElementRecursively(inCLayoutTable, function(inValue)
                                         if type(inValue) == "table" and inValue.t then
                                                   inValue.c = inValue.c or ToApply.c
                                                   inValue.bc = inValue.bc or ToApply.bc
                                         end
                               end
                               )
-                              return { FancyLayout = inFancyLayoutTable }
+                              return { CLayout = inCLayoutTable }
                     end,
                     ApplyAll = function(ToApply)
-                              IterateEachElementRecursively(inFancyLayoutTable, function(inValue)
+                              IterateEachElementRecursively(inCLayoutTable, function(inValue)
                                         if type(inValue) == "table" and inValue.t then
                                                   inValue.c = ToApply.c or inValue.c
                                                   inValue.bc = ToApply.bc or inValue.bc
                                         end
                               end
                               )
-                              return { FancyLayout = inFancyLayoutTable }
+                              return { CLayout = inCLayoutTable }
                     end,
           }
 end
 
 
-gprocess.FancyLayout = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess.CLayout = function(inPresentation, inValue, inFrameIndex, inElementName)
           local Layout = inValue.layout
           Layout:Update(vec3(0, 0, gbaseDepth), vec3(gFrameDimension.x, gFrameDimension.y, 1))
           local Elements = {}
@@ -38,6 +38,6 @@ gprocess.FancyLayout = function(inPresentation, inValue, inFrameIndex, inElement
           end
           )
           for i, value in ipairs(Elements) do
-                    gprocess.FancyButton(inPresentation, Copy(FancyButton(value).FancyButton), inFrameIndex, value.en)
+                    gprocess.CButton(inPresentation, Copy(CButton(value).CButton), inFrameIndex, value.en)
           end
 end

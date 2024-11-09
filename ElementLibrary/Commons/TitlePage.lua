@@ -1,6 +1,6 @@
-require "ElementLibrary.Fancy.FancyRequire"
+require "ElementLibrary.Commons.Require"
 
-FancyTitlePage = function(inTitlePage)
+CTitlePage = function(inTitlePage)
           local t = {
                     t = "JkrGUIv2",
                     st = "shitty bull",
@@ -13,12 +13,12 @@ FancyTitlePage = function(inTitlePage)
                     act = "add",
                     logo = -1,
           }
-          return { FancyTitlePage = Default(inTitlePage, t) }
+          return { CTitlePage = Default(inTitlePage, t) }
 end
 
 gTitlePageData = {}
 gTitle = ""
-gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           if inValue.act == "add" then
                     gTitle = inValue.t
                     local Push = PC(
@@ -34,7 +34,7 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               bc = background_color,
                               _push_constant = FullPC
                     }
-                    gprocess.FancyButton(inPresentation, FancyButton(background).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(background).CButton, inFrameIndex,
                               "__fancy__background")
                     local t = U({
                               f = "Huge",
@@ -79,16 +79,16 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                               logo.pic = nil
                     end
 
-                    gprocess.FancyPicture(inPresentation, FancyPicture(logo).FancyPicture, inFrameIndex,
+                    gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
                               "__fancy_titlepage_logo")
 
-                    gprocess.FancyButton(inPresentation, FancyButton(t).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(t).CButton, inFrameIndex,
                               "__fancy_titlepage_title")
-                    gprocess.FancyButton(inPresentation, FancyButton(st).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(st).CButton, inFrameIndex,
                               "__fancy_titlepage_sub_title")
 
                     for i = 1, #names - 1, 1 do
-                              gprocess.FancyButton(inPresentation, FancyButton(names[i + 1]).FancyButton, inFrameIndex,
+                              gprocess.CButton(inPresentation, CButton(names[i + 1]).CButton, inFrameIndex,
                                         "__fancy__name__" .. i)
                     end
                     gTitlePageData.names = Copy(names)
@@ -97,14 +97,14 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
           elseif inValue.act == "remove" then
                     gTitlePageData.t.p = "CENTER_OUT"
                     gTitlePageData.st.p = "CENTER_OUT"
-                    gprocess.FancyButton(inPresentation, FancyButton(gTitlePageData.t).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(gTitlePageData.t).CButton, inFrameIndex,
                               "__fancy_titlepage_title")
-                    gprocess.FancyButton(inPresentation, FancyButton(gTitlePageData.st).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(gTitlePageData.st).CButton, inFrameIndex,
                               "__fancy_titlepage_sub_title")
 
                     for i = 1, #gTitlePageData.names - 1, 1 do
                               gTitlePageData.names[i + 1].p = "OUT_CENTER"
-                              gprocess.FancyButton(inPresentation, FancyButton(gTitlePageData.names[i + 1]).FancyButton,
+                              gprocess.CButton(inPresentation, CButton(gTitlePageData.names[i + 1]).CButton,
                                         inFrameIndex,
                                         "__fancy__name__" .. i)
                     end
@@ -140,23 +140,23 @@ gprocess["FancyTitlePage"] = function(inPresentation, inValue, inFrameIndex, inE
                     logo.c = vec4(0.1)
                     logo.bc = vec4(0.4)
 
-                    gprocess.FancyPicture(inPresentation, FancyPicture(logo).FancyPicture, inFrameIndex,
+                    gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
                               "__fancy_titlepage_logo")
 
-                    gprocess.FancyButton(inPresentation,
-                              FancyButton(t).FancyButton,
+                    gprocess.CButton(inPresentation,
+                              CButton(t).CButton,
                               inFrameIndex,
                               "__fancy_titlepage_title")
-                    gprocess.FancyButton(inPresentation,
-                              FancyButton(st).FancyButton,
+                    gprocess.CButton(inPresentation,
+                              CButton(st).CButton,
                               inFrameIndex,
                               "__fancy_titlepage_sub_title")
 
 
 
                     for i = 1, #names, 1 do
-                              gprocess.FancyButton(inPresentation,
-                                        FancyButton(names[i]).FancyButton,
+                              gprocess.CButton(inPresentation,
+                                        CButton(names[i]).CButton,
                                         inFrameIndex,
                                         "__fancy__name__" .. i)
                     end

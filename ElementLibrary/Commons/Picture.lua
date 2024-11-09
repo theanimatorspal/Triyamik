@@ -1,6 +1,6 @@
 require "Present.Present"
 
-FancyPicture = function(inFancyPictureTable)
+CPicture = function(inCPictureTable)
           local t = {
                     pic = -1,
                     p = "CENTER_CENTER",
@@ -10,11 +10,11 @@ FancyPicture = function(inFancyPictureTable)
                     c = vec4(1),  -- Image color
                     bc = vec4(1), -- Image color
           }
-          return { FancyPicture = Default(inFancyPictureTable, t) }
+          return { CPicture = Default(inCPictureTable, t) }
 end
 
 
-gprocess.FancyPicture = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess.CPicture = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
           local PrevD = vec3(inValue.d.x, inValue.d.y, inValue.d.z)
           if inValue.ar and inValue.bh then
@@ -40,7 +40,7 @@ gprocess.FancyPicture = function(inPresentation, inValue, inFrameIndex, inElemen
           end
           gAddFrameKeyElement(inFrameIndex, {
                     {
-                              "*FP*",
+                              "*CP*",
                               handle = gscreenElements[ElementName],
                               value = inValue,
                               name = ElementName
@@ -48,7 +48,7 @@ gprocess.FancyPicture = function(inPresentation, inValue, inFrameIndex, inElemen
           })
 end
 
-ExecuteFunctions["*FP*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+ExecuteFunctions["*CP*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
                     inFrameIndex, inDirection)
           local new = inElement.value

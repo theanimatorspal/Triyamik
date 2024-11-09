@@ -91,7 +91,7 @@ function repl.Window(inThreadIndex, showWindow)
                               local w = gate.w
                               local i = gate.i
                               while gate.window_loop do
-                                        WindowClearColor = gate.window_cc
+                                        wcc = gate.window_cc
                                         WindowUpdateFunction = gate.window_up
                                         WindowUIDrawFunction = gate.window_uidraw
                                         WindowDispatchFunction = gate.window_disp
@@ -109,8 +109,8 @@ function repl.Window(inThreadIndex, showWindow)
                                         WindowUIDrawFunction()
                                         w:EndUIs()
 
-                                        w:BeginDraws(WindowClearColor.x, WindowClearColor.y,
-                                                  WindowClearColor.z, WindowClearColor.w, 1)
+                                        w:BeginDraws(wcc.x, wcc.y,
+                                                  wcc.z, wcc.w, 1)
                                         w:ExecuteUIs()
                                         w:EndDraws()
                                         w:Present()

@@ -1,6 +1,6 @@
-require "ElementLibrary.Fancy.FancyRequire"
+require "ElementLibrary.Commons.Require"
 
-FancyEnumerate = function(inFancyEnumerateTable)
+CEnumerate = function(inCEnumerateTable)
           local t = {
                     t = "__Enumeration",
                     items = {
@@ -12,11 +12,11 @@ FancyEnumerate = function(inFancyEnumerateTable)
                     rd = vec2(0.6, 0.3),
                     order = {}
           }
-          return { FancyEnumerate = Default(inFancyEnumerateTable, t) }
+          return { CEnumerate = Default(inCEnumerateTable, t) }
 end
 
 local gEnums = {}
-gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess.CEnumerate = function(inPresentation, inValue, inFrameIndex, inElementName)
           local Elementname = gUnique(inElementName)
           local title = U()
           title.t = inValue.t
@@ -106,7 +106,7 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
                               i = inValue.order[i]
                               -- value = items[inValue.order[i]]
                     end
-                    gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(value).CButton, inFrameIndex,
                               "__fancy__enumeration" .. "__items__" .. inElementName .. i)
           end
 
@@ -115,7 +115,7 @@ gprocess.FancyEnumerate = function(inPresentation, inValue, inFrameIndex, inElem
                               i = inValue.order[i]
                               -- value = item_bullets[inValue.order[i]]
                     end
-                    gprocess.FancyButton(inPresentation, FancyButton(value).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(value).CButton, inFrameIndex,
                               "__fancy_enumeration" .. "__bullets__" .. inElementName .. i)
           end
 end

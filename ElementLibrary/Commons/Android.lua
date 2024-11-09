@@ -1,11 +1,11 @@
 require "Present.Present"
 
-FancyAndroid = function(inFancyAndroidTable)
-          return { FancyAndroid = inFancyAndroidTable }
+CAndroid = function(inCAndroidTable)
+          return { CAndroid = inCAndroidTable }
 end
--- TODO Fancy defer listen = false at last,
+-- TODO C defer listen = false at last,
 -- do this later in execution
-gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementName)
           Engine.net.Server() -- dont start the server but provide  the functions
           Engine.gate[1] = function()
                     Engine = mt:Get("Engine", StateId)
@@ -84,7 +84,7 @@ gprocess.FancyAndroid = function(inPresentation, inValue, inFrameIndex, inElemen
           vlayout:Update(vec3(0, 0, gbaseDepth),
                     vec3(gFrameDimension.x, gFrameDimension.y, 1))
           for i = 1, #layout do
-                    gprocess.FancyButton(inPresentation, FancyButton(layout[i]).FancyButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(layout[i]).CButton, inFrameIndex,
                               "__fancy_ip_address_" .. i)
           end
 end

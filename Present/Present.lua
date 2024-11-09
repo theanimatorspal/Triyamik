@@ -156,7 +156,7 @@ gPresentation = function(inPresentation, Validation)
             w:ToggleWindowFullScreen()
         end
 
-        WindowClearColor = vec4(1)
+        wcc = vec4(1)
 
 
 
@@ -287,30 +287,25 @@ gPresentation = function(inPresentation, Validation)
             oldTime = w:GetWindowCurrentTime()
             e:ProcessEventsEXT(gwindow)
             Update()
-            w:BeginUpdates()
-            --tracy.ZoneBeginN("luaUpdate")
-            --tracy.ZoneEnd()
             gWindowDimension = w:GetWindowDimension()
-            w:EndUpdates()
 
-            w:BeginDispatches()
-            --tracy.ZoneBeginN("luaDispatch")
+            w:Wait()
+            w:AcquireImage()
+            w:BeginRecording()
             Dispatch()
-            --tracy.ZoneEnd()
-            w:EndDispatches()
-
             MultiThreadedDraws()
+
             w:BeginUIs()
-            --tracy.ZoneBeginN("luaDraw")
             Draw()
-            --tracy.ZoneEnd()
             w:EndUIs()
 
-            w:BeginDraws(WindowClearColor.x, WindowClearColor.y, WindowClearColor.z,
-                WindowClearColor.w, 1)
+            w:BeginDraws(wcc.x, wcc.y, wcc.z, wcc.w, 1)
             MultiThreadedExecute()
             w:ExecuteUIs()
             w:EndDraws()
+
+            w:BlitImage()
+            w:EndRecording()
             w:Present()
             local delta = w:GetWindowCurrentTime() - oldTime
             if (frameCount % 100 == 0) then

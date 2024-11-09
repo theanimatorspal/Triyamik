@@ -1,4 +1,4 @@
-require "ElementLibrary.C.CRequire"
+require "ElementLibrary.Commons.Require"
 
 CGLTF = function(inGLTFViewTable)
           local t = {

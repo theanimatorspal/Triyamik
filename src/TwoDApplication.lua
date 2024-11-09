@@ -16,6 +16,11 @@ local nw
 local cimage
 local simage
 local squad
+local shape3d
+local world3d
+local world3dfile
+local world3dobjects
+local world3dobjectsptr
 
 gprocess["TwoDApplication"] = function(inP, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
@@ -49,8 +54,19 @@ gprocess["TwoDApplication"] = function(inP, inValue, inFrameIndex, inElementName
                     vec4(0)
           )
           WC.Set()
-          squad = wr_.CreateQuad(vec3(200, 200, 50), fd, PushConstant, "showImage", simage.mId)
+          squad = wr_.CreateQuad(vec3(20, 20, 50), gFrameDimension, PushConstant, "showImage", simage.mId)
           WC.Reset()
+
+          shape3d = Jkr.CreateShapeRenderer3D(Engine.i, nw)
+          world3d = Engine.CreateWorld3D(nw, shape3d)
+          world3dfile = Jkr.FileJkr("WorldShapeFile.jkr");
+          Jkr.SerializeDeserializeShape3D(Engine.i, "pbr_shape->", world3dfile, shape3d)
+          Jkr.SerializeDeserializeWorld3D(Engine.i, nw, "pbr_world->", world3dfile, world3d)
+          world3dobjects = world3dfile:ReadObject3DVector("object3ds")
+          world3dobjectsptr = world3d:MakeExplicitObjectsVector()
+          for i = 1, #world3dobjects, 1 do
+                    world3dobjectsptr:add(world3dobjects[i])
+          end
 end
 
 ExecuteFunctions["TwoDApplication"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
@@ -65,33 +81,25 @@ ExecuteFunctions["TwoDApplication"] = function(inPresentation, inElement, inFram
                     while run do
                               e:ProcessEventsEXT(w)
                               wr_:Update()
-
-                              -- 3D Window
-                              nw:BeginUpdates()
-                              -- nw:EndUpdates()
-
-                              nw:BeginDispatches()
-                              nw:EndDispatches()
-
+                              world3d:Update(e)
+                              nw:Wait()
+                              nw:BeginRecording()
                               nw:BeginUIs()
+                              world3d:DrawObjectsExplicit(nw, world3dobjectsptr, Jkr.CmdParam.UI)
                               nw:EndUIs()
-
-                              nw:BeginDraws(0, 1, 1, wc.w, 1)
+                              nw:BeginDraws(0, 1, 0, wc.w, 1)
                               nw:ExecuteUIs()
                               nw:EndDraws()
-                              nw:Submit()
+                              nw:EndRecording()
+                              -- nw:Submit()
 
                               -- Present Window
-                              w:BeginUpdates()
-                              w:EndUpdates()
-
-
-                              w:BeginDispatches()
+                              w:Wait()
+                              w:AcquireImage()
+                              w:BeginRecording()
                               cimage.CopyFromWindowTargetImage(nw)
                               cimage.CopyToSampled(simage)
                               wr_:Dispatch()
-                              w:EndDispatches()
-
                               w:BeginUIs()
                               wr_:Draw()
                               w:EndUIs()
@@ -99,7 +107,10 @@ ExecuteFunctions["TwoDApplication"] = function(inPresentation, inElement, inFram
                               w:BeginDraws(wc.x, wc.y, wc.z, wc.w, 1)
                               w:ExecuteUIs()
                               w:EndDraws()
-                              w:Present()
+                              w:BlitImage()
+                              w:EndRecording()
+                              -- w:Present()
+                              Jkr.SyncSubmitPresent(nw, w)
                     end
           end
 end

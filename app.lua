@@ -1,11 +1,13 @@
 require "ElementLibrary.Fancy.Fancy"
+require "ElementLibrary.Contexts.GLTFViewer"
 require "src.TwoDApplication"
+
 Pr = DefaultPresentation()
 -- Pr.Config.FullScreen = true
 
 P = {
           Frame { FancyButton { t = "HEllO" } },
-          Frame { TwoDApplication {} },
+          Frame { CON.GLTFViewer {} },
           Frame { FancyButton { t = "BYE BYE" } },
 }
 

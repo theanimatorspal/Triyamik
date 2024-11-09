@@ -1,4 +1,4 @@
-require "ElementLibrary.Fancy.Fancy"
+require "ElementLibrary.Commons.Commons"
 Pr = DefaultPresentation()
 Pr.Config.FullScreen = true
 -- todo fancyenumerate hide bug, should write all over again
@@ -57,16 +57,16 @@ end
 
 P = {
           Frame {
-                    -- FancyAndroid {},
+                    -- CAndroid {},
           },
           Frame {
-                    FancyTitlePage(titlepage),
-                    FancyNumbering {},
-                    FancyStructure {},
+                    CTitlePage(titlepage),
+                    CNumbering {},
+                    CStructure {},
           },
           Frame {
-                    FancyTitlePage { act = "structure" },
-                    minmaj = FancyEnumerate {
+                    CTitlePage { act = "structure" },
+                    minmaj = CEnumerate {
                               items = {
                                         "Minor Project Overview",
                                         "Major Project Overview",
@@ -74,33 +74,32 @@ P = {
                               },
                               hide = "all"
                     },
-                    fslider = FancySlider {},
-                    FancyButton {
+                    CButton {
                               onclick = function()
                                         gMoveToParicular(13)
                               end
                     }
           },
           Frame {
-                    s1 = FancySection { t = "Introduction" },
-                    minmaj = FancyEnumerate {},
-                    FancyLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
+                    s1 = CSection { t = "Introduction" },
+                    minmaj = CEnumerate {},
+                    CLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 1 },
-                    FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 1 },
+                    CLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 2 },
-                    FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 2 },
+                    CLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 2 },
-                    FancyLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
-                    scope_enum = FancyEnumerate {
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 2 },
+                    CLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+                    scope_enum = CEnumerate {
                               items = {
                                         "2D + 3D Rendering and Presentation",
                                         "Mobile <-> PC Communication",
@@ -111,27 +110,27 @@ P = {
                     it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 3 },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
-                    scope_enum = FancyEnumerate { order = { 3, 1, 2 } },
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 3 },
+                    CLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
+                    scope_enum = CEnumerate { order = { 3, 1, 2 } },
                     it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 3 },
-                    scope_enum = FancyEnumerate { items = {} },
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 3 },
+                    scope_enum = CEnumerate { items = {} },
                     it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
+                    CLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
           },
           Frame {
-                    s3 = FancySection { t = "Demonstration" },
-                    minmaj = FancyEnumerate { hide = { 1, 2, 3 } },
-                    scope_enum = FancyEnumerate { hide = { 1, 2, 3 } },
+                    s3 = CSection { t = "Demonstration" },
+                    minmaj = CEnumerate { hide = { 1, 2, 3 } },
+                    scope_enum = CEnumerate { hide = { 1, 2, 3 } },
                     it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(0, 0, 0, 0.5) }
           },
           Frame {
-                    s3 = FancySection {},
+                    s3 = CSection {},
                     it_was_all = Text {
                               t = "It was all a demonstration",
                               c = vec4(0, 0, 0, 1),
@@ -139,8 +138,8 @@ P = {
                     }
           },
           Frame {
-                    s3 = FancySection {},
-                    en = FancyEnumerate {
+                    s3 = CSection {},
+                    en = CEnumerate {
                               items = {
                                         "Refactoring Code (C++, Lua, Java) and Interlop C++ <-> Lua <-> Java",
                                         "Basic PBR with Texture, and IBL",
@@ -154,10 +153,10 @@ P = {
                     it_was_all = Text { t = "Other Demonstrations", c = vec4(0, 0, 0, 1), f = "Huge" }
           },
           Frame {
-                    s2 = FancySection { t = "Tasks Completed" },
-                    en = FancyEnumerate {},
+                    s2 = CSection { t = "Tasks Completed" },
+                    en = CEnumerate {},
                     it_was_all = Text { t = "Other Demonstrations", c = vec4(vec3(1), 0), f = "Huge" },
-                    remain_enum = FancyEnumerate {
+                    remain_enum = CEnumerate {
                               items = {
                                         "Architecture Finalization and 3D Integration",
                                         "Context Aware UI",
@@ -172,14 +171,14 @@ P = {
                     }
           },
           Frame {
-                    s4 = FancySection { t = "Remaining Works" },
-                    en = FancyEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
-                    remain_enum = FancyEnumerate {},
+                    s4 = CSection { t = "Remaining Works" },
+                    en = CEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
+                    remain_enum = CEnumerate {},
                     thank_you = Text { t = "Thank You", p = "CENTER_CENTER", f = "Huge", c = vec4(1, 1, 1, 0) }
           },
           Frame {
-                    s4 = FancySection {},
-                    remain_enum = FancyEnumerate { hide = "all" },
+                    s4 = CSection {},
+                    remain_enum = CEnumerate { hide = "all" },
                     thank_you = Text { t = "Thank You, Any Questions ?", p = "CENTER_CENTER", f = "Huge", c = vec4(0, 0, 0, 1) }
           }
 }
