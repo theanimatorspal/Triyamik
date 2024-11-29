@@ -59,6 +59,9 @@ local CreateEngineHandles = function(Validation)
     if not gwindow then
         gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, gFrameDimension)
         gWindowDimension = gwindow:GetWindowDimension()
+    end
+
+    if not gwid then
         gwid = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, gwindow, Engine.e)
     end
 
@@ -110,12 +113,15 @@ local function getFileNameWithoutExtension(filePath)
     local nameWithoutExt = fileName:match("(.+)%..+$") or fileName -- Remove extension
     return nameWithoutExt
 end
-gPresentation = function(inPresentation, Validation)
-    if not Validation then Validation = false end
-    CreateEngineHandles(Validation)
+
+local conf
+local validation = false
+gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
+    if inValidation then validation = true end
+    CreateEngineHandles(validation)
     local shouldRun = true
     if inPresentation.Config then
-        local conf = inPresentation.Config
+        conf = inPresentation.Config
         gFontMap.SetFont = function(inFontFileName, inShortFontName)
             gFontMap[inShortFontName] = {}
             gFontMap[inShortFontName].Tiny = gwid.CreateFont(inFontFileName, conf.FontSizes.Tiny)
@@ -152,7 +158,7 @@ gPresentation = function(inPresentation, Validation)
         local e = Engine.e
         local w = gwindow
         local mt = Engine.mt
-        if inPresentation.Config.FullScreen then
+        if conf.FullScreen then
             w:ToggleWindowFullScreen()
         end
 
@@ -214,6 +220,11 @@ gPresentation = function(inPresentation, Validation)
                 end
             end
             currentFrame = inFrameNumber
+        end
+
+        gEndPresentation = function()
+            shouldRun = false
+            gwid = nil
         end
 
         local Event = function()
@@ -283,7 +294,7 @@ gPresentation = function(inPresentation, Validation)
 
         e:SetEventCallBack(Event)
 
-        while shouldRun do
+        while shouldRun and not inDontRunWindowLoop do
             oldTime = w:GetWindowCurrentTime()
             e:ProcessEventsEXT(gwindow)
             Update()
@@ -313,7 +324,6 @@ gPresentation = function(inPresentation, Validation)
             end
             frameCount = frameCount + 1
         end
-        w:Hide()
         Engine.gate.application_has_ended = true
         Engine.mt:Wait()
     end

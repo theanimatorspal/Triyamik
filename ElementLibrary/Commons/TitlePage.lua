@@ -78,9 +78,9 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                     if logo.pic == -1 then
                               logo.pic = nil
                     end
-
                     gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
                               "__fancy_titlepage_logo")
+
 
                     gprocess.CButton(inPresentation, CButton(t).CButton, inFrameIndex,
                               "__fancy_titlepage_title")

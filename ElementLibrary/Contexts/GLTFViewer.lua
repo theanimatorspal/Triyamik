@@ -2,7 +2,7 @@ require "ElementLibrary.Contexts.Require"
 
 CON.GLTFViewer = function(inTable)
           local t = {
-                    file_paths = {},
+                    file_path = "",
                     mode = "PRESENT",
                     fd = vec2(256, 256),
                     wcc = vec4(0.2, 0.2, 0.2, 1),
@@ -39,10 +39,7 @@ gprocess["CON_GLTFViewer"] = function(inP, inValue, inFrameIndex, inElementName)
                     wc = inValue.wcc
                     wr_ = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
                     nw = Jkr.CreateWindowNoWindow(Engine.i, inValue.fd)
-                    if inValue.mode == "PRESENT" then end
-                    if inValue.mode == "EDITOR" then
-                    end
-                    if inValue.mode == "VIEWER" then end
+                    cimage = wr_.CreateComputeImage(vec3(0), inValue.fd)
           end
 end
 

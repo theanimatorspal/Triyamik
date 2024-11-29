@@ -19,7 +19,7 @@ Pr:insert({
           --           }
           -- },
           Frame {
-                    gltf = FancyGLTF {
+                    gltf = CGLTF {
                               -- filename = "res/models/Lantern/Lantern.gltf",
                               filename = "C:/Users/sansk/OneDrive/Desktop/PBR/res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
                               -- filename = "C:/Users/sansk/OneDrive/Documents/check.glb",

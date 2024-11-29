@@ -81,3 +81,13 @@ ExecuteFunctions["*CB*"] = function(inPresentation, inElement, inFrameIndex, t, 
                               new.bc, new.o)
           end
 end
+
+CButtonUpdate = function(inElementName, inPosition_3f, inDimension_3f, inText, inFont, inColor, inBackgroundColor)
+          local element = gscreenElements[inElementName].handle
+          element:Update(inPosition_3f or element.mPosition_3f,
+                    inDimension_3f or element.mDimension_3f,
+                    gFontMap[inFont] or gFontMap.Normal,
+                    inText,
+                    inColor,
+                    inBackgroundColor)
+end
