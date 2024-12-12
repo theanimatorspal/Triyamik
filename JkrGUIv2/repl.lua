@@ -8,7 +8,7 @@ inspect = require("JkrGUIv2.inspect")
 
 Engine:Load(true)
 i = Engine.i
-e = Engine.e
+E = Engine.e
 mt = Engine.mt
 
 function SetMT()
@@ -37,7 +37,7 @@ SetMT()
 
 gate.Engine = Engine
 gate.i = i
-gate.e = e
+gate.E = E
 gate.mt = mt
 gate.SetMT = SetMT
 
@@ -87,7 +87,7 @@ function repl.Window(inThreadIndex, showWindow)
                     repl.w:Show()
                     gate[inThreadIndex] = function()
                               gate.window_loop = true
-                              local e = gate.e
+                              local e = gate.E
                               local w = gate.w
                               local i = gate.i
                               while gate.window_loop do
@@ -125,7 +125,7 @@ end
 
 function repl.WidgetRenderer()
           if not wid then
-                    wid = Jkr.CreateWidgetRenderer(gate.i, gate.w, gate.e)
+                    wid = Jkr.CreateWidgetRenderer(gate.i, gate.w, gate.E)
           end
           gate.wid = wid
           gate.window_up = function() wid:Update() end

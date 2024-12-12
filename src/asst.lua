@@ -2,7 +2,7 @@ require "ElementLibrary.Procedurals.Image"
 require "ElementLibrary.Procedurals.Object"
 require "ElementLibrary.Fancy.Fancy"
 
-Pr = DefaultPresentation()
+Pr = gDefaultConfiguration()
 
 Pr:insert({
           -- Frame {

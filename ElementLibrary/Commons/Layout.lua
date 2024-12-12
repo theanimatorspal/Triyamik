@@ -38,6 +38,12 @@ gprocess.CLayout = function(inPresentation, inValue, inFrameIndex, inElementName
           end
           )
           for i, value in ipairs(Elements) do
-                    gprocess.CButton(inPresentation, Copy(CButton(value).CButton), inFrameIndex, value.en)
+                    -- et = elementType i.e. CButton
+                    if not value.et then
+                              gprocess.CButton(inPresentation, Copy(CButton(value).CButton), inFrameIndex, value.en)
+                    else
+                              gprocess[value.et](inPresentation, Copy(CButton(value).CButton),
+                                        inFrameIndex, value.en)
+                    end
           end
 end

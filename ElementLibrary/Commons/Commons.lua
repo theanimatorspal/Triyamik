@@ -2,7 +2,7 @@ ginspect = require "JkrGUIv2.inspect"
 require "ElementLibrary.Commons.Button"
 require "ElementLibrary.Commons.Picture"
 require "ElementLibrary.Commons.Enumerate"
-require "ElementLibrary.Commons.GLTF"
+require "ElementLibrary.Commons.Obj"
 require "ElementLibrary.Commons.TitlePage"
 require "ElementLibrary.Commons.Structure"
 

@@ -29,30 +29,30 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                                         listen = false
                                         gate.__fancy_android_device_connected = true
                                         net.BroadCast(function()
-                                                  gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
-                                                  f = gwr.CreateFont("font.ttf", 14)
-                                                  REMOTE_NEXT_BUTTON = gwr.CreateGeneralButton(vec3(0, 0, 20),
-                                                            vec3(framed.x, framed.y / 2, 1),
+                                                  GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
+                                                  F = GWR.CreateFont("font.ttf", 14)
+                                                  REMOTE_NEXT_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
+                                                            vec3(FrameD.x, FrameD.y / 2, 1),
                                                             function()
                                                                       Engine.net.SendToServer(function()
                                                                                 gMoveForward()
                                                                       end)
-                                                            end, false, f, "Next",
+                                                            end, false, F, "Next",
                                                             vec4(0, 0, 0, 1), vec4(1))
                                                   REMOTE_NEXT_BUTTON:Update(vec3(0, 0, 20),
-                                                            vec3(framed.x, framed.y / 2, 1))
+                                                            vec3(FrameD.x, FrameD.y / 2, 1))
 
 
-                                                  REMOVE_PREV_BUTTON = gwr.CreateGeneralButton(vec3(0, 0, 20),
-                                                            vec3(framed.x, framed.y / 2, 1), function()
+                                                  REMOVE_PREV_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
+                                                            vec3(FrameD.x, FrameD.y / 2, 1), function()
                                                                       Engine.net.SendToServer(function()
                                                                                 gMoveBackward()
                                                                       end)
-                                                            end, false, f, "Previous",
+                                                            end, false, F, "Previous",
                                                             vec4(0, 0, 0, 1), vec4(1))
 
-                                                  REMOVE_PREV_BUTTON:Update(vec3(0, framed.y / 2, 20),
-                                                            vec3(framed.x, framed.y / 2, 1))
+                                                  REMOVE_PREV_BUTTON:Update(vec3(0, FrameD.y / 2, 20),
+                                                            vec3(FrameD.x, FrameD.y / 2, 1))
                                         end
                                         )
                               end

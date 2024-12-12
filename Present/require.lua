@@ -6,6 +6,7 @@ require("JkrGUIv2.Widgets.General")
 --
 -- General Stuffs
 gwindow = nil
+gnwindow = nil
 gwid = nil
 gassets = {}
 gliterals = {}
@@ -19,12 +20,26 @@ gbaseDepth = 50
 gFrameCount = 0
 gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
+gNFrameDimension = vec2(1920 / 2, 1080 / 2)
 gCurrentScissorsTobeDrawn = Jkr.Table(100, 0)
 
 -- 3d Stuffs
 gworld3d = nil
 gshaper3d = nil
 gobjects3d = nil
+gcamera3d = nil
+-- 3d stuffs for nowindow
+gnworld3d = nil
+gnshaper3d = nil
+gnobjects3d = nil
+gncamera3d = nil
+
+--[============================================================[
+          MAINLOOP FUNCTIONS
+]============================================================]
+MainLoop = function(w, e, shouldRun, inDontRunWindowLoop, Update, Dispatch, Draw, MultiThreadedDraws,
+                    MultiThreadedExecute)
+end
 
 
 --[============================================================[

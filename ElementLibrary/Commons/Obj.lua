@@ -1,19 +1,20 @@
 require "ElementLibrary.Commons.Require"
 
-CGLTF = function(inGLTFViewTable)
+Cobj = function(inOBJViewTable)
           local t = {
-                    filename = "",
+                    filename = "", -- expects GLTF
                     renderer = "CONSTANT_COLOR",
                     skinning = -1,
                     animation = vec2(-1, -1), --(index, deltatime)
                     p = vec3(0, 0, 0),
                     r = vec4(1, 1, 1, 0),
-                    d = vec3(1, 1, 1)
+                    d = vec3(1, 1, 1),
+                    load = "None" -- expects a function (if provided, it will not load the filename)
           }
-          return { CGLTF = Default(inGLTFViewTable, t) }
+          return { Cobj = Default(inOBJViewTable, t) }
 end
 
-gprocess["CGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementName)
+gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName = gUnique(inElementName)
           if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
                     inValue = vec4(1, 1, 1, 0)
@@ -22,13 +23,24 @@ gprocess["CGLTF"] = function(inPresentation, inValue, inFrameIndex, inElementNam
                     inValue.skinning = false
           end
           if not gscreenElements[ElementName] then
-                    local GLTFObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d, inValue.filename,
-                              inValue.renderer,
-                              Jkr.CompileContext.Default, inValue.skinning)
-                    gscreenElements[ElementName] = GLTFObjects
+                    if type(inValue.load) == "function" then
+                              local obs = inValue.load()
+                              for i = 1, #obs, 1 do
+                                        if obs[i].mP2 ~= 1 then
+                                                  obs[i].mP2 = 1
+                                        end
+                              end
+                              gscreenElements[ElementName] = inValue.load()
+                    else
+                              local OBJObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
+                                        inValue.filename,
+                                        inValue.renderer,
+                                        Jkr.CompileContext.Default, inValue.skinning)
+                              gscreenElements[ElementName] = OBJObjects
+                    end
           end
           local Element = {
-                    "*CGLTF*",
+                    "*Cobj*",
                     handle = gscreenElements[ElementName],
                     value = inValue,
                     name = ElementName
@@ -38,7 +50,7 @@ end
 
 local CameraControl
 
-ExecuteFunctions["*CGLTF*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
                     gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
           end
@@ -52,11 +64,11 @@ ExecuteFunctions["*CGLTF*"] = function(inPresentation, inElement, inFrameIndex, 
                                         local prev = PreviousElement.value
                                         if new.skinning and prev.skinning then
                                                   local intera = glerp(prev.animation.y, new.animation.y, t)
-                                                  local gltf = gworld3d:GetGLTFModel(Element.mAssociatedModel)
+                                                  local gltf = gworld3d:GetOBJModel(Element.mAssociatedModel)
                                                   local uniform = gworld3d:GetUniform3D(Element.mAssociatedUniform)
                                                   gltf:UpdateAnimationNormalizedTime(math.int(new.animation.x), intera,
                                                             true)
-                                                  uniform:UpdateByGLTFAnimation(gltf)
+                                                  uniform:UpdateByOBJAnimation(gltf)
                                         end
                                         local interp = glerp_3f(prev.p, new.p, t)
                                         local interr = glerp_4f(prev.r, new.r, t)
@@ -74,12 +86,12 @@ ExecuteFunctions["*CGLTF*"] = function(inPresentation, inElement, inFrameIndex, 
                                         Element.mMatrix = Matrix
                               else
                                         if new.skinning then
-                                                  local gltf = gworld3d:GetGLTFModel(Element.mAssociatedModel)
+                                                  local gltf = gworld3d:GetOBJModel(Element.mAssociatedModel)
                                                   local uniform = gworld3d:GetUniform3D(Element.mAssociatedUniform)
                                                   gltf:UpdateAnimationNormalizedTime(math.int(new.animation.x),
                                                             new.animation.y,
                                                             true)
-                                                  uniform:UpdateByGLTFAnimation(gltf)
+                                                  uniform:UpdateByOBJAnimation(gltf)
                                         end
                                         local interp = new.p
                                         local interr = new.r

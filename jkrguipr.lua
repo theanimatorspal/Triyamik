@@ -1,5 +1,5 @@
 require "ElementLibrary.Commons.Commons"
-Pr = DefaultPresentation()
+Pr = gDefaultConfiguration()
 Pr.Config.FullScreen = true
 -- todo fancyenumerate hide bug, should write all over again
 

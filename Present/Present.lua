@@ -61,44 +61,22 @@ local CreateEngineHandles = function(Validation)
         gWindowDimension = gwindow:GetWindowDimension()
     end
 
+    if not gnwindow then
+        gnwindow = Jkr.CreateWindowNoWindow(Engine.i, gNFrameDimension, 3)
+    end
+
     if not gwid then
         gwid = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, gwindow, Engine.e)
     end
 
     if not gworld3d and not gshaper3d then
         gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
-        gworld3d = Jkr.World3D(gshaper3d)
-        gcamera3d = Jkr.Camera3D()
-        gcamera3d:SetAttributes(vec3(0, 0, 0), vec3(0, 30, 30))
-        gcamera3d:SetPerspective(0.3, 16 / 9, 0.1, 10000)
-        gworld3d:AddCamera(gcamera3d)
-        gdummypiplineindex = gworld3d:AddSimple3D(Engine.i, gwindow);
-        gdummypipline = gworld3d:GetSimple3D(gdummypiplineindex)
-        local light0 = {
-            pos = vec4(-1, -2, 2, 4),
-            dir = Jmath.Normalize(vec4(0, 0, 0, 0) - vec4(10, 10, -10, 1))
-        }
-        gworld3d:AddLight3D(light0.pos, light0.dir)
+        gworld3d, gcamera3d = Engine.CreateWorld3D(gwindow, gshaper3d)
+    end
 
-        local vshader, fshader = Engine.GetAppropriateShader("CONSTANT_COLOR",
-            Jkr.CompileContext.Default, nil, nil, false, false
-        )
-
-        gdummypipline:CompileEXT(
-            Engine.i,
-            gwindow,
-            "cache/dummyshader.glsl",
-            vshader.str,
-            fshader.str,
-            "",
-            false,
-            Jkr.CompileContext.Default
-        )
-
-        local globaluniformindex = gworld3d:AddUniform3D(Engine.i)
-        local globaluniformhandle = gworld3d:GetUniform3D(globaluniformindex)
-        globaluniformhandle:Build(gdummypipline) -- EUTA PIPELINE BANAUNU PRXA
-        gworld3d:AddWorldInfoToUniform3D(globaluniformindex)
+    if not gnworld3d and not gnshaper3d then
+        gnshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gnwindow)
+        gnworld3d, gncamera3d = Engine.CreateWorld3D(gnwindow, gnshaper3d)
     end
 
     if not gobjects3d then
@@ -116,10 +94,12 @@ end
 
 local conf
 local validation = false
-gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
+
+gPresentation = function(inPresentation, inValidation, inLoopType)
     if inValidation then validation = true end
     CreateEngineHandles(validation)
     local shouldRun = true
+    local shouldUpdate = true
     if inPresentation.Config then
         conf = inPresentation.Config
         gFontMap.SetFont = function(inFontFileName, inShortFontName)
@@ -157,6 +137,7 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
         local frameCount = 0
         local e = Engine.e
         local w = gwindow
+        local nw = gnwindow
         local mt = Engine.mt
         if conf.FullScreen then
             w:ToggleWindowFullScreen()
@@ -222,12 +203,17 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
             currentFrame = inFrameNumber
         end
 
-        gEndPresentation = function()
+        local Update, Event, Dispatch, Draw
+        gEndPresentation = function(inNullifyWidgetRenderer)
             shouldRun = false
-            gwid = nil
+            shouldUpdate = false
+            if inNullifyWidgetRenderer then
+                gwid.c = Jkr.CreateCallBuffers()
+                gscreenElements = {}
+            end
         end
 
-        local Event = function()
+        Event = function()
             if receive_events then
                 if (e:IsKeyPressed(Keyboard.SDLK_RIGHT)) then
                     gMoveForward()
@@ -244,12 +230,13 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
             gwid:Event()
         end
 
-        local function Update()
+        Update = function()
+            gWindowDimension = w:GetWindowDimension()
             gwid:Update()
             gworld3d:Update(e)
             --tracy.ZoneBeginN("luaExecuteFrame")
             --tracy.ZoneEnd()
-            if w:GetWindowCurrentTime() - currentTime > stepTime then
+            if w:GetWindowCurrentTime() - currentTime > stepTime and shouldUpdate then
                 if animate then
                     t = t + direction * (stepTime + residualTime)
                     if t <= 0.0 or t >= 1.0 then
@@ -257,16 +244,14 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
                         receive_events = true
                         if t < 0.0 then
                             t = 0.0
-                            hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                         elseif t > 1.0 then
                             t = 1.0
-                            hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                         end
                     else
-                        hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                         receive_events = false
                     end
                 end
+                hasNextFrame = ExecuteFrame(inPresentation, currentFrame, t, direction)
                 residualTime = (w:GetWindowCurrentTime() - currentTime) / 1000
                 currentTime = w:GetWindowCurrentTime()
             else
@@ -275,15 +260,18 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
             end
         end
 
-        local function Dispatch()
+        Dispatch = function()
             gwid:Dispatch()
             DispatchFrame(inPresentation, currentFrame, t, direction)
         end
 
-        local function Draw()
+        Draw = function()
             gworld3d:DrawObjectsExplicit(gwindow, gobjects3d, Jkr.CmdParam.UI)
             gwid:Draw()
             gobjects3d:clear()
+        end
+
+        DrawNW3D = function()
         end
 
         local function MultiThreadedDraws()
@@ -292,13 +280,44 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
         local function MultiThreadedExecute()
         end
 
+        e:RemoveEventCallBacks();
         e:SetEventCallBack(Event)
+        if inLoopType == "GeneralLoop" then
+            while shouldRun do
+                e:ProcessEventsEXT(gwindow)
+                Update()
 
-        while shouldRun and not inDontRunWindowLoop do
-            oldTime = w:GetWindowCurrentTime()
-            e:ProcessEventsEXT(gwindow)
-            Update()
-            gWindowDimension = w:GetWindowDimension()
+                w:Wait()
+                w:AcquireImage()
+                w:BeginRecording()
+                Dispatch()
+                MultiThreadedDraws()
+
+                w:BeginUIs()
+                Draw()
+                w:EndUIs()
+
+                w:BeginDraws(wcc.x, wcc.y, wcc.z, wcc.w, 1)
+                MultiThreadedExecute()
+                w:ExecuteUIs()
+                w:EndDraws()
+
+                w:BlitImage()
+                w:EndRecording()
+                w:Present()
+            end
+        elseif inLoopType == "NoWindowLoop" then
+            e:ProcessEventsEXT(w)
+            wid:Update()
+            nw:Wait()
+            nw:BeginRecording()
+            nw:BeginUIs()
+            world3d:DrawObjectsExplicit(nw, world3dobjectsptr, Jkr.CmdParam.UI)
+            nw:EndUIs()
+            nw:BeginDraws(0, 1, 0, wc.w, 1)
+            nw:ExecuteUIs()
+            nw:EndDraws()
+            nw:EndRecording()
 
             w:Wait()
             w:AcquireImage()
@@ -317,12 +336,7 @@ gPresentation = function(inPresentation, inValidation, inDontRunWindowLoop)
 
             w:BlitImage()
             w:EndRecording()
-            w:Present()
-            local delta = w:GetWindowCurrentTime() - oldTime
-            if (frameCount % 100 == 0) then
-                w:SetTitle("JkrGUI Present : " .. 1000 / delta)
-            end
-            frameCount = frameCount + 1
+            Jkr.SyncSubmitPresent(nw, w)
         end
         Engine.gate.application_has_ended = true
         Engine.mt:Wait()
@@ -331,7 +345,7 @@ end
 
 
 
-function DefaultPresentation()
+function gDefaultConfiguration()
     local o = {
         Config = {
             -- FullScreen = true,
