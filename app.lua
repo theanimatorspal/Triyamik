@@ -39,8 +39,8 @@ do
           local Present = {
                     Frame {
                               obj = Cobj {
-                                        filename = "C:/Users/sansk/Downloads/s3mini_lowpoly_free.glb",
-                                        camera_control = "FLYCAM_KEYBOARD"
+                                        filename = "res/models/laptop/laptop.gltf",
+                                        camera_control = "EDITOR_MOUSE"
                               }
                     }
           }

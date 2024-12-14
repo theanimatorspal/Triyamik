@@ -48,11 +48,14 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
           gAddFrameKeyElement(inFrameIndex, { Element })
 end
 
-local CameraControl
+local FlycamKeyboardCameraControl, EditorMouseCameraControl
 
 ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-          if inElement.value.camera_control == "FLYCAM_KEYBOARD" then
-                    gwid.c:PushOneTime(Jkr.CreateUpdatable(CameraControl), 1)
+          local camControl = inElement.value.camera_control
+          if camControl == "FLYCAM_KEYBOARD" then
+                    gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
+          elseif camControl == "EDITOR_MOUSE" then
+                    gwid.c:PushOneTime(Jkr.CreateUpdatable(EditorMouseCameraControl), 1)
           end
           for i = 1, #inElement.handle, 1 do
                     Element = inElement.handle[i]
@@ -113,7 +116,8 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
           gobjects3d:add(Element) -- gobjects3d is erased at each frame
 end
 
-CameraControl = function()
+
+FlycamKeyboardCameraControl = function()
           local e = Engine.e
           local cam = gworld3d:GetCurrentCamera()
           if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_W)) then
@@ -141,4 +145,35 @@ CameraControl = function()
                     cam:Pitch(-0.5)
           end
           cam:SetPerspective()
+end
+
+_LOCAL_Mouse_control = {
+          WorldMatrix = Jmath.GetIdentityMatrix4x4(),
+          rx = 0,
+          ry = 0
+}
+
+EditorMouseCameraControl = function()
+          local lmc = _LOCAL_Mouse_control
+          local e = Engine.e
+          local cam = gworld3d:GetCurrentCamera()
+          local rmouse = e:GetRelativeMousePos() * 0.1
+          local rmat = Jmath.GetIdentityMatrix4x4()
+          if (e:IsLeftButtonPressedContinous()) then
+                    if (e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LALT)) then
+                              lmc.rx = lmc.rx + rmouse.x
+                              lmc.ry = lmc.ry + rmouse.y
+                    end
+                    if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LCTRL) then
+                              cam:MoveForward(rmouse.x)
+                    end
+                    if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LSHIFT) then
+                              cam:MoveLeft(rmouse.x)
+                              cam:MoveUp(rmouse.y)
+                    end
+          end
+          rmat = Jmath.Rotate_deg(rmat, lmc.ry, vec3(1, 0, 0))
+          rmat = Jmath.Rotate_deg(rmat, lmc.rx, vec3(0, 1, 0))
+          cam:SetPerspective()
+          gworld3d:SetWorldMatrix(rmat)
 end

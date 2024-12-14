@@ -568,7 +568,7 @@ end
 Engine.CreateWorld3D = function(w, inshaper3d)
     local world3d = Jkr.World3D(inshaper3d)
     local camera3d = Jkr.Camera3D()
-    camera3d:SetAttributes(vec3(0, 0, 0), vec3(0, 30, 30))
+    camera3d:SetAttributes(vec3(0, 0, 0), vec3(0, 0, 30))
     camera3d:SetPerspective(0.3, 16 / 9, 0.1, 10000)
     world3d:AddCamera(camera3d)
     local dummypipelineindex = world3d:AddSimple3D(Engine.i, w);

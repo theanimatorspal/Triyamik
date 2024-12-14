@@ -1,3 +1,5 @@
 Experiment/android/**
 *.jkr
 res/
+cache/
+cache2/
