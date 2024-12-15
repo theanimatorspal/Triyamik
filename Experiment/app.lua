@@ -87,10 +87,11 @@ function Main()
     NumericHLayout_6:Add({ cpbf("."), cpbf("0"), spbf("Submit", function()
         local function afunction()
             net = Engine.net
-            net.Client(string.sub(DisplayText, 2, #DisplayText))
+            net.Client()
+            net.Start(string.sub(DisplayText, 2, #DisplayText))
         end
         if pcall(afunction) then
-            Jkr.ShowToastNotification("Connection Succeeded")
+            Jkr.ShowToastNotification("Connection Tried")
             GNetworkLoop = true
         else
             Jkr.ShowToastNotification("Connection Failed")

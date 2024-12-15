@@ -122,4 +122,5 @@ function IterateEachFrame(inPresentation, infunc_int_val)
                               end
                     end
           end
+          gFrameCount = frameindex
 end

@@ -9,6 +9,17 @@ inspect = require "JkrGUIv2.inspect"
 ]============================================================]
 
 local ProcessFrames = function(inPresentation)
+    if inPresentation.Config.CircularSwitch then
+        local FirstFrame
+        IterateEachFrame(inPresentation,
+            function(eachFrameIndex, value)
+                if eachFrameIndex == 1 then
+                    FirstFrame = { Frame = value }
+                end
+            end)
+        table.insert(inPresentation, FirstFrame)
+    end
+
     IterateEachFrame(inPresentation,
         function(eachFrameIndex, _)
             gFrameKeys[eachFrameIndex] = {}
@@ -39,7 +50,6 @@ local ProcessFrames = function(inPresentation)
             end
         end
     end
-    gFrameCount = FrameIndex
 end
 
 local Log = function(inContent)
@@ -100,32 +110,41 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
     CreateEngineHandles(validation)
     local shouldRun = true
     local shouldUpdate = true
+    local circularSwitch
+    local continousAutoPlay
     if inPresentation.Config then
         conf = inPresentation.Config
-        gFontMap.SetFont = function(inFontFileName, inShortFontName)
-            gFontMap[inShortFontName] = {}
-            gFontMap[inShortFontName].Tiny = gwid.CreateFont(inFontFileName, conf.FontSizes.Tiny)
-            gFontMap[inShortFontName].Small = gwid.CreateFont(inFontFileName, conf.FontSizes.Small)
-            gFontMap[inShortFontName].Normal = gwid.CreateFont(inFontFileName, conf.FontSizes.Normal)
-            gFontMap[inShortFontName].large = gwid.CreateFont(inFontFileName, conf.FontSizes.large)
-            gFontMap[inShortFontName].Large = gwid.CreateFont(inFontFileName, conf.FontSizes.Large)
-            gFontMap[inShortFontName].huge = gwid.CreateFont(inFontFileName, conf.FontSizes.huge)
-            gFontMap[inShortFontName].Huge = gwid.CreateFont(inFontFileName, conf.FontSizes.Huge)
-            gFontMap[inShortFontName].gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.gigantic)
-            gFontMap[inShortFontName].Gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.Gigantic)
-            gFontMap.__current_selected_font = inShortFontName
+        if conf.LoopType then
+            inLoopType = conf.LoopType
         end
-
-        setmetatable(gFontMap, {
-            __index = function(_, k)
-                return gFontMap[gFontMap.__current_selected_font][k]
+        circularSwitch = conf.CircularSwitch
+        continousAutoPlay = conf.ContinousAutoPlay
+        if conf.FontSizes then
+            gFontMap.SetFont = function(inFontFileName, inShortFontName)
+                gFontMap[inShortFontName] = {}
+                gFontMap[inShortFontName].Tiny = gwid.CreateFont(inFontFileName, conf.FontSizes.Tiny)
+                gFontMap[inShortFontName].Small = gwid.CreateFont(inFontFileName, conf.FontSizes.Small)
+                gFontMap[inShortFontName].Normal = gwid.CreateFont(inFontFileName, conf.FontSizes.Normal)
+                gFontMap[inShortFontName].large = gwid.CreateFont(inFontFileName, conf.FontSizes.large)
+                gFontMap[inShortFontName].Large = gwid.CreateFont(inFontFileName, conf.FontSizes.Large)
+                gFontMap[inShortFontName].huge = gwid.CreateFont(inFontFileName, conf.FontSizes.huge)
+                gFontMap[inShortFontName].Huge = gwid.CreateFont(inFontFileName, conf.FontSizes.Huge)
+                gFontMap[inShortFontName].gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.gigantic)
+                gFontMap[inShortFontName].Gigantic = gwid.CreateFont(inFontFileName, conf.FontSizes.Gigantic)
+                gFontMap.__current_selected_font = inShortFontName
             end
-        })
 
-        for _, value in ipairs(conf.FontFilePaths) do
-            gFontMap.SetFont(value, getFileNameWithoutExtension(value))
+            setmetatable(gFontMap, {
+                __index = function(_, k)
+                    return gFontMap[gFontMap.__current_selected_font][k]
+                end
+            })
+
+            for _, value in ipairs(conf.FontFilePaths) do
+                gFontMap.SetFont(value, getFileNameWithoutExtension(value))
+            end
+            print(inspect(gFontMap.Tiny))
         end
-        print(inspect(gFontMap.Tiny))
     else
         Log("Error: No Config provided.")
     end
@@ -155,7 +174,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         --
         --[==================================================================]
         local currentFrame = 1
-        local t = 0
+        local t = 1
         local hasNextFrame = false
 
         local currentTime = w:GetWindowCurrentTime()
@@ -165,14 +184,18 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         local animate = true
         local receive_events = true
 
+        if conf.StepTime then
+            stepTime = conf.StepTime
+        end
+
         gMoveForward = function(inT)
-            if receive_events and (hasNextFrame) then
+            if receive_events and hasNextFrame and (currentFrame < gFrameCount - 1) then
                 if inT then t = inT else t = 0.0 end
                 currentFrame = currentFrame + 1
                 direction = 1
                 animate = true
             end
-            print("currentFrame: ", currentFrame)
+            print("currentFrame: ", currentFrame, "gFrameCount:", gFrameCount)
         end
 
         gMoveBackward = function(inT)
@@ -182,7 +205,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 direction = -1
                 animate = true
             end
-            print("currentFrame: ", currentFrame)
+            print("currentFrame: ", currentFrame, "gFrameCount:", gFrameCount)
         end
 
         gMoveToParicular = function(inFrameNumber)
@@ -231,11 +254,20 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         end
 
         Update = function()
+            if continousAutoPlay then
+                gMoveForward()
+            end
+            if circularSwitch then
+                if currentFrame == gFrameCount - 1 and t == 1.0 then
+                    currentFrame = 1
+                elseif currentFrame == 1 and t == 0.0 then
+                    currentFrame = gFrameCount - 1
+                end
+            end
             gWindowDimension = w:GetWindowDimension()
             gwid:Update()
             gworld3d:Update(e)
-            --tracy.ZoneBeginN("luaExecuteFrame")
-            --tracy.ZoneEnd()
+
             if w:GetWindowCurrentTime() - currentTime > stepTime and shouldUpdate then
                 if animate then
                     t = t + direction * (stepTime + residualTime)
@@ -338,11 +370,13 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
             w:EndRecording()
             Jkr.SyncSubmitPresent(nw, w)
         end
-        Engine.gate.application_has_ended = true
-        Engine.mt:Wait()
     end
 end
 
+ClosePresentations = function()
+    Engine.gate.application_has_ended = true
+    Engine.mt:Wait()
+end
 
 
 function gDefaultConfiguration()

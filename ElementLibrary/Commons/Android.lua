@@ -16,7 +16,35 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                     gate.ip_addresses = net.Start()
                     gate.net = Engine.net
                     local listen = true
-                    while listen and (not gate.application_has_ended) and (not gate.__fancy_android_device_connected) do
+
+                    local function __LOCAL_android_construct_next_previous_buttons()
+                              GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
+                              F = GWR.CreateFont("font.ttf", 14)
+                              REMOTE_NEXT_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
+                                        vec3(FrameD.x, FrameD.y / 2, 1),
+                                        function()
+                                                  Engine.net.SendToServer(function()
+                                                            gMoveForward()
+                                                  end)
+                                        end, false, F, "Next",
+                                        vec4(0, 0, 0, 1), vec4(1))
+                              REMOTE_NEXT_BUTTON:Update(vec3(0, 0, 20),
+                                        vec3(FrameD.x, FrameD.y / 2, 1))
+
+
+                              REMOVE_PREV_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
+                                        vec3(FrameD.x, FrameD.y / 2, 1), function()
+                                                  Engine.net.SendToServer(function()
+                                                            gMoveBackward()
+                                                  end)
+                                        end, false, F, "Previous",
+                                        vec4(0, 0, 0, 1), vec4(1))
+
+                              REMOVE_PREV_BUTTON:Update(vec3(0, FrameD.y / 2, 20),
+                                        vec3(FrameD.x, FrameD.y / 2, 1))
+                    end
+
+                    while listen and (not gate.application_has_ended) and (not gate.android_device_connected) do
                               net.BroadCast(
                                         function()
                                                   Engine.net.SendToServer("Connection Established")
@@ -27,34 +55,8 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                               if type(msg) == "string" and msg == "Connection Established" then
                                         print("HERE")
                                         listen = false
-                                        gate.__fancy_android_device_connected = true
-                                        net.BroadCast(function()
-                                                  GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
-                                                  F = GWR.CreateFont("font.ttf", 14)
-                                                  REMOTE_NEXT_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
-                                                            vec3(FrameD.x, FrameD.y / 2, 1),
-                                                            function()
-                                                                      Engine.net.SendToServer(function()
-                                                                                gMoveForward()
-                                                                      end)
-                                                            end, false, F, "Next",
-                                                            vec4(0, 0, 0, 1), vec4(1))
-                                                  REMOTE_NEXT_BUTTON:Update(vec3(0, 0, 20),
-                                                            vec3(FrameD.x, FrameD.y / 2, 1))
-
-
-                                                  REMOVE_PREV_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
-                                                            vec3(FrameD.x, FrameD.y / 2, 1), function()
-                                                                      Engine.net.SendToServer(function()
-                                                                                gMoveBackward()
-                                                                      end)
-                                                            end, false, F, "Previous",
-                                                            vec4(0, 0, 0, 1), vec4(1))
-
-                                                  REMOVE_PREV_BUTTON:Update(vec3(0, FrameD.y / 2, 20),
-                                                            vec3(FrameD.x, FrameD.y / 2, 1))
-                                        end
-                                        )
+                                        gate.android_device_connected = true
+                                        net.BroadCast(__LOCAL_android_construct_next_previous_buttons)
                               end
                     end
           end
@@ -65,7 +67,7 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                                         "*FANDR*",
                                         handle = nil,
                                         value = inValue,
-                                        name = "__fancy_android_listener"
+                                        name = "__common_android_listener"
                               }
                     })
           end)
@@ -85,7 +87,7 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                     vec3(gFrameDimension.x, gFrameDimension.y, 1))
           for i = 1, #layout do
                     gprocess.CButton(inPresentation, CButton(layout[i]).CButton, inFrameIndex,
-                              "__fancy_ip_address_" .. i)
+                              "__common_ip_address_" .. i)
           end
 end
 
@@ -94,13 +96,13 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
           if not Engine.net.listenOnce then
                     Engine.net.Server()
           end
-          if Engine.gate.__fancy_android_device_connected then
+          if Engine.gate.android_device_connected then
                     local Message = Engine.net.listenOnce()
                     if type(Message) == "function" then
                               Message()
                     end
           end
-          if Engine.gate.__fancy_function then
-                    Engine.gate.__fancy_function()
+          if Engine.gate.__common_function then
+                    Engine.gate.__common_function()
           end
 end

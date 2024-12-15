@@ -172,8 +172,8 @@ EditorMouseCameraControl = function()
                               cam:MoveUp(rmouse.y)
                     end
           end
-          rmat = Jmath.Rotate_deg(rmat, lmc.ry, vec3(1, 0, 0))
-          rmat = Jmath.Rotate_deg(rmat, lmc.rx, vec3(0, 1, 0))
+          rmat = Jmath.Rotate_deg(rmat, lmc.ry * 2, vec3(1, 0, 0))
+          rmat = Jmath.Rotate_deg(rmat, lmc.rx * 2, vec3(0, 1, 0))
           cam:SetPerspective()
           gworld3d:SetWorldMatrix(rmat)
 end

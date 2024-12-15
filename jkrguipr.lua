@@ -1,7 +1,7 @@
 require "ElementLibrary.Commons.Commons"
 Pr = gDefaultConfiguration()
 Pr.Config.FullScreen = true
--- todo fancyenumerate hide bug, should write all over again
+-- todo commonenumerate hide bug, should write all over again
 
 local titlepage = {
           t = "Triyamik",

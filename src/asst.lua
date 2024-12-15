@@ -1,6 +1,6 @@
 require "ElementLibrary.Procedurals.Image"
 require "ElementLibrary.Procedurals.Object"
-require "ElementLibrary.Fancy.Fancy"
+require "ElementLibrary.common.common"
 
 Pr = gDefaultConfiguration()
 
@@ -28,7 +28,7 @@ Pr:insert({
                     -- Three = Object {},
           },
           -- Frame {
-          -- gltf = FancyGLTF {
+          -- gltf = commonGLTF {
           --           r = vec4(0, 0, 1, 180),
           --           camera_control = "FLYCAM_KEYBOARD"
           -- }

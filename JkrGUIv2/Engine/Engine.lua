@@ -546,7 +546,7 @@ Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmode
             ---@note This is supposed to be used for storage of the abovematrix
             object.mMatrix3 = Nodes[NodeIndex]:GetLocalMatrix()
             object.mP1 = NodeIndex
-            object.mP2 = 1
+            object.mP2 = 1 -- This indicates the object is the root object
             Objects[#Objects + 1] = object
         end
     end
@@ -560,6 +560,10 @@ Engine.AddAndConfigureGLTFToWorld = function(w, inworld3d, inshape3d, ingltfmode
                 end
             end
         end
+    end
+    ---@note If there is a single object in the gltf file then it has to be the root object
+    if #Objects == 1 then
+        Objects[1].mP2 = 1
     end
     return Objects
 end

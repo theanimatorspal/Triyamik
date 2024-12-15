@@ -107,7 +107,7 @@ gprocess.CEnumerate = function(inPresentation, inValue, inFrameIndex, inElementN
                               -- value = items[inValue.order[i]]
                     end
                     gprocess.CButton(inPresentation, CButton(value).CButton, inFrameIndex,
-                              "__fancy__enumeration" .. "__items__" .. inElementName .. i)
+                              "__common__enumeration" .. "__items__" .. inElementName .. i)
           end
 
           for i, value in ipairs(item_bullets) do
@@ -116,6 +116,6 @@ gprocess.CEnumerate = function(inPresentation, inValue, inFrameIndex, inElementN
                               -- value = item_bullets[inValue.order[i]]
                     end
                     gprocess.CButton(inPresentation, CButton(value).CButton, inFrameIndex,
-                              "__fancy_enumeration" .. "__bullets__" .. inElementName .. i)
+                              "__common_enumeration" .. "__bullets__" .. inElementName .. i)
           end
 end

@@ -6,5 +6,5 @@ require "ElementLibrary.Commons.Obj"
 require "ElementLibrary.Commons.TitlePage"
 require "ElementLibrary.Commons.Structure"
 
--- require "ElementLibrary.Commons.Android"
+require "ElementLibrary.Commons.Android"
 require "ElementLibrary.Commons.Layout"

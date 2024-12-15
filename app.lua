@@ -27,22 +27,45 @@
 
 require "ElementLibrary.Commons.Commons"
 do
-          local runApp = true
-          local bc = vec4(1, 0.5, 0, 0.5)
-          local c = vec4(0, 0, 0, 1)
           local Configuration = gDefaultConfiguration()
-          local Validation = false
+          local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")
 
           local Present = {
+                    Config = {
+                              ContinousAutoPlay = {
+                                        func = gMoveForward
+                              },
+                              CircularSwitch = true,
+                              StepTime = 0.001
+                    },
                     Frame {
-                              obj = Cobj {
+                              laptop = Cobj {
                                         filename = "res/models/laptop/laptop.gltf",
-                                        camera_control = "EDITOR_MOUSE"
+                                        camera_control = "EDITOR_MOUSE",
+                                        p = vec3(0, 0, 0),
+                                        r = vec4(1, 1, 1, 0),
+                                        d = vec3(1, 1, 1),
                               }
-                    }
+                    },
+                    Frame {
+                              laptop = Cobj {
+                                        p = vec3(-5, 0, 0),
+                                        r = vec4(1, 1, 1, 0),
+                                        d = vec3(1, 1, 1),
+                              }
+                    },
+                    Frame {
+                              laptop = Cobj {
+                                        p = vec3(5, 0, 0),
+                                        r = vec4(0, 1, 0, 0),
+                                        d = vec3(1, 1, 1),
+                              }
+                    },
           }
           gPresentation(Present, Validation, CurrentLoopType)
+
+          ClosePresentations()
 end

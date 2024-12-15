@@ -35,7 +35,7 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                               _push_constant = FullPC
                     }
                     gprocess.CButton(inPresentation, CButton(background).CButton, inFrameIndex,
-                              "__fancy__background")
+                              "__common__background")
                     local t = U({
                               f = "Huge",
                               t = inValue.t,
@@ -79,17 +79,17 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                               logo.pic = nil
                     end
                     gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
-                              "__fancy_titlepage_logo")
+                              "__common_titlepage_logo")
 
 
                     gprocess.CButton(inPresentation, CButton(t).CButton, inFrameIndex,
-                              "__fancy_titlepage_title")
+                              "__common_titlepage_title")
                     gprocess.CButton(inPresentation, CButton(st).CButton, inFrameIndex,
-                              "__fancy_titlepage_sub_title")
+                              "__common_titlepage_sub_title")
 
                     for i = 1, #names - 1, 1 do
                               gprocess.CButton(inPresentation, CButton(names[i + 1]).CButton, inFrameIndex,
-                                        "__fancy__name__" .. i)
+                                        "__common__name__" .. i)
                     end
                     gTitlePageData.names = Copy(names)
                     gTitlePageData.t = Copy(t)
@@ -98,15 +98,15 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                     gTitlePageData.t.p = "CENTER_OUT"
                     gTitlePageData.st.p = "CENTER_OUT"
                     gprocess.CButton(inPresentation, CButton(gTitlePageData.t).CButton, inFrameIndex,
-                              "__fancy_titlepage_title")
+                              "__common_titlepage_title")
                     gprocess.CButton(inPresentation, CButton(gTitlePageData.st).CButton, inFrameIndex,
-                              "__fancy_titlepage_sub_title")
+                              "__common_titlepage_sub_title")
 
                     for i = 1, #gTitlePageData.names - 1, 1 do
                               gTitlePageData.names[i + 1].p = "OUT_CENTER"
                               gprocess.CButton(inPresentation, CButton(gTitlePageData.names[i + 1]).CButton,
                                         inFrameIndex,
-                                        "__fancy__name__" .. i)
+                                        "__common__name__" .. i)
                     end
           elseif inValue.act == "structure" then
                     local t = U(Copy(gTitlePageData.t))
@@ -141,16 +141,16 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                     logo.bc = vec4(0.4)
 
                     gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
-                              "__fancy_titlepage_logo")
+                              "__common_titlepage_logo")
 
                     gprocess.CButton(inPresentation,
                               CButton(t).CButton,
                               inFrameIndex,
-                              "__fancy_titlepage_title")
+                              "__common_titlepage_title")
                     gprocess.CButton(inPresentation,
                               CButton(st).CButton,
                               inFrameIndex,
-                              "__fancy_titlepage_sub_title")
+                              "__common_titlepage_sub_title")
 
 
 
@@ -158,7 +158,7 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                               gprocess.CButton(inPresentation,
                                         CButton(names[i]).CButton,
                                         inFrameIndex,
-                                        "__fancy__name__" .. i)
+                                        "__common__name__" .. i)
                     end
           end
 end
