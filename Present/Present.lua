@@ -9,7 +9,7 @@ inspect = require "JkrGUIv2.inspect"
 ]============================================================]
 
 local ProcessFrames = function(inPresentation)
-    if inPresentation.Config.CircularSwitch then
+    if inPresentation.Config and inPresentation.Config.CircularSwitch then
         local FirstFrame
         IterateEachFrame(inPresentation,
             function(eachFrameIndex, value)
@@ -116,6 +116,9 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         conf = inPresentation.Config
         if conf.LoopType then
             inLoopType = conf.LoopType
+        end
+        if conf.InterpolationType then
+            gSetInterpolationType(conf.InterpolationType)
         end
         circularSwitch = conf.CircularSwitch
         continousAutoPlay = conf.ContinousAutoPlay
@@ -258,9 +261,9 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 gMoveForward()
             end
             if circularSwitch then
-                if currentFrame == gFrameCount - 1 and t == 1.0 then
+                if currentFrame == gFrameCount - 1 and t >= 1.0 then
                     currentFrame = 1
-                elseif currentFrame == 1 and t == 0.0 then
+                elseif currentFrame == 1 and t <= 0.0 then
                     currentFrame = gFrameCount - 1
                 end
             end

@@ -34,12 +34,16 @@ do
           gPresentation(Configuration, Validation, "NoLoop")
 
           local Present = {
-                    Config = {
-                              ContinousAutoPlay = {
-                                        func = gMoveForward
-                              },
-                              CircularSwitch = true,
-                              StepTime = 0.001
+                    -- Config = {
+                    -- ContinousAutoPlay = {
+                    --           func = gMoveForward
+                    -- },
+                    -- CircularSwitch = true,
+                    -- StepTime = 0.001,
+                    -- InterpolationType = "LINEAR"
+                    -- },
+                    Frame {
+                              CAndroid {},
                     },
                     Frame {
                               laptop = Cobj {
@@ -47,20 +51,6 @@ do
                                         camera_control = "EDITOR_MOUSE",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
-                                        d = vec3(1, 1, 1),
-                              }
-                    },
-                    Frame {
-                              laptop = Cobj {
-                                        p = vec3(-5, 0, 0),
-                                        r = vec4(1, 1, 1, 0),
-                                        d = vec3(1, 1, 1),
-                              }
-                    },
-                    Frame {
-                              laptop = Cobj {
-                                        p = vec3(5, 0, 0),
-                                        r = vec4(0, 1, 0, 0),
                                         d = vec3(1, 1, 1),
                               }
                     },

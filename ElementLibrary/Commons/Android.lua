@@ -85,10 +85,20 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
           local vlayout = V():Add(layout, CR(layout))
           vlayout:Update(vec3(0, 0, gbaseDepth),
                     vec3(gFrameDimension.x, gFrameDimension.y, 1))
+
           for i = 1, #layout do
-                    gprocess.CButton(inPresentation, CButton(layout[i]).CButton, inFrameIndex,
+                    gprocess.CButton(inPresentation, CButton(layout[i]).CButton, 1,
+                              "__common_ip_address_" .. i)
+                    local out = Copy(CButton(layout[i]).CButton)
+                    out.p = vec3(100 * gFrameDimension.x, 100 * gFrameDimension.y, 1)
+                    gprocess.CButton(inPresentation, out, 2,
                               "__common_ip_address_" .. i)
           end
+
+          -- for i = 1, #layout do
+          --           gprocess.CButton(inPresentation, CButton(layout[i]).CButton, inFrameIndex,
+          --                     "__common_ip_address_" .. i)
+          -- end
 end
 
 
