@@ -48,7 +48,7 @@ do
                     Frame {
                               laptop = Cobj {
                                         filename = "res/models/laptop/laptop.gltf",
-                                        camera_control = "EDITOR_MOUSE",
+                                        camera_control = "ANDROID_SENSOR",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
                                         d = vec3(1, 1, 1),

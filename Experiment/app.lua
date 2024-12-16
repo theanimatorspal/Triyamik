@@ -150,12 +150,15 @@ function Main()
     end
 
     GDisplayLoop = true
+
     while not E:ShouldQuit() and GDisplayLoop do
         if GNetworkLoop then
             GNetworkValue = net.listenOnce()
             if type(GNetworkValue) == "function" then
-                if not pcall(GNetworkValue) then
-                    Jkr.ShowToastNotification("Error Calling the function")
+                local success, result = pcall(GNetworkValue)
+                if not success then
+                    Jkr.ShowToastNotification(result)
+                    print(" ")
                 end
             end
             if type(GNetworkValue) == "string" then

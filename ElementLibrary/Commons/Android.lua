@@ -53,7 +53,6 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                               Jkr.SleepForMiliSeconds(1000)
                               local msg = net.listenOnce()
                               if type(msg) == "string" and msg == "Connection Established" then
-                                        print("HERE")
                                         listen = false
                                         gate.android_device_connected = true
                                         net.BroadCast(__LOCAL_android_construct_next_previous_buttons)
