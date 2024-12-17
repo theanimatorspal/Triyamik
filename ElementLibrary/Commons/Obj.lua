@@ -194,7 +194,7 @@ AndroidSensorCameraControl = function()
         end
         local function StartUDPInAndroid()
             Engine.net.UDP()
-            Engine.net.StartUDP(6524)
+            Engine.net.StartUDP(6523)
             local vc = Jkr.ConvertToVChar(vec3(0))
             Jkr.SetBufferSizeUDP(#vc)
         end
@@ -215,8 +215,9 @@ AndroidSensorCameraControl = function()
                 for i = 1, #GSERVER_IP_ADDRESSES do
                     -- print("SENT")
                     local ip = GSERVER_IP_ADDRESSES[i]
-                    local v3 = vec3(4, 5, 6)
-                    Engine.net.SendUDP(v3, ip, 6523)
+                    local data = Jkr.GetAccelerometerData()
+                    Engine.net.SendUDP(data, ip, 6523)
+                    -- Jkr.ShowToastNotification("UDP Sent")
                 end
             end
 
@@ -229,11 +230,11 @@ AndroidSensorCameraControl = function()
     local rmat = Jmath.GetIdentityMatrix4x4()
     local message = Engine.net.listenOnceUDP(vec3(0))
     if message and type(message) == "userdata" then
-        local ort = message
-        rmat = Jmath.Rotate_deg(rmat, math.floor(ort.y * 10) / 10 * 5, vec3(1, 0, 0))
-        rmat = Jmath.Rotate_deg(rmat, math.floor(ort.x * 10) / 10 * 5, vec3(0, 1, 0))
+        rmat = Jmath.Rotate_deg(rmat, math.floor(message.y * 10) / 10 * 5, vec3(1, 0, 0))
+        rmat = Jmath.Rotate_deg(rmat, math.floor(message.x * 10) / 10 * 5, vec3(0, 1, 0))
         gworld3d:SetWorldMatrix(rmat)
     end
+
     --   if msg then
     --             print(msg.x, msg.y, msg.z)
     --   end
