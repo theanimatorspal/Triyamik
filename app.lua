@@ -54,6 +54,12 @@ do
                                         d = vec3(1, 1, 1),
                               }
                     },
+                    -- Frame {
+                    --           img = CComputeImage {
+                    --                     cd = vec3(640, 480, 1),
+                    --                     d = vec3(1920, 1080, 1)
+                    --           }
+                    -- }
           }
           gPresentation(Present, Validation, CurrentLoopType)
 

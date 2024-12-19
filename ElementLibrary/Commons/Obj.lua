@@ -206,6 +206,12 @@ AndroidSensorCameraControl = function()
                 string.format("GSERVER_IP_ADDRESSES[%d] = '%s'\n", i, Engine.gate.ip_addresses[i])
         end
 
+        Engine.net.BroadCast(
+            function()
+                Jkr.Java.InitializeCamera("BACK")
+            end
+        )
+
         ---@note In UDP Message is not needed FUCK
         local f, e = load(android_udp_func)
         Engine.net.BroadCast(f)
@@ -217,7 +223,6 @@ AndroidSensorCameraControl = function()
                     local ip = GSERVER_IP_ADDRESSES[i]
                     local data = Jkr.GetAccelerometerData()
                     Engine.net.SendUDP(data, ip, 6523)
-                    -- Jkr.ShowToastNotification("UDP Sent")
                 end
             end
 
@@ -259,3 +264,21 @@ AndroidSensorCameraControl = function()
     --           print("Android Device not connected")
     -- end
 end
+
+
+--   public char[] ShowFuck(String inString) {
+--             if (inString == "FUCK") {
+--                 char[] f = {1, 2, 3};
+--                 return  f;
+--             }
+--             if (inString == "DUCK") {
+--                 char[] f = {2, 3, 4};
+--                 return  f;
+--             }
+--             if (inString == "HUCK") {
+--                 char[] f = {5, 6, 7};
+--                 return  f;
+--             }
+--             char[] f = {0, 0, 0};
+--             return f;
+--   }

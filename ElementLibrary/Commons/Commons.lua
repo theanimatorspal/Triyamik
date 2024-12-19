@@ -8,3 +8,4 @@ require "ElementLibrary.Commons.Structure"
 
 require "ElementLibrary.Commons.Android"
 require "ElementLibrary.Commons.Layout"
+require "ElementLibrary.Commons.ComputeImage"

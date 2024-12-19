@@ -57,7 +57,7 @@ end
 
 P = {
           Frame {
-                    -- CAndroid {},
+                    CAndroid {},
           },
           Frame {
                     CTitlePage(titlepage),

@@ -3,12 +3,35 @@ function Main()
         require "JkrGUIv2.Widgets.General"
         require "JkrGUIv2.Engine.Engine"
     end
+    Jkr.GetLayoutsAsVH()
     Engine:Load(true)
     FrameD = vec2(200, 400)
     W = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, FrameD)
     E = Engine.e
     GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
     F = GWR.CreateFont("font.ttf", 14)
+    function U(inValue)
+        inValue.p = inValue.p or vec3(0, 0, 50)
+        inValue.d = inValue.d or vec3(100, 100, 1)
+        inValue.onclick = inValue.onclick or function() end
+        inValue.text = inValue.text or " "
+        inValue.c = inValue.c or vec4(vec3(1), 0)
+        inValue.bc = inValue.bc or vec4(0.9, 0.8, 0.95, 1)
+        if not inValue.continous then inValue.continous = false end
+        inValue = GWR.CreateGeneralButton(
+            inValue.p,
+            inValue.d,
+            inValue.onclick,
+            false,
+            F,
+            inValue.text,
+            inValue.c,
+            inValue.bc,
+            inValue.pc,
+            inValue.img
+        )
+        return inValue
+    end
 
     local Background = GWR.CreateGeneralButton(vec3(0, 0, 50), vec3(100, 100, 1),
         function() end,
