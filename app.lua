@@ -1,30 +1,3 @@
--- require "ElementLibrary.Commons.Commons"
--- require "ElementLibrary.Contexts.GLTFViewer"
--- require "src.TwoDApplication"
-
--- Pr = gDefaultConfiguration()
--- -- Pr.Config.FullScreen = true
-
--- P = {
---           Frame { CButton { t = "HEllO" } },
---           Frame { CON.GLTFViewer {} },
---           Frame { CButton { t = "BYE BYE" } },
--- }
-
--- Pr:insert(P)
--- -- gPresentation(Pr, true)
-
--- local file = io.popen(
---           "powershell -Command \"Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.OpenFileDialog; $f.Filter = 'All Files (*.*)|*.*'; if ($f.ShowDialog() -eq 'OK') { $f.FileName }\"")
--- local filePath = file:read("*a"):gsub("%s+$", "") -- Read and trim output
--- file:close()
-
--- if filePath ~= "" then
---           print("Selected file: " .. filePath)
--- else
---           print("No file selected")
--- end
-
 require "ElementLibrary.Commons.Commons"
 do
           local Configuration = gDefaultConfiguration()
@@ -48,12 +21,25 @@ do
                     Frame {
                               laptop = Cobj {
                                         filename = "res/models/laptop/laptop.gltf",
-                                        camera_control = "ANDROID_SENSOR",
+                                        camera_control = "EDITOR_MOUSE",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
                                         d = vec3(1, 1, 1),
+                                        world = "laptop_world"
                               }
                     },
+                    -- Frame {
+                    --           fuck = Cobj {
+                    --                     filename = "res/models/DamagedHelmet/DamagedHelmet.gltf",
+                    --                     hdr_filename = "res/images/lakeside.hdr",
+                    --                     camera_control = "EDITOR_MOUSE",
+                    --                     renderer = "PBR",
+                    --                     p = vec3(0, 0, 0),
+                    --                     r = vec4(1, 1, 1, 0),
+                    --                     d = vec3(1, 1, 1),
+
+                    --           }
+                    -- },
                     -- Frame {
                     --           img = CComputeImage {
                     --                     cd = vec3(640, 480, 1),

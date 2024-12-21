@@ -1650,6 +1650,12 @@ Basics.GetBasicVertexHeaderWithoutTangent = function()
     return Deferred.GetBasicVertexHeader()
 end
 
+PBR.PreCalcImages = function(inShader)
+    return inShader.uSamplerCubeMap(20, "samplerCubeMap", 0)
+        .uSampler2D(23, "samplerBRDFLUT", 0)
+        .uSamplerCubeMap(24, "samplerIrradiance", 0)
+        .uSamplerCubeMap(25, "prefilteredMap", 0)
+end
 
 Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel, materialindex, inskinning, intangent)
     if intangent == nil then intangent = true end
@@ -1705,7 +1711,10 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
 
         local fshader = Basics.GetConstantFragmentHeader()
             .gltfPutMaterialTextures(gltfmodel, materialindex)
-            .GlslMainBegin()
+
+        PBR.PreCalcImages(fshader)
+
+        fshader.GlslMainBegin()
         if fshader.gltfMaterialTextures.mBaseColorTexture == true then
             if fshader.gltfMaterialTextures.mEmissiveTextureIndex == true then
                 fshader.Append [[
@@ -1769,4 +1778,58 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
 
         return vshader, fshader
     end
+
+    if inShaderType == "PBR" then
+        local out = Engine.CreatePBRShaderByGLTFMaterial(gltfmodel, materialindex)
+        return out.vShader, out.fShader
+    end
+    if inShaderType == "GENERAL_UNIFORM" then
+        local vShader = Engine.Shader()
+            .Header(450)
+            .NewLine()
+            .VLayout()
+            .Push()
+            .Ubo()
+            .GlslMainBegin()
+            .Append [[
+                    gl_Position = Ubo.proj * Ubo.view * Push.model * vec4(inPosition, 1);
+            ]]
+            .GlslMainEnd()
+
+        local fShader = Engine.Shader()
+            .Header(450)
+            .NewLine()
+            .Ubo()
+
+        PBR.PreCalcImages(fShader)
+
+        fShader.outFragColor()
+            .GlslMainBegin()
+            .Append
+            [[
+                outFragColor = vec4(0.0f);
+            ]]
+            .GlslMainEnd()
+        return vShader, fShader
+    end
+end
+
+
+PBR.Setup = function(w, world3d, buffer3d, inSkyboxModelId, inWorldUniformHandle, cacheprefix, hdr_path)
+    Jkr.SetupPBR(Engine.i,
+        w,
+        inWorldUniformHandle,
+        world3d,
+        buffer3d, -- shape 3d
+        math.floor(inSkyboxModelId),
+        cacheprefix,
+        PBR.GenBrdfLutV.str,
+        PBR.GenBrdfLutF.str,
+        PBR.FilterCubeV.str,
+        PBR.IrradianceCubeF.str,
+        PBR.FilterCubeV.str,
+        PBR.PreFilterEnvMapF.str,
+        PBR.EquirectangularMapToMultiVShader.str,
+        PBR.EquirectangularMapToMultiFShader.str,
+        hdr_path);
 end

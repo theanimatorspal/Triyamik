@@ -92,7 +92,12 @@ local CreateEngineHandles = function(Validation)
     if not gobjects3d then
         gobjects3d = gworld3d:MakeExplicitObjectsVector()
     end
-
+    gworld3dS["default"] = {
+        world3d = gworld3d,
+        camera3d = gcamera3d,
+        shaper3d = gshaper3d,
+        objects3d = gobjects3d
+    }
     gwindow:Show()
 end
 

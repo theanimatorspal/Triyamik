@@ -2,10 +2,14 @@ require "ElementLibrary.Commons.Require"
 
 Cobj = function(inOBJViewTable)
     local t = {
-        filename = "", -- expects GLTF
-        renderer = "CONSTANT_COLOR",
+        filename = "",     -- expects GLTF
+        hdr_filename = "", -- expects HDR for skybox, PBR
+        -- world name, this will be used by gscreenElements,
+        -- so you cannot name anything that you named this
+        world = "default",
+        renderer = "CONSTANT_COLOR", -- Write "PBR" for PBR
         skinning = -1,
-        animation = vec2(-1, -1), --(index, deltatime)
+        animation = vec2(-1, -1),    --(index, deltatime)
         p = vec3(0, 0, 0),
         r = vec4(1, 1, 1, 0),
         d = vec3(1, 1, 1),
@@ -16,6 +20,30 @@ end
 
 gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName)
     local ElementName = gUnique(inElementName)
+    print("inValue.world:", inValue.world)
+    if inValue.world == "default" then
+        gshaper3d = gworld3dS["default"].shaper3d
+        gworld3d = gworld3dS["default"].world3d
+        gcamera3d = gworld3dS["default"].camera3d
+        gobjects3d = gworld3dS["default"].objects3d
+    else
+        if not gscreenElements[inValue.world] then
+            local shaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
+            local world3d, camera3d = Engine.CreateWorld3D(gwindow, gshaper3d)
+            local objects3d = world3d:MakeExplicitObjectsVector()
+            gscreenElements[inValue.world] = {
+                shaper3d = shaper3d,
+                world3d = world3d,
+                camera3d = camera3d,
+                objects3d = objects3d
+            }
+        end
+        gworld3d = gscreenElements[inValue.world].world3d
+        gshaper3d = gscreenElements[inValue.world].shaper3d
+        gcamera3d = gscreenElements[inValue.world].camera3d
+        gobjects3d = gscreenElements[inValue.world].objects3d
+        print("WHAT THE FUCK")
+    end
     if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
         inValue = vec4(1, 1, 1, 0)
     end
@@ -35,7 +63,7 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
             local OBJObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
                 inValue.filename,
                 inValue.renderer,
-                Jkr.CompileContext.Default, inValue.skinning)
+                Jkr.CompileContext.Default, inValue.skinning, inValue.hdr_filename)
             gscreenElements[ElementName] = OBJObjects
         end
     end
@@ -52,6 +80,12 @@ local FlycamKeyboardCameraControl, EditorMouseCameraControl, AndroidSensorCamera
 
 ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
     local camControl = inElement.value.camera_control
+    local Value = gscreenElements[inElement.value.world]
+    print(inElement.value.world)
+    gworld3d = Value.world3d
+    gshaper3d = Value.shaper3d
+    gcamera3d = Value.camera3d
+    gobjects3d = Value.objects3d
     if camControl == "FLYCAM_KEYBOARD" then
         gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
     elseif camControl == "EDITOR_MOUSE" then
@@ -185,7 +219,7 @@ end
 _LOCAL_Android_Sensor_Camera_Control = { FirstTime = true }
 AndroidSensorCameraControl = function()
     local asc = _LOCAL_Android_Sensor_Camera_Control
-    if asc.FirstTime and Engine.gate.android_device_connected then
+    if asc.FirstTime and Engine.gate.android_device_connected_tcp then
         local function StartUDP()
             Engine.net.UDP()
             Engine.net.StartUDP(6523)
@@ -219,7 +253,6 @@ AndroidSensorCameraControl = function()
         Engine.net.BroadCast(function()
             local function GUDPSend()
                 for i = 1, #GSERVER_IP_ADDRESSES do
-                    -- print("SENT")
                     local ip = GSERVER_IP_ADDRESSES[i]
                     local data = Jkr.GetAccelerometerData()
                     Engine.net.SendUDP(data, ip, 6523)
@@ -243,7 +276,7 @@ AndroidSensorCameraControl = function()
     --   if msg then
     --             print(msg.x, msg.y, msg.z)
     --   end
-    -- if Engine.gate.android_device_connected then
+    -- if Engine.gate.android_device_connected_tcp then
     --           Engine.net.BroadCast(
     --                     function()
     --                               local data = Jkr.GetAccelerometerData()

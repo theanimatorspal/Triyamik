@@ -44,7 +44,7 @@ gprocess.CComputeImage = function(inPresentation, inValue, inFrameIndex, inEleme
                               }
                     })
 
-                    if Engine.gate.android_device_connected then
+                    if Engine.gate.android_device_connected_tcp then
                               Engine.net.BroadCast(function()
                                         Jkr.Java.InitializeCamera("BACK")
                               end)
@@ -68,7 +68,7 @@ ExecuteFunctions["CComputeImage"] = function(inPresentation, inElement, inFrameI
                     inElement.handle.simage:Update(ComputePositionByName(new.p, new.d), new.d)
           end
 
-          if Engine.gate.android_device_connected then
+          if Engine.gate.android_device_connected_tcp then
                     Engine.net.BroadCast(function()
                               local CameraImage = Jkr.Java.GetCameraImage(" ")
                               local Message = Jkr.Message()

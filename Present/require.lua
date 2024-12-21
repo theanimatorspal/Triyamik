@@ -24,10 +24,12 @@ gNFrameDimension = vec2(1920 / 2, 1080 / 2)
 gCurrentScissorsTobeDrawn = Jkr.Table(100, 0)
 
 -- 3d Stuffs
+gworld3dS = {}
 gworld3d = nil
 gshaper3d = nil
 gobjects3d = nil
 gcamera3d = nil
+
 -- 3d stuffs for nowindow
 gnworld3d = nil
 gnshaper3d = nil
