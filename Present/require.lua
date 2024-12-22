@@ -25,6 +25,7 @@ gCurrentScissorsTobeDrawn = Jkr.Table(100, 0)
 
 -- 3d Stuffs
 gworld3dS = {}
+gworld3dS["default"] = {}
 gworld3d = nil
 gshaper3d = nil
 gobjects3d = nil

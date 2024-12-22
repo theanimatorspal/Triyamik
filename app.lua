@@ -1,7 +1,7 @@
 require "ElementLibrary.Commons.Commons"
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = true
+          local Validation = false
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")
@@ -25,21 +25,21 @@ do
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
                                         d = vec3(1, 1, 1),
-                                        world = "laptop_world"
+                                        world = "default"
                               }
                     },
-                    -- Frame {
-                    --           fuck = Cobj {
-                    --                     filename = "res/models/DamagedHelmet/DamagedHelmet.gltf",
-                    --                     hdr_filename = "res/images/lakeside.hdr",
-                    --                     camera_control = "EDITOR_MOUSE",
-                    --                     renderer = "PBR",
-                    --                     p = vec3(0, 0, 0),
-                    --                     r = vec4(1, 1, 1, 0),
-                    --                     d = vec3(1, 1, 1),
-
-                    --           }
-                    -- },
+                    Frame {
+                              fuck = Cobj {
+                                        filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
+                                        hdr_filename = "res/images/lakeside.hdr",
+                                        camera_control = "EDITOR_MOUSE",
+                                        renderer = "CONSTANT_COLOR",
+                                        p = vec3(0, 0, 0),
+                                        r = vec4(1, 1, 1, 0),
+                                        d = vec3(1, 1, 1),
+                                        world = "fuck_world"
+                              }
+                    },
                     -- Frame {
                     --           img = CComputeImage {
                     --                     cd = vec3(640, 480, 1),

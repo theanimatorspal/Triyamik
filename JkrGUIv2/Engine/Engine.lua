@@ -319,8 +319,19 @@ Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex)
 
 vec3 calculateNormal()
 {
-    vec3 tangentNormal = texture(uNormalTexture, vUV).xyz * 2.0 - 1.0;
+]]
 
+    if (Material.mNormalTextureIndex ~= -1) then
+        fShader.Append [[
+    vec3 tangentNormal = texture(uNormalTexture, vUV).xyz * 2.0 - 1.0;
+    ]]
+    else
+        fShader.Append [[
+    vec3 tangentNormal = vec3(0, 0, 1.0);
+        ]]
+    end
+
+    fShader.Append [[
     vec3 N = normalize(vNormal);
     vec3 T = normalize(vTangent.xyz);
     vec3 B = normalize(cross(N, T));
@@ -486,6 +497,7 @@ Engine.AddAndConfigureGLTFToWorld = function(w,
                                              incompilecontext,
                                              inskinning,
                                              inhdrenvfilename)
+    print("inworld3d:", inworld3d)
     if not incompilecontext then incompilecontext = Jkr.CompileContext.Default end
     local skyboxId
     if inshadertype == "PBR" then

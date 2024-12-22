@@ -2,10 +2,8 @@ require "ElementLibrary.Commons.Require"
 
 Cobj = function(inOBJViewTable)
     local t = {
-        filename = "",     -- expects GLTF
-        hdr_filename = "", -- expects HDR for skybox, PBR
-        -- world name, this will be used by gscreenElements,
-        -- so you cannot name anything that you named this
+        filename = "",               -- expects GLTF
+        hdr_filename = "",           -- expects HDR for skybox, PBR
         world = "default",
         renderer = "CONSTANT_COLOR", -- Write "PBR" for PBR
         skinning = -1,
@@ -20,30 +18,35 @@ end
 
 gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName)
     local ElementName = gUnique(inElementName)
-    print("inValue.world:", inValue.world)
     if inValue.world == "default" then
         gshaper3d = gworld3dS["default"].shaper3d
         gworld3d = gworld3dS["default"].world3d
         gcamera3d = gworld3dS["default"].camera3d
         gobjects3d = gworld3dS["default"].objects3d
-    else
-        if not gscreenElements[inValue.world] then
-            local shaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
-            local world3d, camera3d = Engine.CreateWorld3D(gwindow, gshaper3d)
-            local objects3d = world3d:MakeExplicitObjectsVector()
-            gscreenElements[inValue.world] = {
-                shaper3d = shaper3d,
-                world3d = world3d,
-                camera3d = camera3d,
-                objects3d = objects3d
-            }
+        if not gworld3dS[inValue.world] then
+            gworld3dS[inValue.world] = {}
+            gworld3dS[inValue.world].shaper3d = gshaper3d
+            gworld3dS[inValue.world].world3d = gworld3d
+            gworld3dS[inValue.world].camera3d = gcamera3d
+            gworld3dS[inValue.world].objects3d = gobjects3d
         end
-        gworld3d = gscreenElements[inValue.world].world3d
-        gshaper3d = gscreenElements[inValue.world].shaper3d
-        gcamera3d = gscreenElements[inValue.world].camera3d
-        gobjects3d = gscreenElements[inValue.world].objects3d
-        print("WHAT THE FUCK")
+    else
+        if not gworld3dS[inValue.world] then
+            local shaper3d_ = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
+            local world3d_, camera3d_ = Engine.CreateWorld3D(gwindow, shaper3d_)
+            local objects3d_ = world3d_:MakeExplicitObjectsVector()
+            gworld3dS[inValue.world] = {}
+            gworld3dS[inValue.world].shaper3d = shaper3d_
+            gworld3dS[inValue.world].world3d = world3d_
+            gworld3dS[inValue.world].camera3d = camera3d_
+            gworld3dS[inValue.world].objects3d = objects3d_
+        end
     end
+    gworld3d = gworld3dS[inValue.world].world3d
+    gshaper3d = gworld3dS[inValue.world].shaper3d
+    gcamera3d = gworld3dS[inValue.world].camera3d
+    gobjects3d = gworld3dS[inValue.world].objects3d
+
     if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
         inValue = vec4(1, 1, 1, 0)
     end
@@ -60,6 +63,7 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
             end
             gscreenElements[ElementName] = inValue.load()
         else
+            print(gworld3d)
             local OBJObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
                 inValue.filename,
                 inValue.renderer,
@@ -74,18 +78,23 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
         name = ElementName
     }
     gAddFrameKeyElement(inFrameIndex, { Element })
+    gworld3d = gworld3dS.default.world3d
+    gshaper3d = gworld3dS.default.shaper3d
+    gcamera3d = gworld3dS.default.camera3d
+    gobjects3d = gworld3dS.default.objects3d
 end
 
 local FlycamKeyboardCameraControl, EditorMouseCameraControl, AndroidSensorCameraControl
 
+local i = 0
 ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
     local camControl = inElement.value.camera_control
-    local Value = gscreenElements[inElement.value.world]
-    print(inElement.value.world)
+    local Value = gworld3dS[inElement.value.world]
     gworld3d = Value.world3d
     gshaper3d = Value.shaper3d
     gcamera3d = Value.camera3d
     gobjects3d = Value.objects3d
+
     if camControl == "FLYCAM_KEYBOARD" then
         gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
     elseif camControl == "EDITOR_MOUSE" then

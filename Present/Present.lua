@@ -82,6 +82,9 @@ local CreateEngineHandles = function(Validation)
     if not gworld3d and not gshaper3d then
         gshaper3d = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
         gworld3d, gcamera3d = Engine.CreateWorld3D(gwindow, gshaper3d)
+        gworld3dS["default"].world3d = gworld3d
+        gworld3dS["default"].shaper3d = gshaper3d
+        gworld3dS["default"].camera3d = gcamera3d
     end
 
     if not gnworld3d and not gnshaper3d then
@@ -91,13 +94,8 @@ local CreateEngineHandles = function(Validation)
 
     if not gobjects3d then
         gobjects3d = gworld3d:MakeExplicitObjectsVector()
+        gworld3dS["default"].objects3d = gobjects3d
     end
-    gworld3dS["default"] = {
-        world3d = gworld3d,
-        camera3d = gcamera3d,
-        shaper3d = gshaper3d,
-        objects3d = gobjects3d
-    }
     gwindow:Show()
 end
 
@@ -171,7 +169,6 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         end
 
         wcc = vec4(1)
-
 
 
         --[==================================================================]
@@ -272,9 +269,6 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                     currentFrame = gFrameCount - 1
                 end
             end
-            gWindowDimension = w:GetWindowDimension()
-            gwid:Update()
-            gworld3d:Update(e)
 
             if w:GetWindowCurrentTime() - currentTime > stepTime and shouldUpdate then
                 if animate then
@@ -298,6 +292,9 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 residualTime = residualTime / 1000 + stepTime -
                     (w:GetWindowCurrentTime() - currentTime) / 1000
             end
+
+            gwid:Update()
+            gworld3d:Update(e)
         end
 
         Dispatch = function()
