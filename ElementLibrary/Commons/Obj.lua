@@ -6,8 +6,9 @@ Cobj = function(inOBJViewTable)
         hdr_filename = "",           -- expects HDR for skybox, PBR
         world = "default",
         renderer = "CONSTANT_COLOR", -- Write "PBR" for PBR
+        renderer_parameter = mat4(vec4(1), vec4(1), vec4(1), vec4(1)),
         skinning = -1,
-        animation = vec2(-1, -1),    --(index, deltatime)
+        animation = vec2(-1, -1), --(index, deltatime)
         p = vec3(0, 0, 0),
         r = vec4(1, 1, 1, 0),
         d = vec3(1, 1, 1),
@@ -63,8 +64,7 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
             end
             gscreenElements[ElementName] = inValue.load()
         else
-            print(gworld3d)
-            local OBJObjects = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
+            local OBJObjects, skyboxId = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
                 inValue.filename,
                 inValue.renderer,
                 Jkr.CompileContext.Default, inValue.skinning, inValue.hdr_filename)
@@ -86,7 +86,6 @@ end
 
 local FlycamKeyboardCameraControl, EditorMouseCameraControl, AndroidSensorCameraControl
 
-local i = 0
 ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
     local camControl = inElement.value.camera_control
     local Value = gworld3dS[inElement.value.world]
@@ -94,6 +93,7 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
     gshaper3d = Value.shaper3d
     gcamera3d = Value.camera3d
     gobjects3d = Value.objects3d
+    local renderer_parameter = inElement.value.renderer_parameter
 
     if camControl == "FLYCAM_KEYBOARD" then
         gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
@@ -156,9 +156,10 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 Element.mMatrix = Matrix
             end
         end
+        ---@todo Fix this, the model is only shown for a moment
+        Element.mMatrix2 = renderer_parameter
+        gobjects3d:add(Element) -- gobjects3d is erased at each frame
     end
-    ---@todo Fix this, the model is only shown for a moment
-    gobjects3d:add(Element) -- gobjects3d is erased at each frame
 end
 
 
@@ -213,8 +214,8 @@ EditorMouseCameraControl = function()
             cam:MoveForward(rmouse.x)
         end
         if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LSHIFT) then
-            cam:MoveLeft(rmouse.x)
-            cam:MoveUp(rmouse.y)
+            cam:MoveLeft(rmouse.x / 2.0)
+            cam:MoveUp(rmouse.y / 2.0)
         end
     end
     rmat = Jmath.Rotate_deg(rmat, lmc.ry * 2, vec3(1, 0, 0))

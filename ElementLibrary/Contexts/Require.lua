@@ -1,2 +1,0 @@
-require "Present.Present"
-CON = {}
