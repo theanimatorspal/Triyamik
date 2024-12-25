@@ -1700,8 +1700,9 @@ PBR.PreCalcImages = function(inShader)
         .uSamplerCubeMap(25, "prefilteredMap", 0)
 end
 
-Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel, materialindex, inskinning, intangent)
-    if intangent == nil then intangent = true end
+Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel, materialindex, inskinning, intangent,
+                                       inextraInfo)
+    if intangent == nil then if gltfmodel then intangent = true else intangent = false end end
     if inShaderType == "CONSTANT_COLOR" and incompilecontext == Jkr.CompileContext.Default then
         local vshader
         if intangent then
@@ -1755,11 +1756,17 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
         local fshader = Basics.GetConstantFragmentHeader()
             .gltfPutMaterialTextures(gltfmodel, materialindex)
 
+        if inextraInfo and inextraInfo.baseColorTexture == true then
+            fshader.uSampler2D(3, "uBaseColorTexture")
+        end
+
         PBR.PreCalcImages(fshader)
 
         fshader.GlslMainBegin()
         if fshader.gltfMaterialTextures.mBaseColorTexture == true then
-            if fshader.gltfMaterialTextures.mEmissiveTextureIndex == true then
+            if fshader.gltfMaterialTextures.mEmissiveTextureIndex == true
+                or (inextraInfo and inextraInfo.baseColorTexture == true)
+            then
                 fshader.Append [[
                     outFragColor = texture(uBaseColorTexture, vUV) + texture(uEmissiveTexture, vUV);
                     ]]

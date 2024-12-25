@@ -19,6 +19,9 @@ do
                     Frame {
                               CAndroid {},
                     },
+                    Frame {
+                              CTest {}
+                    }
                     -- Frame {
                     --           laptop = Cobj {
                     --                     filename = "res/models/laptop/laptop.gltf",

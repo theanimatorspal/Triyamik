@@ -68,6 +68,7 @@ local CreateEngineHandles = function(Validation)
 
     if not gwindow then
         gwindow = Jkr.CreateWindow(Engine.i, "Hello", vec2(900, 480), 3, gFrameDimension)
+        gwindow:BuildShadowPass()
         gWindowDimension = gwindow:GetWindowDimension()
     end
 
@@ -329,6 +330,11 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 w:BeginRecording()
                 Dispatch()
                 MultiThreadedDraws()
+
+                for i = 1, 3 do
+                    w:BeginShadowPass(i, 1.0)
+                    w:EndShadowPass()
+                end
 
                 w:BeginUIs()
                 Draw()
