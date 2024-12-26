@@ -1764,9 +1764,7 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
 
         fshader.GlslMainBegin()
         if fshader.gltfMaterialTextures.mBaseColorTexture == true then
-            if fshader.gltfMaterialTextures.mEmissiveTextureIndex == true
-                or (inextraInfo and inextraInfo.baseColorTexture == true)
-            then
+            if fshader.gltfMaterialTextures.mEmissiveTextureIndex == true then
                 fshader.Append [[
                     outFragColor = texture(uBaseColorTexture, vUV) + texture(uEmissiveTexture, vUV);
                     ]]
@@ -1775,6 +1773,12 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
                     outFragColor = texture(uBaseColorTexture, vUV);
                     ]]
             end
+        elseif inextraInfo and inextraInfo.baseColorTexture == true then
+            fshader.Append [[
+                    vec4 color = Push.m2[0];
+                    vec4 outC = texture(uBaseColorTexture, vUV);
+                    outFragColor = vec4(outC.x * color.x, outC.y * color.y, outC.z * color.z, outC.w * color.w);
+                    ]]
         else
             fshader.Append [[
                 outFragColor = vec4(vColor.x, vColor.y, vColor.z, 1);

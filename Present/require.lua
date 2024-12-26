@@ -29,6 +29,7 @@ gworld3dS["default"] = {}
 gworld3d = nil
 gshaper3d = nil
 gobjects3d = nil
+gshadowobjects3d = nil
 gcamera3d = nil
 
 -- 3d stuffs for nowindow

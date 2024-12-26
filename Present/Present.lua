@@ -97,6 +97,12 @@ local CreateEngineHandles = function(Validation)
         gobjects3d = gworld3d:MakeExplicitObjectsVector()
         gworld3dS["default"].objects3d = gobjects3d
     end
+
+    if not gshadowobjects3d then
+        gshadowobjects3d = gworld3d:MakeExplicitObjectsVector()
+        gworld3dS["default"].shadowobjects3d = gshadowobjects3d
+    end
+
     gwindow:Show()
 end
 
@@ -299,6 +305,11 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         end
 
         Dispatch = function()
+            for i = 1, 3 do
+                w:BeginShadowPass(i, 1.0)
+                gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, Jkr.CmdParam.UI)
+                w:EndShadowPass()
+            end
             gwid:Dispatch()
             DispatchFrame(inPresentation, currentFrame, t, direction)
         end
@@ -331,10 +342,6 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 Dispatch()
                 MultiThreadedDraws()
 
-                for i = 1, 3 do
-                    w:BeginShadowPass(i, 1.0)
-                    w:EndShadowPass()
-                end
 
                 w:BeginUIs()
                 Draw()
