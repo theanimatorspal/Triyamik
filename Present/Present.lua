@@ -304,10 +304,13 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
             gworld3d:Update(e)
         end
 
+        local cmd_none = Jkr.CmdParam.None
+        local cmd_ui = Jkr.CmdParam.UI
+
         Dispatch = function()
-            for i = 1, 3 do
+            for i = 0, 3 do
                 w:BeginShadowPass(i, 1.0)
-                gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, Jkr.CmdParam.UI)
+                gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, cmd_none)
                 w:EndShadowPass()
             end
             gwid:Dispatch()
@@ -315,7 +318,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         end
 
         Draw = function()
-            gworld3d:DrawObjectsExplicit(gwindow, gobjects3d, Jkr.CmdParam.UI)
+            gworld3d:DrawObjectsExplicit(gwindow, gobjects3d, cmd_ui)
             gwid:Draw()
             gobjects3d:clear()
         end

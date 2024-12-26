@@ -7,18 +7,16 @@ CTest = function(inCPictureTable)
 end
 
 
+local test_cubeid
 local test_cube
 local test_plane
 local test_plane_shadow
 local test_cube_shadow
 gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName       = gUnique(inElementName)
-          ---@note Upto here this is test for text on object
-          ---@
-          ---@
+          local Gen               = Jkr.Generator(Jkr.Shapes.Cube3D, vec3(1, 4, 0.1))
+          local test_cubeid       = gshaper3d:Add(Gen, vec3(0, 0, 0))
           ---@FromHere Test for shadowing
-          ---@
-          ---@
 
           local vshader, fshader  = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
           local shadow_depth_s3di = gworld3d:AddSimple3D(Engine.i, gwindow)
@@ -27,8 +25,8 @@ gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
                     Engine.i,
                     gwindow,
                     "cache/test_shadow_depth_pass_s3d.glsl",
-                    vshader.str,
-                    fshader.str,
+                    vshader.Print().str,
+                    fshader.Print().str,
                     "",
                     false,
                     Jkr.CompileContext.ShadowPass
@@ -37,12 +35,12 @@ gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           -- test_cube.mAssociatedSimple3D  = 0 -- This should be Shadower
 
           test_plane_shadow                     = Jkr.Object3D()
-          test_plane_shadow.mAssociatedSimple3D = 0 --This should be shadowing
+          test_plane_shadow.mAssociatedSimple3D = shadow_depth_s3di --This should be shadowing
           test_plane_shadow.mId                 = test_cubeid
           test_plane_shadow.mMatrix             = Jmath.Scale(test_plane_shadow.mMatrix, vec3(1, 0.1, 1))
 
           test_cube_shadow                      = Jkr.Object3D()
-          test_cube_shadow.mAssociatedSimple3D  = 0 --
+          test_cube_shadow.mAssociatedSimple3D  = shadow_depth_s3di --
           test_cube_shadow.mId                  = test_cubeid
 
           gAddFrameKeyElement(inFrameIndex, {
@@ -56,6 +54,7 @@ gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
 end
 
 ExecuteFunctions["CTest"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
-          -- gshadowobjects3d:add(test_plane)
-          gobjects3d:add(test_cube)
+          gshadowobjects3d:add(test_cube_shadow)
+          gshadowobjects3d:add(test_plane_shadow)
+          -- gobjects3d:add(test_cube)
 end

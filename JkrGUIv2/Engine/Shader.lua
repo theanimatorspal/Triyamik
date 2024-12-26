@@ -1912,14 +1912,15 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
             .Header(450)
             .VLayout()
             .Define("SHADOW_MAP_CASCADE_COUNT", "4")
+
             .Push()
             .Ubo()
             .Out(0, "vec2", "outUV")
-            .Append [[
-            out gl_PerVertex {
-                vec4 gl_Position;
-            };
-            ]]
+            -- .Append [[
+            -- out gl_PerVertex {
+            --     vec4 gl_Position;
+            -- };
+            -- ]]
             .GlslMainBegin()
             .Append [[
                 vec4 Index = Push.m2[0];
@@ -1933,6 +1934,10 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
             .Header(450)
             .Push()
             .outFragColor()
+
+        PBR.PreCalcImages(fShader)
+
+        fShader
             .GlslMainBegin()
             .Append [[ outFragColor = vec4(1.0); ]]
             .GlslMainEnd()
