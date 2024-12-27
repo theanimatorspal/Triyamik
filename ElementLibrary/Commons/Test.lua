@@ -14,13 +14,14 @@ local test_plane_shadow
 local test_cube_shadow
 gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           local ElementName       = gUnique(inElementName)
-          local Gen               = Jkr.Generator(Jkr.Shapes.Cube3D, vec3(1, 4, 0.1))
+          local Gen               = Jkr.Generator(Jkr.Shapes.Cube3D, vec3(1, 1, 1))
           local test_cubeid       = gshaper3d:Add(Gen, vec3(0, 0, 0))
           ---@FromHere Test for shadowing
 
           local vshader, fshader  = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
           local shadow_depth_s3di = gworld3d:AddSimple3D(Engine.i, gwindow)
           local shadow_depth_s3d  = gworld3d:GetSimple3D(shadow_depth_s3di)
+          -- Jkr.DebugBreak()
           shadow_depth_s3d:CompileEXT(
                     Engine.i,
                     gwindow,
@@ -38,7 +39,6 @@ gprocess.CTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           test_plane_shadow.mAssociatedSimple3D = shadow_depth_s3di --This should be shadowing
           test_plane_shadow.mId                 = test_cubeid
           test_plane_shadow.mMatrix             = Jmath.Scale(test_plane_shadow.mMatrix, vec3(1, 0.1, 1))
-
           test_cube_shadow                      = Jkr.Object3D()
           test_cube_shadow.mAssociatedSimple3D  = shadow_depth_s3di --
           test_cube_shadow.mId                  = test_cubeid

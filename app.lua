@@ -1,7 +1,7 @@
 require "ElementLibrary.Commons.Commons"
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = true
+          local Validation = false
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")

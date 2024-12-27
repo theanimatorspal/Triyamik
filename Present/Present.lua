@@ -301,7 +301,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
             end
 
             gwid:Update()
-            gworld3d:Update(e)
+            gworld3d:Update(e, w)
         end
 
         local cmd_none = Jkr.CmdParam.None
@@ -313,6 +313,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                 gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, cmd_none)
                 w:EndShadowPass()
             end
+            gshadowobjects3d:clear()
             gwid:Dispatch()
             DispatchFrame(inPresentation, currentFrame, t, direction)
         end
