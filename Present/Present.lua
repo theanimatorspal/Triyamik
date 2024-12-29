@@ -306,14 +306,35 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
 
         local cmd_none = Jkr.CmdParam.None
         local cmd_ui = Jkr.CmdParam.UI
-
+        local mat4s = std_vector_mat4()
+        local uniforms = std_vector_int()
+        local simple3ds = std_vector_int()
         Dispatch = function()
-            for i = 0, 3 do
-                w:BeginShadowPass(i, 1.0)
-                gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, cmd_none)
-                w:EndShadowPass()
+            if gshadowobjects3d then
+                for i = 0, 3 do
+                    w:BeginShadowPass(i, 1.0)
+                    for ii = 1, #gshadowobjects3d do
+                        mat4s:add(gshadowobjects3d[ii].mMatrix2)
+                        uniforms:add(gshadowobjects3d[ii].mAssociatedUniform)
+                        simple3ds:add(gshadowobjects3d[ii].mAssociatedSimple3D)
+                        gshadowobjects3d[ii].mMatrix2 = mat4(vec4(i, 0, 0, 0), vec4(0), vec4(0), vec4(0))
+                        gshadowobjects3d[ii].mAssociatedUniform = -1
+                        gshadowobjects3d[ii].mAssociatedSimple3D = gshadowsimple3did
+                    end
+                    gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, cmd_none)
+                    for ii = 1, #gshadowobjects3d do
+                        gshadowobjects3d[ii].mMatrix2 = mat4s[ii]
+                        gshadowobjects3d[ii].mAssociatedUniform = uniforms[ii]
+                        gshadowobjects3d[ii].mAssociatedSimple3D = simple3ds[ii]
+                    end
+                    mat4s:clear()
+                    uniforms:clear()
+                    simple3ds:clear()
+                    w:EndShadowPass()
+                end
+                gshadowobjects3d = nil
             end
-            gshadowobjects3d:clear()
+            -- gshadowobjects3d:clear()
             gwid:Dispatch()
             DispatchFrame(inPresentation, currentFrame, t, direction)
         end

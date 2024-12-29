@@ -25,28 +25,61 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
         gcamera3d = gworld3dS["default"].camera3d
         gobjects3d = gworld3dS["default"].objects3d
         if not gworld3dS[inValue.world] then
-            gworld3dS[inValue.world] = {}
-            gworld3dS[inValue.world].shaper3d = gshaper3d
-            gworld3dS[inValue.world].world3d = gworld3d
-            gworld3dS[inValue.world].camera3d = gcamera3d
+            gworld3dS[inValue.world]           = {}
+            gworld3dS[inValue.world].shaper3d  = gshaper3d
+            gworld3dS[inValue.world].world3d   = gworld3d
+            gworld3dS[inValue.world].camera3d  = gcamera3d
             gworld3dS[inValue.world].objects3d = gobjects3d
+
+            local vshader, fshader             = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
+            local shadow_depth_s3di            = gworld3d:AddSimple3D(Engine.i, gwindow)
+            local shadow_depth_s3d             = gworld3d:GetSimple3D(shadow_depth_s3di)
+            shadow_depth_s3d:CompileEXT(
+                Engine.i,
+                gwindow,
+                "cache2/test_shadow_depth_pass_s3d.glsl",
+                vshader.str,
+                fshader.str,
+                "",
+                false,
+                Jkr.CompileContext.ShadowPass
+            )
+            gworld3dS[inValue.world].shadow_shader_id = shadow_depth_s3di
+            gworld3dS[inValue.world].shadow_shader = shadow_depth_s3d
         end
     else
         if not gworld3dS[inValue.world] then
-            local shaper3d_ = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
-            local world3d_, camera3d_ = Engine.CreateWorld3D(gwindow, shaper3d_)
-            local objects3d_ = world3d_:MakeExplicitObjectsVector()
-            gworld3dS[inValue.world] = {}
-            gworld3dS[inValue.world].shaper3d = shaper3d_
-            gworld3dS[inValue.world].world3d = world3d_
-            gworld3dS[inValue.world].camera3d = camera3d_
+            local shaper3d_                    = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
+            local world3d_, camera3d_          = Engine.CreateWorld3D(gwindow, shaper3d_)
+            local objects3d_                   = world3d_:MakeExplicitObjectsVector()
+            gworld3dS[inValue.world]           = {}
+            gworld3dS[inValue.world].shaper3d  = shaper3d_
+            gworld3dS[inValue.world].world3d   = world3d_
+            gworld3dS[inValue.world].camera3d  = camera3d_
             gworld3dS[inValue.world].objects3d = objects3d_
+
+            local vshader, fshader             = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
+            local shadow_depth_s3di            = world3d_:AddSimple3D(Engine.i, gwindow)
+            local shadow_depth_s3d             = world3d_:GetSimple3D(shadow_depth_s3di)
+            shadow_depth_s3d:CompileEXT(
+                Engine.i,
+                gwindow,
+                "cache2/test_shadow_depth_pass_s3d.glsl",
+                vshader.str,
+                fshader.str,
+                "",
+                false,
+                Jkr.CompileContext.ShadowPass
+            )
+            gworld3dS[inValue.world].shadow_shader_id = shadow_depth_s3di
+            gworld3dS[inValue.world].shadow_shader = shadow_depth_s3d
         end
     end
     gworld3d = gworld3dS[inValue.world].world3d
     gshaper3d = gworld3dS[inValue.world].shaper3d
     gcamera3d = gworld3dS[inValue.world].camera3d
     gobjects3d = gworld3dS[inValue.world].objects3d
+    gshadowsimple3did = gworld3dS[inValue.world].shadow_shader_id
 
     if inValue.r.x == 0 and inValue.r.y == 0 and inValue.r.z == 0 then
         inValue = vec4(1, 1, 1, 0)
@@ -93,6 +126,7 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
     gshaper3d = Value.shaper3d
     gcamera3d = Value.camera3d
     gobjects3d = Value.objects3d
+    gshadowsimple3did = Value.shadow_shader_id
     local renderer_parameter = inElement.value.renderer_parameter
 
     if camControl == "FLYCAM_KEYBOARD" then
@@ -160,6 +194,7 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
         Element.mMatrix2 = renderer_parameter
         gobjects3d:add(Element) -- gobjects3d is erased at each frame
     end
+    gshadowobjects3d = gobjects3d
 end
 
 
@@ -210,7 +245,7 @@ EditorMouseCameraControl = function()
             lmc.rx = lmc.rx + rmouse.x
             lmc.ry = lmc.ry + rmouse.y
         end
-        if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LCTRL) then
+        if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LCTRL) or e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_RCTRL) then
             cam:MoveForward(rmouse.x)
         end
         if e:IsKeyPressedContinous(Keyboard.SDL_SCANCODE_LSHIFT) then
