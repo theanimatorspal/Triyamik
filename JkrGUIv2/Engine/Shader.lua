@@ -842,6 +842,14 @@ layout(set = 0, binding = %d, rgba8) uniform image2D %s;
         return o.NewLine().NewLine()
     end
 
+    o.Shadow_textureProj          = function()
+        return o.Append(shadow_textureProj).NewLine()
+    end
+
+    o.filterPCF                   = function()
+        return o.Append(filterPCF).NewLine()
+    end
+
     o.Print                       = function()
         local lineNumber = 13
 
@@ -1887,6 +1895,9 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
             .Header(450)
             .NewLine()
             .Ubo()
+            .Append [[
+            layout(set = 0, binding = 32) uniform sampler2DArray shadowMap;
+            ]]
 
         PBR.PreCalcImages(fShader)
 
@@ -1954,7 +1965,7 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
                 outUV = inUV;
                 vec3 pos = inPosition + vec3(Ubo.lights[int(Index.y)]);
                 gl_Position = Ubo.shadowMatrixCascades[int(Index.x)] * vec4(pos, 1.0);
-            ]].InvertY()
+            ]]
             .GlslMainEnd()
 
         local fShader = Engine.Shader()
@@ -2027,7 +2038,6 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
             .Append(filterPCF)
             .GlslMainBegin()
             .Append [[
-            vec4 Index = Push.m2[0];
             vec4 cascadeSplits = Push.m2[1];
             int enablePCF = 1;
             uint cascadeIndex = 0;

@@ -1,11 +1,10 @@
 require "ElementLibrary.Commons.Commons"
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = false
+          local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")
-          gwindow:BuildShadowPass()
 
           local Present = {
                     -- Config = {

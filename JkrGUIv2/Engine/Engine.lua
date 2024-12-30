@@ -206,7 +206,7 @@ end
 
 Engine.GetGLTFInfo = Engine.PrintGLTFInfo
 
-Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex)
+Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex, inShadow)
     inMaterialIndex = inMaterialIndex + 1
     local Material = inGLTF:GetMaterialsRef()[inMaterialIndex]
     local vShader = Engine.Shader()
@@ -255,9 +255,27 @@ Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex)
         .uSampler2D(23, "samplerBRDFLUT", 0)
         .uSamplerCubeMap(24, "samplerIrradiance", 0)
         .uSamplerCubeMap(25, "prefilteredMap", 0)
-        .Ubo()
+        .Append [[
+        layout (set = 0, binding = 32) uniform sampler2DArray shadowMap;
+        ]]
+
+    fShader.Ubo()
         .outFragColor()
         .Push()
+
+    if inShadow then
+        fShader.Append [[
+        const mat4 biasMat = mat4(
+            0.5, 0.0, 0.0, 0.0,
+            0.0, 0.5, 0.0, 0.0,
+            0.0, 0.0, 1.0, 0.0,
+            0.5, 0.5, 0.0, 1.0
+        );
+        ]]
+            .Shadow_textureProj()
+            .filterPCF()
+    end
+    fShader
         .Append [[
 
     struct PushConsts {
@@ -426,6 +444,29 @@ vec3 calculateNormal()
         ]]
     end
 
+    if inShadow then
+        fShader.Append [[
+    vec4 cascadeSplits = Push.m2[1];
+    int enablePCF = 1;
+    uint cascadeIndex = 0;
+    for(uint i = 0; i < SHADOW_MAP_CASCADE_COUNT; ++i)
+    {
+        if(inViewPos.z < cascadeSplits[i])
+        {
+            cascadeIndex = i + 1;
+        }
+    }
+    vec4 shadowCoord = (biasMat * Ubo.shadowMatrix[cascadeIndex]) * vec4 (inPos, 1.0);
+
+    float shadow = 0;
+    if (enablePCF == 1) {
+        shadow = filterPCF(shadowCoord / shadowCoord.w, cascadeIndex);
+    } else {
+        shadow = textureProj(shadowCoord / shadowCoord.w, vec2(0.0), cascadeIndex);
+    }
+        ]]
+    end
+
     fShader.Append [[
 
     vec4 p1 = Push.m2[0];
@@ -440,6 +481,11 @@ vec3 calculateNormal()
 
     outFragColor = vec4(color + Emissive, 1.0);
     ]]
+    if inShadow then
+        fShader.Append [[
+       outFragColor = outFragColor.rgba * shadow;
+       ]]
+    end
 
     fShader.GlslMainEnd()
 
@@ -653,5 +699,7 @@ Engine.CreateWorld3D = function(w, inshaper3d)
     local globaluniformhandle = world3d:GetUniform3D(globaluniformindex)
     globaluniformhandle:Build(dummypipeline) -- EUTA PIPELINE BANAUNU PRXA
     world3d:AddWorldInfoToUniform3D(globaluniformindex)
+    print("WOINDOIW:", w)
+    Jkr.RegisterShadowPassImageToUniform3D(w, globaluniformhandle, 32)
     return world3d, camera3d
 end
