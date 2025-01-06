@@ -30,10 +30,11 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
             gworld3dS[inValue.world].world3d   = gworld3d
             gworld3dS[inValue.world].camera3d  = gcamera3d
             gworld3dS[inValue.world].objects3d = gobjects3d
-
-            local vshader, fshader             = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
-            local shadow_depth_s3di            = gworld3d:AddSimple3D(Engine.i, gwindow)
-            local shadow_depth_s3d             = gworld3d:GetSimple3D(shadow_depth_s3di)
+        end
+        if not gworld3dS[inValue.world].shadow_shader_id then
+            local vshader, fshader  = Engine.GetAppropriateShader("CASCADED_SHADOW_DEPTH_PASS")
+            local shadow_depth_s3di = gworld3d:AddSimple3D(Engine.i, gwindow)
+            local shadow_depth_s3d  = gworld3d:GetSimple3D(shadow_depth_s3di)
             shadow_depth_s3d:CompileEXT(
                 Engine.i,
                 gwindow,
@@ -49,7 +50,8 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
         end
     else
         if not gworld3dS[inValue.world] then
-            local shaper3d_                    = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
+            local shaper3d_ = Jkr.CreateShapeRenderer3D(Engine.i, gwindow)
+            io:flush()
             local world3d_, camera3d_          = Engine.CreateWorld3D(gwindow, shaper3d_)
             local objects3d_                   = world3d_:MakeExplicitObjectsVector()
             gworld3dS[inValue.world]           = {}

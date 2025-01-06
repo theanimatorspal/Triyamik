@@ -48,7 +48,6 @@ function Main()
             inValue = Value
         else
             inValue.Update = function(self, inPosition_3f, inDimension_3f)
-
             end
         end
         return inValue

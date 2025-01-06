@@ -74,6 +74,7 @@ local CreateEngineHandles = function(Validation)
 
     if not gnwindow then
         gnwindow = Jkr.CreateWindowNoWindow(Engine.i, gNFrameDimension, 3)
+        gnwindow:BuildShadowPass()
     end
 
     if not gwid then
@@ -310,6 +311,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         local uniforms = std_vector_int()
         local simple3ds = std_vector_int()
         Dispatch = function()
+            print("=====================SHADOW_BEGUN==============================")
             if gshadowobjects3d then
                 for i = 0, 3 do
                     w:BeginShadowPass(i, 1.0)
@@ -319,7 +321,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                         simple3ds:add(gshadowobjects3d[ii].mAssociatedSimple3D)
                         gshadowobjects3d[ii].mMatrix2 = mat4(vec4(i, 0, 0, 0), vec4(0), vec4(0), vec4(0))
                         gshadowobjects3d[ii].mAssociatedUniform = -1
-                        gshadowobjects3d[ii].mAssociatedSimple3D = gshadowsimple3did
+                        gshadowobjects3d[ii].mAssociatedSimple3D = math.floor(gshadowsimple3did)
                     end
                     gworld3d:DrawObjectsExplicit(gwindow, gshadowobjects3d, cmd_none)
                     for ii = 1, #gshadowobjects3d do
@@ -333,6 +335,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                     w:EndShadowPass()
                 end
                 gshadowobjects3d = nil
+                print("=====================SHADOW_END==============================")
             end
             -- gshadowobjects3d:clear()
             gwid:Dispatch()

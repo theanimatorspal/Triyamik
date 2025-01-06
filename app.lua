@@ -95,11 +95,12 @@ do
                                         filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
                                         hdr_filename = "res/images/warm.hdr",
                                         camera_control = "EDITOR_MOUSE",
-                                        renderer = "PBR_SHADOW",
+                                        -- renderer = "PBR_SHADOW",
+                                        renderer = "PBR",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
                                         d = vec3(1, 1, 1),
-                                        world = "fuck_world",
+                                        world = "default",
                                         renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1, 11.2, 1 / 2.2, 1))
                               }
                     },
