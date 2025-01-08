@@ -311,7 +311,6 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         local uniforms = std_vector_int()
         local simple3ds = std_vector_int()
         Dispatch = function()
-            print("=====================SHADOW_BEGUN==============================")
             if gshadowobjects3d then
                 for i = 0, 3 do
                     w:BeginShadowPass(i, 1.0)
@@ -335,7 +334,6 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
                     w:EndShadowPass()
                 end
                 gshadowobjects3d = nil
-                print("=====================SHADOW_END==============================")
             end
             -- gshadowobjects3d:clear()
             gwid:Dispatch()

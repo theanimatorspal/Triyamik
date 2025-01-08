@@ -94,9 +94,9 @@ do
                               fuck = Cobj {
                                         filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
                                         hdr_filename = "res/images/warm.hdr",
-                                        camera_control = "EDITOR_MOUSE",
-                                        -- renderer = "PBR_SHADOW",
-                                        renderer = "PBR",
+                                        camera_control = "FLYCAM_KEYBOARD",
+                                        renderer = "PBR_SHADOW",
+                                        -- renderer = "PBR",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
                                         d = vec3(1, 1, 1),
