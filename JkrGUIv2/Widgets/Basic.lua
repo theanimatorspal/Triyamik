@@ -243,13 +243,14 @@ Jkr.CreateWidgetRenderer = function(i, w, e)
     --[============================================================[
                     TEXT LABEL
           ]============================================================]
-    o.CreateTextLabel = function(inPosition_3f, inDimension_3f, inFont, inText, inColor)
+    o.CreateTextLabel = function(inPosition_3f, inDimension_3f, inFont, inText, inColor, inNotDraw)
         local textLabel = {}
         textLabel.mText = inText
         textLabel.mFont = inFont
         textLabel.mId = o.t:Add(inFont.mId, inPosition_3f, inText)
-        textLabel.PushId = o.c:Push(Jkr.CreateDrawable(textLabel.mId, nil, "TEXT", nil, inColor), o.mCurrentScissor)
-
+        if not inNotDraw then
+            textLabel.PushId = o.c:Push(Jkr.CreateDrawable(textLabel.mId, nil, "TEXT", nil, inColor), o.mCurrentScissor)
+        end
         textLabel.Update = function(self, inPosition_3f, inDimension_3f, inFont, inText, inColor)
             --tracy.ZoneBeginN("luatextUpdate")
             if inFont then self.mFont = inFont end
