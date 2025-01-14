@@ -143,7 +143,9 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                     end
           end
 
+          local frames = 0
           IterateEachFrame(inPresentation, function(inEachFrame, _)
+                    frames = frames + 1
                     gAddFrameKeyElement(inEachFrame, {
                               {
                                         "*FANDR*",
@@ -173,8 +175,10 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                               "__common_ip_address_" .. i)
                     local out = Copy(CButton(layout[i]).CButton)
                     out.p = vec3(100 * gFrameDimension.x, 100 * gFrameDimension.y, 1)
-                    gprocess.CButton(inPresentation, out, 2,
-                              "__common_ip_address_" .. i)
+                    if frames > 1 then
+                              gprocess.CButton(inPresentation, out, 2,
+                                        "__common_ip_address_" .. i)
+                    end
           end
 
           -- for i = 1, #layout do

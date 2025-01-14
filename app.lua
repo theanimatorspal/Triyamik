@@ -1,11 +1,12 @@
 require "ElementLibrary.Commons.Commons"
+require "ElementLibrary.Procedurals.Procedurals"
+
 do
           local Configuration = gDefaultConfiguration()
           local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")
-          gwindow:BuildShadowPass()
 
           local Present = {
                     -- Config = {
@@ -19,6 +20,12 @@ do
                     Frame {
                               CAndroid {},
                     },
+                    -- Frame {
+                    --           PRO.Text3D {}
+                    -- },
+                    -- Frame {
+                    --           CTest {}
+                    -- }
                     Frame {
                               Cobj {
                                         camera_control = "EDITOR_MOUSE",
@@ -63,18 +70,18 @@ do
                                         renderer_parameter = mat4(vec4(1, 0, 0, 1), vec4(0), vec4(0), vec4(0))
                               }
                     },
-                    Frame {
-                              laptop = Cobj {
-                                        filename = "res/models/laptop/laptop.gltf",
-                                        camera_control = "EDITOR_MOUSE",
-                                        hdr_filename = "res/images/lakeside.hdr",
-                                        renderer = "CONSTANT_COLOR",
-                                        p = vec3(0, 0, 0),
-                                        r = vec4(1, 1, 1, 0),
-                                        d = vec3(1, 1, 1),
-                                        world = "default"
-                              }
-                    },
+                    -- Frame {
+                    --           laptop = Cobj {
+                    --                     filename = "res/models/laptop/laptop.gltf",
+                    --                     camera_control = "EDITOR_MOUSE",
+                    --                     hdr_filename = "res/images/lakeside.hdr",
+                    --                     renderer = "CONSTANT_COLOR",
+                    --                     p = vec3(0, 0, 0),
+                    --                     r = vec4(1, 1, 1, 0),
+                    --                     d = vec3(1, 1, 1),
+                    --                     world = "default"
+                    --           }
+                    -- },
                     -- Frame {
                     --           fuck = Cobj {
                     --                     filename = "res/models/DamagedHelmet/DamagedHelmet.gltf",
@@ -92,12 +99,13 @@ do
                     --           fuck = Cobj {
                     --                     filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
                     --                     hdr_filename = "res/images/warm.hdr",
-                    --                     camera_control = "EDITOR_MOUSE",
-                    --                     renderer = "PBR",
+                    --                     camera_control = "FLYCAM_KEYBOARD",
+                    --                     renderer = "PBR_SHADOW",
+                    --                     -- renderer = "PBR",
                     --                     p = vec3(0, 0, 0),
                     --                     r = vec4(1, 1, 1, 0),
                     --                     d = vec3(1, 1, 1),
-                    --                     world = "fuck_world",
+                    --                     world = "default",
                     --                     renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1, 11.2, 1 / 2.2, 1))
                     --           }
                     -- },
