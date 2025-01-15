@@ -1783,6 +1783,9 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
 
         local fshader = Basics.GetConstantFragmentHeader()
             .gltfPutMaterialTextures(gltfmodel, materialindex)
+            .Append [[
+            layout(set = 0, binding = 32) uniform sampler2DArray shadowMap;
+            ]]
 
         if inextraInfo and inextraInfo.baseColorTexture == true then
             fshader.uSampler2D(3, "uBaseColorTexture")
@@ -1955,9 +1958,6 @@ Engine.GetAppropriateShader = function(inShaderType, incompilecontext, gltfmodel
             .In(0, "vec3", "vVertUV")
             .outFragColor()
             .Ubo()
-            .Append [[
-        layout (set = 0, binding = 32) uniform sampler2DArray shadowMap;
-        ]]
 
         PBR.PreCalcImages(fShader)
         fShader

@@ -17,9 +17,9 @@ do
                     -- StepTime = 0.001,
                     -- InterpolationType = "LINEAR"
                     -- },
-                    Frame {
-                              CAndroid {},
-                    },
+                    -- Frame {
+                    --           CAndroid {},
+                    -- },
                     -- Frame {
                     --           PRO.Text3D {}
                     -- },
@@ -37,7 +37,7 @@ do
                                                             "महामूर्ख")
                                                   local Gen = Jkr.Generator(Jkr.Shapes.Cube3D, vec3(1, 4, 0.1))
                                                   local test_cubeid = gshaper3d:Add(Gen, vec3(0, 0, 0))
-                                                  local vshader, fshader = Engine.GetAppropriateShader("CONSTANT_COLOR",
+                                                  local vshader, fshader = Engine.GetAppropriateShader("NORMAL",
                                                             Jkr.CompileContext.Default, nil, nil,
                                                             nil, nil, { baseColorTexture = true })
                                                   local simple3did = gworld3d:AddSimple3D(Engine.i, gwindow)

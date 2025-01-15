@@ -6,6 +6,7 @@ Cobj = function(inOBJViewTable)
         hdr_filename = "",           -- expects HDR for skybox, PBR
         world = "default",
         renderer = "CONSTANT_COLOR", -- Write "PBR" for PBR
+        shadows = false,
         renderer_parameter = mat4(vec4(1), vec4(1), vec4(1), vec4(1)),
         skinning = -1,
         animation = vec2(-1, -1), --(index, deltatime)
@@ -196,7 +197,10 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
         Element.mMatrix2 = renderer_parameter
         gobjects3d:add(Element) -- gobjects3d is erased at each frame
     end
-    gshadowobjects3d = gobjects3d
+    gshadowobjects3d = nil
+    if Value.shadows then
+        gshadowobjects3d = gobjects3d
+    end
 end
 
 
