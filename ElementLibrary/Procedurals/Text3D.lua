@@ -5,7 +5,9 @@ PRO.Text3D = function(inText3DTable)
                     t = "001",
                     p = vec3(0),
                     d = vec3(1, 1, 0.1),
-                    mode = "SEPARATED"
+                    mode = "SEPARATED", -- "COMBINED"
+                    sidedness = "TWOSIDED",
+                    callback_foreachchar = nil
           }
           return { PRO_Text3D = Default(inText3DTable, t) }
 end
@@ -17,14 +19,12 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     local elementName_ = elementName .. 0
                     text3ds[elementName] = { { inValue, inFrameIndex, elementName_ } }
 
-                    inValue.sidedness = "FOURSIDED"
                     inValue.renderer_parameter = mat4(vec4(0, 1, 0, 1), vec4(0), vec4(0), vec4(0))
                     gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex, elementName_)
           else
                     if text3ds[elementName].t ~= inValue.t then
                               text3ds[elementName].t = inValue.t
 
-                              inValue.sidedness = "FOURSIDED"
                               inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
 
                               -- Here, interpolate
@@ -37,15 +37,16 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
                               inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex, elementName_)
                               inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 0.0), vec4(0.0), vec4(0.0), vec4(0.0))
+                              inValue.r = vec4(0, 1, 0, 360)
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex - 1, elementName_)
 
                               -- old text at current frame (opacity 0.0)
                               local eN = text3ds[elementName][#text3ds[elementName] - 1]
                               print(inspect(eN))
                               eN[1].renderer_parameter = mat4(vec4(0.0, 1, 0.0, 0.0), vec4(0.0), vec4(0.0), vec4(0.0))
+                              eN[1].r = vec4(0, 1, 0, 360)
                               gprocess.PRO_Text3Dbase(inPresentation, eN[1], inFrameIndex, eN[3])
                     else
-                              inValue.sidedness = "FOURSIDED"
                               inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
                               local elementName_ = elementName .. #text3ds[elementName]
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex,
@@ -171,21 +172,69 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
           end
 
           local ElementName = gUnique(inElementName)
-          if not gscreenElements[ElementName] then
-                    gscreenElements[ElementName] = {}
-                    for i = 1, #inValue.t do
+          if inValue.mode == "SEPARATED" then
+                    if not gscreenElements[ElementName] then
+                              gscreenElements[ElementName] = {}
+                              for i = 1, #inValue.t do
+                                        local text = gwid.CreateTextLabel(
+                                                  vec3(math.huge, math.huge, gbaseDepth),
+                                                  vec3(1),
+                                                  gFontMap.Huge,
+                                                  string.sub(inValue.t, i, i), nil, true)
+                                        gscreenElements[ElementName][#gscreenElements[ElementName] + 1] = text
+                              end
+                    end
+                    local texts = gscreenElements[ElementName]
+                    for i = 1, #texts do
+                              local p, d, renderer_parameter, r
+                              p = vec3(inValue.p.x - inValue.d.x * (i - 1) * 2, inValue.p.y, inValue.p.z)
+                              d = inValue.d
+                              renderer_parameter = inValue.renderer_parameter
+                              r = inValue.r
+                              if inValue.callback_foreachchar then
+                                        p, d, r, renderer_parameter = inValue.callback_foreachchar(p, d, r,
+                                                  renderer_parameter, i,
+                                                  #texts)
+                              end
+
+                              gprocess.Cobj(inPresentation, Cobj {
+                                        camera_control = "EDITOR_MOUSE",
+                                        load = function()
+                                                  local uniform3did = gworld3d:AddUniform3D(Engine.i, gwindow)
+                                                  local uniform3d = gworld3d:GetUniform3D(uniform3did)
+                                                  uniform3d:Build(Local.Text3D_textShader.simple3d)
+                                                  -- print(texts[i], texts[i].mId, texts[i].mId.mImgId)
+                                                  Jkr.RegisterShape2DImageToUniform3D(gwid.st.handle,
+                                                            uniform3d,
+                                                            texts[i].mId.mImgId,
+                                                            3)
+                                                  local obj = Jkr.Object3D()
+                                                  if inValue.sidedness == "TWOSIDED" then
+                                                            obj.mId = Local.cube_twosided
+                                                  elseif inValue.sidedness == "FOURSIDED" then
+                                                            obj.mId = Local.cube_foursided
+                                                  end
+                                                  obj.mAssociatedUniform = uniform3did
+                                                  obj.mAssociatedSimple3D = Local.Text3D_textShader.simple3did
+                                                  return { obj }
+                                        end,
+                                        p = p,
+                                        d = d,
+                                        renderer_parameter = renderer_parameter,
+                                        r = r
+                              }.Cobj, inFrameIndex, ElementName .. "threed" .. i)
+                    end
+          end
+          if inValue.mode == "COMBINED" then
+                    if not gscreenElements[ElementName] then
                               local text = gwid.CreateTextLabel(
                                         vec3(math.huge, math.huge, gbaseDepth),
                                         vec3(1),
                                         gFontMap.Huge,
-                                        string.sub(inValue.t, i, i), nil, true)
-                              gscreenElements[ElementName][#gscreenElements[ElementName] + 1] = text
+                                        inValue.t, nil, true)
+                              gscreenElements[ElementName] = text
                     end
-          end
-
-          local p = inValue.p
-          local texts = gscreenElements[ElementName]
-          for i = 1, #texts do
+                    local texts = gscreenElements[ElementName]
                     gprocess.Cobj(inPresentation, Cobj {
                               camera_control = "EDITOR_MOUSE",
                               load = function()
@@ -195,7 +244,7 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                                         -- print(texts[i], texts[i].mId, texts[i].mId.mImgId)
                                         Jkr.RegisterShape2DImageToUniform3D(gwid.st.handle,
                                                   uniform3d,
-                                                  texts[i].mId.mImgId,
+                                                  texts.mId.mImgId,
                                                   3)
                                         local obj = Jkr.Object3D()
                                         if inValue.sidedness == "TWOSIDED" then
@@ -207,16 +256,10 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                                         obj.mAssociatedSimple3D = Local.Text3D_textShader.simple3did
                                         return { obj }
                               end,
-                              p = vec3(p.x - inValue.d.x * (i - 1) * 2, p.y, p.z),
+                              p = inValue.p,
                               d = inValue.d,
+                              r = inValue.r,
                               renderer_parameter = inValue.renderer_parameter
-                    }.Cobj, inFrameIndex, ElementName .. "threed" .. i)
+                    }.Cobj, inFrameIndex, ElementName .. "threed")
           end
-
-          local totalframecount = 0
-          IterateEachFrame(inPresentation, function(eachFrameIndex, _)
-                    if eachFrameIndex >= inFrameIndex then
-                              totalframecount = totalframecount + 1
-                    end
-          end)
 end

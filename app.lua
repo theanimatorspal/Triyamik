@@ -22,14 +22,26 @@ do
                     -- },
                     Frame {
                               text = PRO.Text3D {
-                                        t = "A",
-                                        d = vec3(1, 1, 2)
+                                        t = "Darshan",
+                                        mode = "COMBINED"
                               },
                     },
                     Frame {
                               text = PRO.Text3D {
-                                        t = "B",
-                                        d = vec3(1, 1, 2)
+                                        t = "Koirala",
+                                        mode = "COMBINED"
+                              },
+                    },
+                    Frame {
+                              text = PRO.Text3D {
+                                        t = "is",
+                                        mode = "COMBINED"
+                              },
+                    },
+                    Frame {
+                              text = PRO.Text3D {
+                                        t = "bad",
+                                        mode = "COMBINED"
                               },
                     },
                     -- Frame {

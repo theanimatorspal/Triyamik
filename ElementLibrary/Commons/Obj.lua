@@ -163,11 +163,12 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 -- rotate
                 local rotateby = vec3(interr.x, interr.y, interr.z)
                 local rotateby_deg = interr.w
-                Matrix = Jmath.Rotate_deg(Matrix, rotateby_deg, rotateby)
-                -- scale
-                Matrix = Jmath.Scale(Matrix, interd)
                 -- translate
                 Matrix = Jmath.Translate(Matrix, interp)
+                -- scale
+                Matrix = Jmath.Scale(Matrix, interd)
+                -- rotate
+                Matrix = Jmath.Rotate_deg(Matrix, rotateby_deg, rotateby)
                 Element.mMatrix2 = glerp_mat4f(prev.renderer_parameter, new.renderer_parameter, t)
                 Element.mMatrix = Matrix
             else
@@ -183,14 +184,15 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 local interr = new.r
                 local interd = new.d
                 local Matrix = Jmath.Scale(Element.mMatrix3, vec3(1))
+                -- translate
+                Matrix = Jmath.Translate(Matrix, interp)
+                -- scale
+                Matrix = Jmath.Scale(Matrix, interd)
                 -- rotate
                 local rotateby = vec3(interr.x, interr.y, interr.z)
                 local rotateby_deg = interr.w
                 Matrix = Jmath.Rotate_deg(Matrix, rotateby_deg, rotateby)
-                -- scale
-                Matrix = Jmath.Scale(Matrix, interd)
-                -- translate
-                Matrix = Jmath.Translate(Matrix, interp)
+
                 Element.mMatrix = Matrix
                 Element.mMatrix2 = new.renderer_parameter
             end
