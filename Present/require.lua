@@ -62,34 +62,29 @@ gSetInterpolationType = function(inType)
                     glerp = function(a, b, t)
                               return (a * (1 - t) + t * b) * (1 - t) + b * t
                     end
-
-                    glerp_2f = function(a, b, t)
-                              return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
-                    end
-
-                    glerp_3f = function(a, b, t)
-                              return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
-                    end
-
-                    glerp_4f = function(a, b, t)
-                              return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
-                    end
           elseif inType == "LINEAR" then
                     glerp = function(a, b, t)
                               return a * (1 - t) + t * b
                     end
+          end
+          glerp_2f = function(a, b, t)
+                    return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
+          end
 
-                    glerp_2f = function(a, b, t)
-                              return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
-                    end
+          glerp_3f = function(a, b, t)
+                    return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
+          end
 
-                    glerp_3f = function(a, b, t)
-                              return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
-                    end
-
-                    glerp_4f = function(a, b, t)
-                              return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
-                    end
+          glerp_4f = function(a, b, t)
+                    return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
+          end
+          glerp_mat4f = function(a, b, t)
+                    return mat4(
+                              glerp_4f(a[1], b[1], t),
+                              glerp_4f(a[2], b[2], t),
+                              glerp_4f(a[3], b[3], t),
+                              glerp_4f(a[4], b[4], t)
+                    )
           end
 end
 

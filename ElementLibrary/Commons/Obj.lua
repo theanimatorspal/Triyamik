@@ -98,7 +98,7 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
                     obs[i].mP2 = 1
                 end
             end
-            gscreenElements[ElementName] = inValue.load()
+            gscreenElements[ElementName] = obs
         else
             local OBJObjects, skyboxId = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
                 inValue.filename,
@@ -168,6 +168,7 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 Matrix = Jmath.Scale(Matrix, interd)
                 -- translate
                 Matrix = Jmath.Translate(Matrix, interp)
+                Element.mMatrix2 = glerp_mat4f(prev.renderer_parameter, new.renderer_parameter, t)
                 Element.mMatrix = Matrix
             else
                 if new.skinning then
@@ -191,10 +192,10 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 -- translate
                 Matrix = Jmath.Translate(Matrix, interp)
                 Element.mMatrix = Matrix
+                Element.mMatrix2 = new.renderer_parameter
             end
         end
-        ---@todo Fix this, the model is only shown for a moment
-        Element.mMatrix2 = renderer_parameter
+        -- Element.mMatrix2 = renderer_parameter
         gobjects3d:add(Element) -- gobjects3d is erased at each frame
     end
     gshadowobjects3d = nil
