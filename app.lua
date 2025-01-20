@@ -20,28 +20,29 @@ do
                     -- Frame {
                     --           CAndroid {},
                     -- },
+
                     Frame {
                               text = PRO.Text3D {
                                         t = "Darshan",
-                                        mode = "COMBINED"
                               },
+                              PRO.Camera3D {
+                                        fov = 45.0
+                              }
                     },
                     Frame {
                               text = PRO.Text3D {
                                         t = "Koirala",
-                                        mode = "COMBINED"
                               },
+                              PRO.Camera3D { fov = 46.0 }
                     },
                     Frame {
                               text = PRO.Text3D {
                                         t = "is",
-                                        mode = "COMBINED"
                               },
                     },
                     Frame {
                               text = PRO.Text3D {
                                         t = "bad",
-                                        mode = "COMBINED"
                               },
                     },
                     -- Frame {

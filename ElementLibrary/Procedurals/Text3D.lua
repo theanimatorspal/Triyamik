@@ -198,7 +198,6 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                               end
 
                               gprocess.Cobj(inPresentation, Cobj {
-                                        camera_control = "EDITOR_MOUSE",
                                         load = function()
                                                   local uniform3did = gworld3d:AddUniform3D(Engine.i, gwindow)
                                                   local uniform3d = gworld3d:GetUniform3D(uniform3did)
@@ -236,7 +235,6 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                     end
                     local texts = gscreenElements[ElementName]
                     gprocess.Cobj(inPresentation, Cobj {
-                              camera_control = "EDITOR_MOUSE",
                               load = function()
                                         local uniform3did = gworld3d:AddUniform3D(Engine.i, gwindow)
                                         local uniform3d = gworld3d:GetUniform3D(uniform3did)
