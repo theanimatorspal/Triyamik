@@ -4,7 +4,8 @@ PRO.Text3D = function(inText3DTable)
           local t = {
                     t = "001",
                     p = vec3(0),
-                    d = vec3(1, 1, 0.1),
+                    d = vec3(1, 1, 0.01),
+                    color = vec4(0, 0, 0, 1),
                     mode = "SEPARATED", -- "COMBINED"
                     sidedness = "TWOSIDED",
                     callback_foreachchar = nil
@@ -12,20 +13,62 @@ PRO.Text3D = function(inText3DTable)
           return { PRO_Text3D = Default(inText3DTable, t) }
 end
 
+PRO.Text3D_group = function(inText3DTable)
+          local t = {
+                    type = "GRID2D",
+                    texts = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" },
+                    p = vec3(0), --position of the grid (Grid Center)
+                    each_d = vec3(0.1),
+                    each_padding = vec3(2)
+          }
+          return { PRO_Text3D_group = Default(inText3DTable, t) }
+end
+
+gprocess.PRO_Text3D_group = function(inPresentation, inValue, inFrameIndex, inElementName)
+          if inValue.type == "GRID2D" then
+                    local colcount = math.ceil(math.sqrt(#inValue.texts))
+                    local rowcount = math.ceil(#inValue.texts / (colcount * 1.0))
+                    local start_x = inValue.p.x + (colcount) * (inValue.each_padding.x) / 4.0
+                    local start_y = inValue.p.y + (rowcount) * (inValue.each_padding.y) / 4.0
+
+                    local index = 1
+                    local row = 1
+                    while index <= #inValue.texts do
+                              for col = 1, colcount do
+                                        if index <= #inValue.texts then
+                                                  gprocess.PRO_Text3D(inPresentation, PRO.Text3D {
+                                                            t = inValue.texts[index],
+                                                            d = inValue.each_d,
+                                                            p = vec3(
+                                                                      start_x - (col - 1) * (inValue.each_padding.x) / 2.0,
+                                                                      start_y - (row - 1) * (inValue.each_padding.x) / 2.0,
+                                                                      inValue.p.z
+                                                            )
+                                                  }.PRO_Text3D, inFrameIndex, inElementName .. "__" .. index)
+                                                  index = index + 1
+                                        end
+                              end
+                              row = row + 1
+                    end
+          end
+end
+
 local text3ds = {}
 gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementName)
           local elementName = gUnique(inElementName)
+          local c = inValue.color
           if not text3ds[elementName] then
                     local elementName_ = elementName .. 0
                     text3ds[elementName] = { { inValue, inFrameIndex, elementName_ } }
 
-                    inValue.renderer_parameter = mat4(vec4(0, 1, 0, 1), vec4(0), vec4(0), vec4(0))
+                    inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0), vec4(0), vec4(0))
                     gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex, elementName_)
           else
                     if text3ds[elementName].t ~= inValue.t then
                               text3ds[elementName].t = inValue.t
 
-                              inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
+                              inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0.0), vec4(0.0),
+                                        vec4(0.0))
 
                               -- Here, interpolate
                               -- Create a Text3Dbase element (different elementName_)
@@ -34,20 +77,23 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
 
                               -- new text at current frame (opacity 1)
                               -- new text at previous frame (opacity 0.0)
-                              inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
+                              inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0.0), vec4(0.0),
+                                        vec4(0.0))
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex, elementName_)
-                              inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 0.0), vec4(0.0), vec4(0.0), vec4(0.0))
+                              inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 0 * c.w), vec4(0.0), vec4(0.0),
+                                        vec4(0.0))
                               inValue.r = vec4(0, 1, 0, 360)
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex - 1, elementName_)
 
                               -- old text at current frame (opacity 0.0)
                               local eN = text3ds[elementName][#text3ds[elementName] - 1]
-                              print(inspect(eN))
-                              eN[1].renderer_parameter = mat4(vec4(0.0, 1, 0.0, 0.0), vec4(0.0), vec4(0.0), vec4(0.0))
+                              eN[1].renderer_parameter = mat4(vec4(c.x, c.y, c.z, 0 * c.w), vec4(0.0), vec4(0.0),
+                                        vec4(0.0))
                               eN[1].r = vec4(0, 1, 0, 360)
                               gprocess.PRO_Text3Dbase(inPresentation, eN[1], inFrameIndex, eN[3])
                     else
-                              inValue.renderer_parameter = mat4(vec4(0.0, 1, 0.0, 1), vec4(0.0), vec4(0.0), vec4(0.0))
+                              inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0.0), vec4(0.0),
+                                        vec4(0.0))
                               local elementName_ = elementName .. #text3ds[elementName]
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex,
                                         elementName_)

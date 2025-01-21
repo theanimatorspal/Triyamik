@@ -255,15 +255,13 @@ Engine.CreatePBRShaderByGLTFMaterial = function(inGLTF, inMaterialIndex, inShado
         .In(3, "vec4", "vTangent")
         .In(4, "flat int", "vVertexIndex")
         .In(5, "vec3", "vViewPos")
-        .Append [[
-        layout (set = 0, binding = 32) uniform sampler2DArray shadowMap;
-        ]]
         .uSamplerCubeMap(20, "samplerCubeMap", 0)
         .uSampler2D(23, "samplerBRDFLUT", 0)
         .uSamplerCubeMap(24, "samplerIrradiance", 0)
         .uSamplerCubeMap(25, "prefilteredMap", 0)
-
-    -- PBR.PreCalcImages(fShader)
+        .Append [[
+        layout (set = 0, binding = 32) uniform sampler2DArray shadowMap;
+        ]]
 
     fShader.Ubo()
         .outFragColor()
@@ -670,7 +668,6 @@ Engine.AddAndConfigureGLTFToWorld = function(w,
     Objects[#Objects + 1] = SkyboxObject
     return Objects
 end
-
 
 Engine.CreateWorld3D = function(w, inshaper3d)
     local world3d = Jkr.World3D(inshaper3d)

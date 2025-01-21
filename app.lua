@@ -8,6 +8,13 @@ do
           Configuration.Config.FullScreen = false
           gPresentation(Configuration, Validation, "NoLoop")
 
+          local Generate = function(inT)
+                    local t = {}
+                    for i = 1, 7 * 7 do
+                              t[#t + 1] = inT
+                    end
+                    return t
+          end
           local Present = {
                     -- Config = {
                     -- ContinousAutoPlay = {
@@ -22,29 +29,23 @@ do
                     -- },
 
                     Frame {
-                              text = PRO.Text3D {
-                                        t = "Darshan",
+                              text = PRO.Text3D_group {
+                                        each_d = vec3(0.1, 0.1, 0.00001),
                               },
                               PRO.Camera3D {
-                                        fov = 45.0
+                                        fov = 45.0,
+                                        -- type = "ORTHO"
                               }
                     },
-                    Frame {
-                              text = PRO.Text3D {
-                                        t = "Koirala",
-                              },
-                              PRO.Camera3D { fov = 46.0 }
-                    },
-                    Frame {
-                              text = PRO.Text3D {
-                                        t = "is",
-                              },
-                    },
-                    Frame {
-                              text = PRO.Text3D {
-                                        t = "bad",
-                              },
-                    },
+                    -- Frame {
+                    --           text = PRO.Text3D_group {
+                    --                     texts = Generate("X"),
+                    --                     each_d = vec3(0.1, 0.1, 0.00001)
+                    --           },
+                    --           PRO.Camera3D {
+                    --                     fov = 45.0
+                    --           }
+                    -- },
                     -- Frame {
                     --           CTest {}
                     -- }
@@ -135,7 +136,7 @@ do
                     -- }
           }
           gPresentation(Present, Validation, CurrentLoopType)
-          print(inspect(gFrameKeys))
+          -- print(inspect(gFrameKeys))
 
           ClosePresentations()
 end

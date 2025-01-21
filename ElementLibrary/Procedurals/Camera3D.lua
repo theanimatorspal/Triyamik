@@ -9,7 +9,8 @@ PRO.Camera3D = function(inText3DTable)
                     near = 0.001,
                     far = 1000,
                     projection = mat4(0.0),
-                    view = mat4(0.0)
+                    view = mat4(0.0),
+                    type = "PERSPECTIVE" -- "ORTHO"
           }
           return { PRO_Camera3D = Default(inText3DTable, t) }
 end
@@ -30,8 +31,18 @@ gprocess.PRO_Camera3D = function(inPresentation, inValue, inFrameIndex, inElemen
           local r = Jmath.Normalize(Jmath.Cross(u, d))
           local cu = Jmath.Normalize(Jmath.Cross(d, r))
           inValue.view = Jmath.LookAt(e, e + d, cu)
-          inValue.projection = Jmath.Perspective(inValue.fov * 180.0 / math.pi, inValue.aspect, inValue.near, inValue
-                    .far)
+          if inValue.type == "PERSPECTIVE" then
+                    inValue.projection = Jmath.Perspective(inValue.fov * 180.0 / math.pi, inValue.aspect, inValue.near,
+                              inValue.far)
+          elseif inValue.type == "ORTHO" then
+                    inValue.projection = Jmath.Ortho(
+                              -inValue.fov * inValue.aspect,
+                              inValue.fov * inValue.aspect,
+                              -inValue.fov, inValue.fov,
+                              -inValue.far,
+                              inValue.far)
+                    Jmath.PrintMatrix(inValue.projection)
+          end
           gAddFrameKeyElement(inFrameIndex, {
                     {
                               "PRO_Camera3D",
