@@ -21,4 +21,28 @@ gprocess["CText"] = function(inPresentation, inValue, inFrameIndex, inElementNam
           if not texts[elementName] then
                     texts[elementName] = gwid.CreateTextLabel(p, vec3(0), gFontMap[f], t, c)
           end
+          gAddFrameKeyElement(inFrameIndex, {
+                    {
+                              "*CText*",
+                              handle = texts[elementName],
+                              value = inValue,
+                              name = elementName
+                    }
+          })
+end
+
+ExecuteFunctions["*CText*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+          local PreviousElement, inElement = GetPreviousFrameKeyElementD(inPresentation, inElement,
+                    inFrameIndex, inDirection)
+          local new = inElement.value
+          if PreviousElement then
+                    local prev = PreviousElement.value
+                    local interc = glerp_4f(prev.c, new.c, t)
+                    local interp = glerp_3f(prev.p, new.p, t)
+                    local intert = TextInterop(prev.t, new.t, t)
+
+                    inElement.handle:Update(interp, vec3(0), gFontMap[new.f], intert, interc)
+          else
+                    inElement.handle:Update(new.p, vec3(0), gFontMap[new.f], new.t, new.c)
+          end
 end

@@ -1,5 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 Pr = gDefaultConfiguration()
+Pr.Config.StepTime = 0.001
 Pr.Config.FullScreen = true
 -- todo commonenumerate hide bug, should write all over again
 
@@ -188,15 +189,14 @@ P = {
 
 P = {
           Frame {
-                    text = CButton {
+                    text = CText {
                               t = "FUCK YOU",
-                              p = "CENTER_CENTER"
                     }
           },
           Frame {
-                    CButton {
+                    text = CText {
                               t = "How are you",
-                              p = "CENTER_CENTER"
+                              p = vec3(0, 0, gbaseDepth)
                     }
           }
 }
