@@ -15,16 +15,26 @@ end
 
 PRO.Text3D_group = function(inText3DTable)
           local t = {
-                    type = "GRID2D",
-                    texts = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" },
-                    p = vec3(0), --position of the grid (Grid Center)
+                    type = "GRID2D", -- "UNIFIED"
+                    texts = { "JkrGUIv2" },
+                    p = vec3(0),     --position of the grid (Grid Center)
                     each_d = vec3(0.1),
-                    each_padding = vec3(2)
+                    each_padding = vec3(2),
+                    each_mode = "COMBINED"
           }
           return { PRO_Text3D_group = Default(inText3DTable, t) }
 end
 
+local Text3D_group_elements = {}
 gprocess.PRO_Text3D_group = function(inPresentation, inValue, inFrameIndex, inElementName)
+          local elementName = gUnique(inElementName)
+          if not Text3D_group_elements[elementName] then
+                    Text3D_group_elements[elementName] = { inValue, inFrameIndex }
+          else
+                    if #inValue.texts == 1 and inValue.texts[1] == "JkrGUIv2" then
+                              inValue.texts = Text3D_group_elements[elementName][1].texts
+                    end
+          end
           if inValue.type == "GRID2D" then
                     local colcount = math.ceil(math.sqrt(#inValue.texts))
                     local rowcount = math.ceil(#inValue.texts / (colcount * 1.0))
@@ -43,12 +53,24 @@ gprocess.PRO_Text3D_group = function(inPresentation, inValue, inFrameIndex, inEl
                                                                       start_x - (col - 1) * (inValue.each_padding.x) / 2.0,
                                                                       start_y - (row - 1) * (inValue.each_padding.x) / 2.0,
                                                                       inValue.p.z
-                                                            )
-                                                  }.PRO_Text3D, inFrameIndex, inElementName .. "__" .. index)
+                                                            ),
+                                                            mode = inValue.each_mode
+                                                  }.PRO_Text3D, inFrameIndex, elementName .. "__" .. index)
                                                   index = index + 1
                                         end
                               end
                               row = row + 1
+                    end
+          elseif inValue.type == "UNIFIED" then
+                    local index = 1
+                    while index <= #inValue.texts do
+                              gprocess.PRO_Text3D(inPresentation, PRO.Text3D {
+                                        t = inValue.texts[index],
+                                        d = inValue.each_d,
+                                        p = inValue.p,
+                                        mode = inValue.each_mode
+                              }.PRO_Text3D, inFrameIndex, elementName .. "__" .. index)
+                              index = index + 1
                     end
           end
 end
@@ -64,8 +86,8 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0), vec4(0), vec4(0))
                     gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex, elementName_)
           else
-                    if text3ds[elementName].t ~= inValue.t then
-                              text3ds[elementName].t = inValue.t
+                    if text3ds[elementName][#text3ds[elementName]][1].t ~= inValue.t then
+                              text3ds[elementName][#text3ds[elementName]][1].t = inValue.t
 
                               inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0.0), vec4(0.0),
                                         vec4(0.0))
@@ -248,7 +270,6 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                                                   local uniform3did = gworld3d:AddUniform3D(Engine.i, gwindow)
                                                   local uniform3d = gworld3d:GetUniform3D(uniform3did)
                                                   uniform3d:Build(Local.Text3D_textShader.simple3d)
-                                                  -- print(texts[i], texts[i].mId, texts[i].mId.mImgId)
                                                   Jkr.RegisterShape2DImageToUniform3D(gwid.st.handle,
                                                             uniform3d,
                                                             texts[i].mId.mImgId,
@@ -285,7 +306,6 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                                         local uniform3did = gworld3d:AddUniform3D(Engine.i, gwindow)
                                         local uniform3d = gworld3d:GetUniform3D(uniform3did)
                                         uniform3d:Build(Local.Text3D_textShader.simple3d)
-                                        -- print(texts[i], texts[i].mId, texts[i].mId.mImgId)
                                         Jkr.RegisterShape2DImageToUniform3D(gwid.st.handle,
                                                   uniform3d,
                                                   texts.mId.mImgId,

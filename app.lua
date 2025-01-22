@@ -10,7 +10,7 @@ do
 
           local Generate = function(inT)
                     local t = {}
-                    for i = 1, 7 * 7 do
+                    for i = 1, 2 * 2 do
                               t[#t + 1] = inT
                     end
                     return t
@@ -30,13 +30,30 @@ do
 
                     Frame {
                               text = PRO.Text3D_group {
-                                        each_d = vec3(0.1, 0.1, 0.00001),
+                                        each_d = vec3(0.3, 0.1, 0.00001),
+                                        type = "UNIFIED",
+                                        texts = Generate("20x")
                               },
                               PRO.Camera3D {
                                         fov = 45.0,
                                         -- type = "ORTHO"
                               }
                     },
+                    Frame {
+                              text = PRO.Text3D_group {
+                                        each_d = vec3(0.3, 0.1, 0.00001),
+                                        type = "GRID2D",
+                              },
+                              PRO.Camera3D {
+                                        fov = 45.0,
+                                        -- type = "ORTHO"
+                              }
+                    }
+                    -- Frame {
+                    --           text = PRO.Text3D_group {
+                    --                     type = "GRID2D",
+                    --           }
+                    -- },
                     -- Frame {
                     --           text = PRO.Text3D_group {
                     --                     texts = Generate("X"),

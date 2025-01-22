@@ -183,5 +183,26 @@ P = {
           }
 }
 
+-- Pr:insert(P)
+-- gPresentation(Pr, true, "GeneralLoop")
+
+P = {
+          Frame {
+                    text = CButton {
+                              t = "FUCK YOU",
+                              p = "CENTER_CENTER"
+                    }
+          },
+          Frame {
+                    CButton {
+                              t = "How are you",
+                              p = "CENTER_CENTER"
+                    }
+          }
+}
+
 Pr:insert(P)
+print(inspect(Pr))
 gPresentation(Pr, true, "GeneralLoop")
+
+print(inspect(gFrameKeys))
