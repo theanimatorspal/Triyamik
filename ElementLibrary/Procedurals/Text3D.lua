@@ -145,6 +145,7 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
                                         elementName_)
                     end
           end
+          print(inspect(text3ds))
 end
 
 PRO.Text3Dbase = function(inImageTable)
