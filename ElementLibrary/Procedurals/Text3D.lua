@@ -116,7 +116,7 @@ gprocess.PRO_Text3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     else
                               inValue.renderer_parameter = mat4(vec4(c.x, c.y, c.z, 1 * c.w), vec4(0.0), vec4(0.0),
                                         vec4(0.0))
-                              local elementName_ = elementName .. #text3ds[elementName]
+                              local elementName_ = elementName .. (#text3ds[elementName] - 1)
                               gprocess.PRO_Text3Dbase(inPresentation, inValue, inFrameIndex,
                                         elementName_)
                     end

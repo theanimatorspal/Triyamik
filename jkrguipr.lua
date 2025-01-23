@@ -1,6 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 Pr = gDefaultConfiguration()
-Pr.Config.StepTime = 0.001
+Pr.Config.StepTime = 0.1
 Pr.Config.FullScreen = true
 -- todo commonenumerate hide bug, should write all over again
 
@@ -75,11 +75,11 @@ P = {
                               },
                               hide = "all"
                     },
-                    CButton {
-                              onclick = function()
-                                        gMoveToParicular(13)
-                              end
-                    }
+                    -- CButton {
+                    --           onclick = function()
+                    --                     gMoveToParicular(13)
+                    --           end
+                    -- }
           },
           Frame {
                     s1 = CSection { t = "Introduction" },
@@ -187,22 +187,21 @@ P = {
 -- Pr:insert(P)
 -- gPresentation(Pr, true, "GeneralLoop")
 
-P = {
-          Frame {
-                    text = CText {
-                              t = "FUCK YOU",
-                    }
-          },
-          Frame {
-                    text = CText {
-                              t = "How are you",
-                              p = vec3(0, 0, gbaseDepth)
-                    }
-          }
-}
+-- P = {
+--           Frame {
+--                     text = CText {
+--                               t = "FUCK YOU",
+--                     }
+--           },
+--           Frame {
+--                     text = CText {
+--                               t = "How are you",
+--                               p = vec3(0, 0, gbaseDepth)
+--                     }
+--           }
+-- }
 
 Pr:insert(P)
-print(inspect(Pr))
 gPresentation(Pr, true, "GeneralLoop")
 
-print(inspect(gFrameKeys))
+-- print(inspect(gFrameKeys))

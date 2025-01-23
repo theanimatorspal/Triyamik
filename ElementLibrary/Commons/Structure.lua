@@ -47,7 +47,7 @@ gprocess.CStructure = function(inPresentation, inValue, inFrameIndex, inElementN
                     bc = very_transparent_color,
                     _push_constant = StrechedPC
                 }
-                for key, value in pairs(frames_of_each_sections) do                         -- {s1 = {1, 2, 3}, s2 = {3, 4, 5}}
+                for key, value in pairs(frames_of_each_sections) do -- {s1 = {1, 2, 3}, s2 = {3, 4, 5}}
                     if key == commmon_section_element_names_linear[i] then
                         for _, frame_index in ipairs(value) do
                             if eachFrameIndex == frame_index then
