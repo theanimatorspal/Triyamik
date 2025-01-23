@@ -18,6 +18,8 @@ PRO.Text3D_group = function(inText3DTable)
                     type = "GRID2D", -- "UNIFIED"
                     texts = { "JkrGUIv2" },
                     p = vec3(0),     --position of the grid (Grid Center)
+                    offset = 0,
+                    radius = 3,
                     each_d = vec3(0.1),
                     each_padding = vec3(2),
                     each_mode = "COMBINED"
@@ -70,6 +72,28 @@ gprocess.PRO_Text3D_group = function(inPresentation, inValue, inFrameIndex, inEl
                                         p = inValue.p,
                                         mode = inValue.each_mode
                               }.PRO_Text3D, inFrameIndex, elementName .. "__" .. index)
+                              index = index + 1
+                    end
+          elseif inValue.type == "CIRCLE2D" then
+                    local index = 1
+                    local offset = inValue.offset
+                    local r = inValue.radius
+                    local sin = math.sin
+                    local cos = math.cos
+                    local del_theta = 2 * math.pi / #inValue.texts
+                    local theta = (offset - 1) * del_theta
+                    while index <= #inValue.texts do
+                              gprocess.PRO_Text3D(inPresentation, PRO.Text3D {
+                                        t = inValue.texts[index],
+                                        d = inValue.each_d,
+                                        p = vec3(
+                                                  r * sin(theta),
+                                                  r * cos(theta),
+                                                  inValue.p.z
+                                        ),
+                                        mode = inValue.each_mode
+                              }.PRO_Text3D, inFrameIndex, elementName .. "__" .. index)
+                              theta = theta + del_theta
                               index = index + 1
                     end
           end

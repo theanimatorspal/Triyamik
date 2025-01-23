@@ -6,7 +6,7 @@ do
           local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
-          Configuration.Config.StepTime = 0.0001
+          Configuration.Config.StepTime = 0.001
           gPresentation(Configuration, Validation, "NoLoop")
 
           local Generate = function(inT)
@@ -31,7 +31,7 @@ do
 
                     Frame {
                               text = PRO.Text3D_group {
-                                        each_d = vec3(0.3, 0.1, 10),
+                                        each_d = vec3(0.3, 0.1, 2),
                                         type = "UNIFIED",
                                         texts = Generate("20x")
                               },
@@ -44,6 +44,17 @@ do
                               text = PRO.Text3D_group {
                                         each_d = vec3(0.3, 0.1, 0.001),
                                         type = "GRID2D",
+                              },
+                              PRO.Camera3D {
+                                        fov = 45.0,
+                                        -- type = "ORTHO"
+                              }
+                    },
+                    Frame {
+                              text = PRO.Text3D_group {
+                                        each_d = vec3(0.5, 0.5, 0.001),
+                                        type = "CIRCLE2D",
+                                        texts = Generate("X")
                               },
                               PRO.Camera3D {
                                         fov = 45.0,

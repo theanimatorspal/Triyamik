@@ -29,6 +29,7 @@ gprocess["CText"] = function(inPresentation, inValue, inFrameIndex, inElementNam
                               name = elementName
                     }
           })
+          gFontMap["Normal"]:GetTextDimension()
 end
 
 ExecuteFunctions["*CText*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
