@@ -10,7 +10,7 @@ P = {
                                         "image2.png",
                                         "image3.png",
                               },
-                              index = 2,
+                              index = 1,
                     },
           },
           Frame {
