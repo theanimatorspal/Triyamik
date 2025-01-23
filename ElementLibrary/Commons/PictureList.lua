@@ -23,9 +23,9 @@ gprocess.CPictureList = function(inPresentation, inValue, inFrameIndex, inElemen
     end
 
     for i = 1, #paths do
-        local p = inValue.p
-        local d = inValue.d
-        local c = inValue.c
+        local p = vec3(inValue.p)
+        local d = vec3(inValue.d)
+        local c = vec4(inValue.c)
         local alpha = 0
         if i == index then
             alpha = 1
