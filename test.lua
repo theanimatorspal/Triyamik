@@ -4,9 +4,13 @@ gPresentation(conf, true, "NoLoop")
 
 P = {
           Frame {
-                    CPictureWithLabel {
-                              tl = "FUCK",
-                              path = "tulogo.png"
+                    CPictureList {
+                              path = {
+                                        "image1.png",
+                                        "image2.png",
+                                        "image3.png",
+                              }, index = 1,
+
                     }
           }
 
