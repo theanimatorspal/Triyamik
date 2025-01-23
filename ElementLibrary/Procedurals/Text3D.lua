@@ -263,6 +263,9 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                     Local.Text3D_textShader.simple3did = simple3did
                     Local.Text3D_textShader.simple3d = simple3d
           end
+          if not PRO.Text3D_colored_background_shader then
+                    -- local vshader, fshader = Engine.GetAppropriateShader("")
+          end
 
           local ElementName = gUnique(inElementName)
           if inValue.mode == "SEPARATED" then
