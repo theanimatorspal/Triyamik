@@ -3,7 +3,7 @@ require "ElementLibrary.Procedurals.Procedurals"
 
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = false
+          local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           Configuration.Config.StepTime = 0.001
@@ -11,7 +11,7 @@ do
 
           local Generate = function(inT)
                     local t = {}
-                    for i = 1, 2 * 2 do
+                    for i = 1, 5 * 5 do
                               t[#t + 1] = inT
                     end
                     return t
@@ -32,18 +32,18 @@ do
                     Frame {
                               text = PRO.Text3D_group {
                                         each_d = vec3(0.3, 0.1, 2),
-                                        type = "GRID2D",
+                                        type = "UNIFIED",
                                         texts = Generate("20x")
                               },
                               PRO.Camera3D {
-                                        fov = 10.0,
+                                        fov = 1.0,
                                         type = "ORTHO"
                               }
                     },
                     Frame {
                               text = PRO.Text3D_group {
                                         each_d = vec3(0.3, 0.1, 0.001),
-                                        type = "UNIFIED",
+                                        type = "GRID2D",
                                         texts = Generate("20x")
                               },
                               PRO.Camera3D {
@@ -53,9 +53,10 @@ do
                     },
                     Frame {
                               text = PRO.Text3D_group {
+                                        p = vec3(0, 0, 2),
                                         each_d = vec3(0.5, 0.5, 0.001),
-                                        type = "GRID2D",
-                                        texts = Generate("X")
+                                        type = "CIRCLE2D",
+                                        texts = Generate("20x")
                               },
                               PRO.Camera3D {
                                         fov = 45.0,
