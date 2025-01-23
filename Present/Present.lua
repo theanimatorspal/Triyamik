@@ -438,7 +438,7 @@ function gDefaultConfiguration()
                 gigantic = 38, -- \gigantic
                 Gigantic = 42, -- \Gigantic
             },
-            FontFilePaths = { "res/fonts/font.ttf", "res/fonts/Laila.ttf" }
+            FontFilePaths = { "font.ttf", "font.ttf" }
         },
         insert = function(self, inTable)
             for _, value in pairs(inTable) do
