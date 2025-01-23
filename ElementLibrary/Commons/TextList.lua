@@ -16,6 +16,7 @@ gprocess.CTextList = function(inPresentation, inValue, inFrameIndex, inElementNa
           local texts = inValue.texts
           local index = inValue.index
           local d = {}
+          local padding = gFontMap[inValue.f]:GetTextDimension("X")
 
           if texts ~= -1 then
                     textLists[elementName] = texts
@@ -35,10 +36,10 @@ gprocess.CTextList = function(inPresentation, inValue, inFrameIndex, inElementNa
                               alpha = 1
                     elseif i < index then
                               alpha = 0
-                              p = vec3(inValue.p.x - d[index].x * 2, inValue.p.y, gbaseDepth)
+                              p = vec3(inValue.p.x - d[i].x - padding.x, inValue.p.y, gbaseDepth)
                     elseif i > index then
                               alpha = 0
-                              p = vec3(inValue.p.x + d[index].x * 2, inValue.p.y, gbaseDepth)
+                              p = vec3(inValue.p.x + d[index].x + padding.x, inValue.p.y, gbaseDepth)
                     end
                     if i == index - 1 or i == index + 1 then
                               alpha = 0.5

@@ -6,7 +6,7 @@ P = {
           Frame {
                     text = CTextList {
                               texts = {
-                                        "apple", "ball", "cat",
+                                        "akjhfkashb", "rakakasaf", "akhfkajshf", "skjhkfsh", "kahfsklh", "skhgfkhs"
                               },
                               index = 1,
                     },
