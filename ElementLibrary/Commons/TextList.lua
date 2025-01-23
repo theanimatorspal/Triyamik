@@ -44,7 +44,6 @@ gprocess.CTextList = function(inPresentation, inValue, inFrameIndex, inElementNa
                               alpha = 0.5
                     end
 
-
                     local color = vec4(c.x, c.y, c.z, c.w * alpha)
                     gprocess.CText(inPresentation, CText {
                                         t = texts[i],

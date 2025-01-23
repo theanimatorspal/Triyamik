@@ -4,23 +4,21 @@ gPresentation(conf, true, "NoLoop")
 
 P = {
           Frame {
-                    text = CTextList {
-                              texts = {
-                                        "apple", "ball", "cat",
-                              },
-                              index = 1,
-                    },
-          },
-          Frame {
-                    text = CTextList {
-                              index = 2,
+                    text = CPictureWithLabelList {
+                              paths = { "image1.png", "image2.png", "image3.png" },
+                              texts = { "one", "two", "three" },
+                              index = 1
                     }
           },
           Frame {
-                    text = CTextList {
-                              index = 3,
+                    text = CPictureWithLabelList {
+                              index = 2
                     }
+          },
+          Frame {
+                    text = CPictureWithLabelList { index = 3 }
           }
+
 
 }
 
