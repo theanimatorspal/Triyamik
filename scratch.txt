@@ -230,6 +230,10 @@ Inserted device layer VK_LAYER_NV_optimus (C:\WINDOWS\System32\DriverStore\FileR
 			objectType   = Instance
 			objectHandle = 1765170128368
 SwapChainImagesSize: 273665312{
+Current Directory:"C:\\Users\\sansk\\OneDrive\\Desktop\\PresentTest-for-JkrGUI"
+SRC:"C:/Users/sansk/OneDrive/Pictures/jkrgui\\luaproject"
+DEST:"C:\\Users\\sansk\\OneDrive\\Desktop\\PresentTest-for-JkrGUI"
+LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:LEFT:RIGHT:KSAI::VK_KHR_surfaceKSAI::VK_KHR_win32_surfaceKSAI::NO OF PHYSICAL DEVICES:KSAI::1KSAI::GraphicsQueue Index:KSAI::0KSAI::PresentQueueIndex:KSAI::0SwapChainImagesSize: -1055920752{
   GetTextDimension = ,
   mId = 9
 }

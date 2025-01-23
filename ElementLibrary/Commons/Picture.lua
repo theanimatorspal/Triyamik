@@ -6,7 +6,7 @@ CPicture = function(inCPictureTable)
                     p = "CENTER_CENTER",
                     d = vec3(100, 100, 1),
                     ar = 1,       -- aspect ratio
-                    bh = "BY_HEIGHT",
+                    -- bh = "BY_HEIGHT", -- do it yourself
                     c = vec4(1),  -- Image color
                     bc = vec4(1), -- Image color
           }
