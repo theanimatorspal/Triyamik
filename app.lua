@@ -11,7 +11,7 @@ do
 
           local Generate = function(inT)
                     local t = {}
-                    for i = 1, 1 * 1 do
+                    for i = 1, 1 * 5 do
                               t[#t + 1] = inT
                     end
                     return t
