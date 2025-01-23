@@ -17,6 +17,11 @@ P = {
                     text = CPictureList {
                               index = 2,
                     }
+          },
+          Frame {
+                    text = CPictureList {
+                              index = 3,
+                    }
           }
 
 }

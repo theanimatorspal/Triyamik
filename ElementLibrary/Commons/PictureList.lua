@@ -1,7 +1,7 @@
 CPictureList = function(inCPictureList)
     local t = {
         paths = -1,
-        p = vec3(100, 100, 1),
+        p = vec3(100, 100, gbaseDepth),
         d = vec3(100, 100, 1),
         c = vec4(1),
         index = 1,
@@ -32,7 +32,7 @@ gprocess.CPictureList = function(inPresentation, inValue, inFrameIndex, inElemen
         end
         local color = vec4(c.x, c.y, c.z, c.w * alpha)
         gprocess.CPicture(inPresentation, CPicture {
-                pic = paths[index],
+                pic = paths[i],
                 p = p,
                 d = d,
                 c = color,
