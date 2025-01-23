@@ -2,11 +2,11 @@ require "Present.Present"
 
 CPictureWithLabel = function(inCaptionPictureTable)
           local t = {
-                    f    = "Normal",
                     path = -1,
                     p    = vec3(100, 100, 1),
-                    d    = vec3(300, 300, 1),
+                    d    = vec3(400, 300, 1),
                     tl   = "",
+                    f    = "Normal",
           }
           return { CPictureWithLabel = Default(inCaptionPictureTable, t) }
 end
