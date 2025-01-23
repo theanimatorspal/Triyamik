@@ -11,7 +11,7 @@ do
 
           local Generate = function(inT)
                     local t = {}
-                    for i = 1, 1 * 5 do
+                    for i = 1, 1 * 1 do
                               t[#t + 1] = inT
                     end
                     return t
@@ -44,6 +44,7 @@ do
                               text = PRO.Text3D_group {
                                         each_d = vec3(0.3, 0.1, 0.001),
                                         type = "GRID2D",
+                                        texts = Generate("20x")
                               },
                               PRO.Camera3D {
                                         fov = 45.0,
