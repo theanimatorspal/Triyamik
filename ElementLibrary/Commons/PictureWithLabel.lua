@@ -24,3 +24,4 @@ gprocess.CPictureWithLabel = function(inPresentation, inValue, inFrameIndex, inE
           local text_pos = vec3(text_x, inValue.p.y + pic_dimen.y, gbaseDepth)
           gprocess.CText(inPresentation, CText({ t = inValue.tl, p = text_pos }).CText, inFrameIndex, textElementName)
 end
+
