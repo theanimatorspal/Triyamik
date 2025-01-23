@@ -1,0 +1,16 @@
+Experiment/android/**
+*.jkr
+res/
+cache/
+cache2/
+scratch.txt
+scratch.txt
+scratch.txt
+cache/dummyshader.glsl
+cache/dummyshader.glsl
+cache/dummyshader.glsl
+cache/op.roundedRectangle.glsl
+cache2/o.shape2dShaders.roundedRectangle.glsl
+cache2/o.shape2dShaders.showImage.glsl
+cache2/ShapeFillCache.glsl
+cache2/ShapeImageCache.glsl
