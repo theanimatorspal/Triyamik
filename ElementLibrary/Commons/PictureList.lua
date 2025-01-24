@@ -1,5 +1,6 @@
 CPictureList = function(inCPictureList)
           local t = {
+                    type = "HORIZONTAL",
                     paths = -1,
                     p = vec3(100, 100, gbaseDepth),
                     d = vec3(100, 100, 1),
@@ -27,22 +28,37 @@ gprocess.CPictureList = function(inPresentation, inValue, inFrameIndex, inElemen
                     local d = vec3(inValue.d)
                     local c = vec4(inValue.c)
                     local alpha = 0
-                    if i == index then
-                              alpha = 1
-                    elseif i < index then
-                              alpha = 0
-                              p = vec3(inValue.p.x - inValue.d.x, inValue.p.y, gbaseDepth)
-                    elseif i > index then
-                              alpha = 0
-                              p = vec3(inValue.p.x + inValue.d.x, inValue.p.y, gbaseDepth)
+                    if inValue.type == "HORIZONTAL" then
+                              if i == index then
+                                        alpha = 1
+                              elseif i < index then
+                                        alpha = 0
+                                        p = vec3(inValue.p.x - inValue.d.x, inValue.p.y, gbaseDepth)
+                              elseif i > index then
+                                        alpha = 0
+                                        p = vec3(inValue.p.x + inValue.d.x, inValue.p.y, gbaseDepth)
+                              end
+                              if i == index - 1 or i == index + 1 then
+                                        alpha = 0.5
+                                        d.y = d.y * 0.5;
+                                        p.y = p.y + d.y * 0.5
+                              end
+                    elseif inValue.type == "VERTICAL" then
+                              if i == index then
+                                        alpha = 1
+                              elseif i < index then
+                                        alpha = 0
+                                        p = vec3(inValue.p.x, inValue.p.y - inValue.d.y, gbaseDepth)
+                              elseif i > index then
+                                        alpha = 0
+                                        p = vec3(inValue.p.x, inValue.p.y + inValue.d.y, gbaseDepth)
+                              end
+                              if i == index - 1 or i == index + 1 then
+                                        alpha = 0.5
+                                        d.x = d.x * 0.5;
+                                        p.x = p.x + d.x * 0.5
+                              end
                     end
-                    if i == index - 1 or i == index + 1 then
-                              alpha = 0.5
-                              d.y = d.y * 0.5;
-                              p.y = p.y + d.y * 0.5
-                    end
-
-
                     local color = vec4(c.x, c.y, c.z, c.w * alpha)
                     gprocess.CPicture(inPresentation, CPicture {
                                         pic = paths[i],
