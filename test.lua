@@ -113,16 +113,30 @@ P = {
 P = {
           Frame {
                     jpt = CAxis {
-                              type = "X",
+                              type = "XY",
                               r = 0
                     }
           },
 
           Frame {
                     jpt = CAxis {
-                              type = "X",
+                              type = "XY",
                               r = 90
                     }
+          },
+
+          Frame {
+                    jpt = CAxis {
+                              type = "XY",
+                              r = 270
+                    }
+          },
+          Frame {
+                    jpt = CAxis {
+                              type = "XY",
+                              r = 360
+                    }
           }
+
 }
 gPresentation(P, Validation, "GeneralLoop")

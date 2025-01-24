@@ -25,12 +25,16 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
           local r = inValue.r
           local d_t = inValue.d_t
 
+          local mat = Jmath.GetIdentityMatrix4x4()
+          mat = Jmath.Translate(mat, vec3(cd.x / 2, cd.y / 2, 1))
+          mat = Jmath.Rotate_deg(mat, r, vec3(0, 0, 1))
+          mat = Jmath.Translate(mat, vec3(-cd.x / 2, -cd.y / 2, 1))
           gprocess.CComputeImage(inPresentation, CComputeImage {
                     p = p,
                     d = d,
                     cd = cd,
                     mat1 = mat4(vec4(t, r, 1, 1), vec4(c), vec4(0), vec4(0)),
-                    mat2 = Jmath.Translate(Jmath.Rotate_deg(Jmath.Translate(Jmath.GetIdentityMatrix4x4(), vec3(-cd.x / 2, -cd.y / 2, 1)), r, vec3(0, 0, 1)), vec3(cd.x / 2, cd.y / 2, 1)),
+                    mat2 = mat
 
           }.CComputeImage, inFrameIndex, elementName)
           local computeImages, computePainters = CComputeImagesGet()
