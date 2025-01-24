@@ -113,7 +113,15 @@ P = {
 P = {
           Frame {
                     jpt = CAxis {
+                              type = "X",
+                              r = 0
+                    }
+          },
 
+          Frame {
+                    jpt = CAxis {
+                              type = "X",
+                              r = 90
                     }
           }
 }

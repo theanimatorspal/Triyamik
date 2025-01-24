@@ -30,7 +30,7 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
                     d = d,
                     cd = cd,
                     mat1 = mat4(vec4(t, r, 1, 1), vec4(c), vec4(0), vec4(0)),
-                    mat2 = Jmath.GetIdentityMatrix4x4(),
+                    mat2 = Jmath.Translate(Jmath.Rotate_deg(Jmath.Translate(Jmath.GetIdentityMatrix4x4(), vec3(-cd.x / 2, -cd.y / 2, 1)), r, vec3(0, 0, 1)), vec3(cd.x / 2, cd.y / 2, 1)),
 
           }.CComputeImage, inFrameIndex, elementName)
           local computeImages, computePainters = CComputeImagesGet()
@@ -50,34 +50,38 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
                     element.cimage.BindPainter(shader)
                     local t = mat1[1].x
                     local c = mat1[2]
-
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4(cd.x / 2, cd.y / 2, cd.x * 0.95, cd.y / 2), c, vec4(t), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4(cd.x / 2, cd.y / 2, cd.x / 2, 2), c, vec4(t), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-                    -- horizontal ko lagi arrow
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4(cd.x * 0.95, cd.y / 2, cd.x * 0.95 - 4, (cd.y / 2) - 4), c, vec4(t * 2), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4(cd.x * 0.95, cd.y / 2, cd.x * 0.95 - 4, (cd.y / 2) + 4), c, vec4(t * 2), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-                    -- vertical  ko lagi arrow
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4((cd.x / 2), 2, (cd.x / 2) + 4, 6), c, vec4(t * 2), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(vec4((cd.x / 2), 2, (cd.x / 2) - 4, 6), c, vec4(t * 2), vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
-
+                    if type == "X" or type == "XY" then
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(cd.x / 2, cd.y / 2, cd.x * 0.95, cd.y / 2), c, vec4(t), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(cd.x * 0.95, cd.y / 2, cd.x * 0.95 - 4, (cd.y / 2) - 4), c, vec4(t * 2),
+                                                  vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(cd.x * 0.95, cd.y / 2, cd.x * 0.95 - 4, (cd.y / 2) + 4), c, vec4(t * 2),
+                                                  vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                    end
+                    if type == "Y" or type == "XY" then
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(cd.x / 2, cd.y / 2, cd.x / 2, 2), c, vec4(t), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              -- horizontal ko lagi arrow
+                              -- vertical  ko lagi arrow
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4((cd.x / 2), 2, (cd.x / 2) + 4, 6), c, vec4(t * 2), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4((cd.x / 2), 2, (cd.x / 2) - 4, 6), c, vec4(t * 2), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                    end
                     shader:Draw(gwindow, PC_Mats(
                               mat4(vec4(cd.x / 2, cd.y / 2, cd.x / 2, cd.y / 2), c, vec4(t * d_t), vec4(0)),
                               mat2
