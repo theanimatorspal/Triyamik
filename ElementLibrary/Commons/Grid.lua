@@ -26,16 +26,54 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     p = p,
                     d = d,
                     cd = cd,
-                    mat1 = mat4(0),
-                    mat2 = mat4(0),
+                    mat1 = mat4(
+                              vec4(x_count, y_count, inValue.t),
+                              vec4(c),
+                              vec4(0),
+                              vec4(0)
+                    ),
+                    mat2 = Jmath.GetIdentityMatrix4x4(),
           }.CComputeImage, inFrameIndex, elementName)
 
           local computeImages, computePainters = CComputeImagesGet()
           local cmd = Jkr.CmdParam.None
           local element = computeImages[elementName]
+
+          -- yo function pratyek frame ma chalxa
           element[1] = function(mat1, mat2, X, Y, Z)
-                    local shader = computePainters["LINE2"]
+                    -- mat1 ra mat2 vaneko interpolate gareko values ho
+                    local shader = computePainters["LINE2D"]
+                    -- specific
+                    -- push constant vanne kura chae shader le linxa
+                    -- tesma 2 ota matrix hunxa
+                    -- local push = PC_Mats(a, b), where a and b are matrices
+                    --[[
+                              a = mat4(
+                                        vec4(p1_x, p1_y, p2_x, p2_y),
+                                        vec4(color_4f),
+                                        vec4(thicness, 1, 1, 1),
+                                        vec4(1)
+                              ),
+                              b = tranformation matrix -> set default as Jmath.GetIdentityMatrix4x4()
+                    ]]
                     shader:Bind(gwindow, cmd)
                     element.cimage.BindPainter(shader)
+
+                    local x_count = mat1[1].x
+                    local y_count = mat1[1].y
+                    local c       = mat1[2]
+
+                    -- calculation garera grid banaunu paro
+                    -- for loop for x axis
+                    shader:Draw(gwindow, PC_Mats(
+                              mat4(0),
+                              mat2
+                    ), X, Y, Z, cmd)
+                    -- end forloop
+                    -- for loop for y axis
+                    -- end forloop
+
+                    element.cimage.handle:SyncAfter(gwindow, cmd)
+                    element.cimage.CopyToSampled(element.sampled_image)
           end
 end
