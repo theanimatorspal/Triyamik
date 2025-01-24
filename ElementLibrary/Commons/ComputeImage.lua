@@ -97,6 +97,17 @@ compileShaders = function()
                     shader:Store(Engine.i, gwindow)
                     computePainters.CLEAR = shader
           end
+          if not computePainters.RECTANGLE then
+                    local shader = Jkr.CreateCustomImagePainter("cache/RECTANGLE.glsl",
+                              TwoDimensionalIPs.RoundedRectangle.str)
+                    shader:Store(Engine.i, gwindow)
+                    computePainters.RECTANGLE = shader
+          end
+          if not computePainters.CIRCLE then
+                    local shader = Jkr.CreateCustomImagePainter("cache/CIRCLE.glsl", TwoDimensionalIPs.Circle.str)
+                    shader:Store(Engine.i, gwindow)
+                    computePainters.CIRCLE = shader
+          end
           if not computePainters.LINE2D then
                     local shader = Jkr.CreateCustomImagePainter("cache/LINE2D.glsl",
                               TwoDimensionalIPs.HeaderWithoutBegin()
@@ -140,7 +151,7 @@ compileShaders = function()
 
                               vec4 color = p2;
                               if ((sdf < p3.x) && (x > small_x && x < large_x) && (y > small_y && y < large_y))  {
-                              debugPrintfEXT("xKo:%f, yKo:%f", x, y);
+                              //debugPrintfEXT("xKo:%f, yKo:%f", x, y);
                               imageStore(storageImage, to_draw_at, color * (p3.x - sdf));
                               }
 
