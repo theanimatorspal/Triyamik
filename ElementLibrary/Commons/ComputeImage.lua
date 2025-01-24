@@ -1,5 +1,6 @@
 require "ElementLibrary.Commons.Require"
 --@note will have both compute image and non compute image
+
 CComputeImage = function(inComputeImageTable)
           local t = {
                     p = "CENTER_CENTER",
@@ -7,7 +8,6 @@ CComputeImage = function(inComputeImageTable)
                     cd = vec3(100, 100, 1),
                     mat1 = mat4(0),
                     mat2 = mat4(0),
-                    -- shader = "LINE2D"
           }
           return { CComputeImage = Default(inComputeImageTable, t) }
 end
@@ -75,14 +75,15 @@ ExecuteFunctions["CComputeImage"] = function(inPresentation, inElement, inFrameI
                     local intermat2 = glerp_mat4f(prev.mat2, new.mat2, t)
                     gwid.c:PushOneTime(Jkr.CreateDispatchable(
                               function()
-                                        execute(intermat1, intermat2, ceil(cd.x / 16.0), ceil(cd.x / 16.0), 1)
+                                        execute(intermat1, intermat2, ceil(cd.x / 16.0), ceil(cd.x / 16.0), 1, prev, new,
+                                                  t)
                               end
                     ), 1)
           else
                     inElement.handle.simage:Update(ComputePositionByName(new.p, new.d), new.d)
                     gwid.c:PushOneTime(Jkr.CreateDispatchable(
                               function()
-                                        execute(new.mat1, new.mat2, ceil(cd.x / 16.0), ceil(cd.x / 16.0), 1)
+                                        execute(new.mat1, new.mat2, ceil(cd.x / 16.0), ceil(cd.x / 16.0), 1, new, new, t)
                               end
                     ), 1)
           end
@@ -98,7 +99,56 @@ compileShaders = function()
           end
           if not computePainters.RECTANGLE then
                     local shader = Jkr.CreateCustomImagePainter("cache/RECTANGLE.glsl",
-                              TwoDimensionalIPs.RoundedRectangle.str)
+                              TwoDimensionalIPs.HeaderWithoutBegin()
+                              .GlslMainBegin()
+                              .ImagePainterAssistMatrix2()
+                              .Append [[
+                              vec4 point1 = push.b * vec4(p1.x, p1.y, 0, 1);
+                              vec4 point2 = push.b * vec4(p1.z, p1.w, 0, 1);
+                              float x1 = point1.x;
+                              float y1 = point1.y;
+                              float x2 = point2.x;
+                              float y2 = point2.y;
+                              float x = float(gl_GlobalInvocationID.x);
+                              float y = float(gl_GlobalInvocationID.y);
+                              vec2 center = vec2((x1 + x2) / 2.0f, (y1 + y2) / 2.0f);
+                              center.x = center.x / image_size.x;
+                              center.y = center.y / image_size.y;
+                              vec2 hw = vec2(abs(x2 - x1) / 2.0f, abs(y2 - y1) / 2.0f);
+                              float radius = p3.x;
+                              vec2 Q = abs(xy - center) - hw;
+                              float color = distance(max(Q, vec2(0.0)), vec2(0.0)) + min(max(Q.x, Q.y), 0.0) - radius;
+                              color = smoothstep(-0.05, 0.05, -color);
+
+                              vec4 old_color = imageLoad(storageImage, to_draw_at);
+                              vec4 final_color = vec4(p2.x * color, p2.y * color, p2.z * color, p2.w * color);
+                              final_color = mix(final_color, old_color, p3.w);
+
+                              float small_x = x1;
+                              float large_x = x2;
+                              if (x1 > x2)
+                              {
+                                        large_x = x1;
+                                        small_x = x2;
+                              }
+
+                              float small_y = y1;
+                              float large_y = y2;
+                              if (y1 > y2)
+                              {
+                                        large_y = y1;
+                                        small_y = y2;
+                              }
+                              if (
+                                        (x >= (small_x) && x <= (large_x)) &&
+                                        (y >= (small_y) && y <= (large_y))
+                              )  {
+                                        imageStore(storageImage, to_draw_at, final_color);
+                              }
+                              ]]
+                              .GlslMainEnd()
+                              .str
+                    )
                     shader:Store(Engine.i, gwindow)
                     computePainters.RECTANGLE = shader
           end
@@ -163,4 +213,10 @@ compileShaders = function()
                     shader:Store(Engine.i, gwindow)
                     computePainters.LINE2D = shader
           end
+end
+
+CComputeImageTest = function(inTable)
+          return { CComputeImageTest = inTable }
+end
+gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inElementName)
 end
