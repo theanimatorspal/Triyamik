@@ -28,45 +28,66 @@ do
                     -- Frame {
                     --           CAndroid {},
                     -- },
+                    Frame {
+                              line = CLine {
 
-                    Frame {
-                              text = PRO.Text3D_group {
-                                        each_color = vec4(1),
-                                        background_color = vec4(0, 0, 0, 1),
-                                        each_d = vec3(0.3, 0.1, 2),
-                                        type = "UNIFIED",
-                                        texts = Generate("20x")
                               },
-                              PRO.Camera3D {
-                                        fov = 1.0,
-                                        type = "ORTHO"
-                              }
-                    },
-                    Frame {
-                              text = PRO.Text3D_group {
-                                        each_d = vec3(0.3, 0.1, 0.001),
-                                        type = "GRID2D",
-                                        texts = Generate("20x"),
-                              },
-                              PRO.Camera3D {
-                                        fov = 45.0,
-                                        -- type = "ORTHO"
-                              }
-                    },
-                    Frame {
-                              text = PRO.Text3D_group {
-                                        p = vec3(0, 0, 2),
-                                        each_color = vec4(1, 1, 1, 1),
-                                        each_d = vec3(0.5, 0.5, 0.001),
-                                        type = "CIRCLE2D",
-                                        background_color = vec4(1, 0, 0, 1),
-                                        texts = Generate("20x")
-                              },
-                              PRO.Camera3D {
-                                        fov = 45.0,
-                                        -- type = "ORTHO"
+                              line1 = CLine {
+                                        p1 = vec3(50, 20, 1),
+                                        p2 = vec3(300, 100, 1),
+                                        c = vec4(1, 1, 0, 1),
+                                        t = 5
                               }
                     }
+                    -- Frame {
+                    --           comp = CComputeImage {
+                    --                     mat1 = mat4(
+                    --                               vec4(30, 10, 50, 20),
+                    --                               vec4(1, 0, 0, 1),
+                    --                               vec4(3),
+                    --                               vec4(1)
+                    --                     ),
+                    --                     mat2 = Jmath.GetIdentityMatrix4x4()
+                    --           }
+                    -- }
+                    -- Frame {
+                    --           text = PRO.Text3D_group {
+                    --                     each_color = vec4(1),
+                    --                     background_color = vec4(0, 0, 0, 1),
+                    --                     each_d = vec3(0.3, 0.1, 2),
+                    --                     type = "UNIFIED",
+                    --                     texts = Generate("20x")
+                    --           },
+                    --           PRO.Camera3D {
+                    --                     fov = 1.0,
+                    --                     type = "ORTHO"
+                    --           }
+                    -- },
+                    -- Frame {
+                    --           text = PRO.Text3D_group {
+                    --                     each_d = vec3(0.3, 0.1, 0.001),
+                    --                     type = "GRID2D",
+                    --                     texts = Generate("20x"),
+                    --           },
+                    --           PRO.Camera3D {
+                    --                     fov = 45.0,
+                    --                     -- type = "ORTHO"
+                    --           }
+                    -- },
+                    -- Frame {
+                    --           text = PRO.Text3D_group {
+                    --                     p = vec3(0, 0, 2),
+                    --                     each_color = vec4(1, 1, 1, 1),
+                    --                     each_d = vec3(0.5, 0.5, 0.001),
+                    --                     type = "CIRCLE2D",
+                    --                     background_color = vec4(1, 0, 0, 1),
+                    --                     texts = Generate("20x")
+                    --           },
+                    --           PRO.Camera3D {
+                    --                     fov = 45.0,
+                    --                     -- type = "ORTHO"
+                    --           }
+                    -- }
                     -- Frame {
                     --           text = PRO.Text3D_group {
                     --                     type = "GRID2D",
