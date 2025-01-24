@@ -41,8 +41,18 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
 
           -- yo function pratyek frame ma chalxa
           element[1] = function(mat1, mat2, X, Y, Z)
+                    local shader = computePainters["CLEAR"]
+                    shader:Bind(gwindow, cmd)
+                    element.cimage.BindPainter(shader)
+                    shader:Draw(gwindow, PC_Mats(
+                              mat4(0.0),
+                              mat4(0.0)
+                    ), X, Y, Z, cmd)
+
                     -- mat1 ra mat2 vaneko interpolate gareko values ho
                     local shader = computePainters["LINE2D"]
+                    shader:Bind(gwindow, cmd)
+                    element.cimage.BindPainter(shader)
                     -- specific
                     -- push constant vanne kura chae shader le linxa
                     -- tesma 2 ota matrix hunxa
@@ -56,17 +66,13 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                               ),
                               b = tranformation matrix -> set default as Jmath.GetIdentityMatrix4x4()
                     ]]
-                    shader:Bind(gwindow, cmd)
-                    element.cimage.BindPainter(shader)
 
-                    local x_count = mat1[1].x
-                    local y_count = mat1[1].y
-                    local c       = mat1[2]
-                    local t       = mat1[1].z
-                    local x       = 0
-                    local y       = 0
-                    local del_y   = cd.y / y_count
-                    local del_x   = cd.x / x_count
+                    local x_count          = mat1[1].x
+                    local y_count          = mat1[1].y
+                    local c                = mat1[2]
+                    local t                = mat1[1].z
+                    local del_y            = cd.y / y_count
+                    local del_x            = cd.x / x_count
                     -- for i = 1, y_count do
                     --           shader:Draw(gwindow, PC_Mats(
                     --                     mat4(vec4(x, y, x, y + del_y)),
@@ -81,9 +87,11 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     --           end
                     --           y = y + del_y
                     -- end
-                    local x       = 0
+                    local offsetx, offsety = del_x / 2, del_y / 2
+                    local x                = offsetx
                     for i = 1, x_count do
                               shader:Draw(gwindow, PC_Mats(
+                              -- mat4(vec4(x, 0, x, cd.y), c, vec4(t), vec4(0)),
                                         mat4(vec4(x, 0, x, cd.y), c, vec4(t), vec4(0)),
                                         mat2
                               ), X, Y, Z, cmd)
@@ -91,8 +99,7 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                               x = x + del_x
                     end
 
-                    local y = 0
-
+                    local y = offsety
                     for i = 1, y_count do
                               shader:Draw(gwindow, PC_Mats(
                                         mat4(vec4(0, y, cd.x, y), c, vec4(t), vec4(0)),

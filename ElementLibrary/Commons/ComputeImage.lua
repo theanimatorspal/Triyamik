@@ -126,32 +126,35 @@ compileShaders = function()
                               float large_x = x2;
                               if (x1 > x2)
                               {
-                              large_x = x1;
-                              small_x = x2;
+                                        large_x = x1;
+                                        small_x = x2;
                               }
 
                               float small_y = y1;
                               float large_y = y2;
                               if (y1 > y2)
                               {
-                              large_y = y1;
-                              small_x = y2;
+                                        large_y = y1;
+                                        small_y = y2;
                               }
                               float thickness = p3.x;
 
                               // Calculate signed distance function
                               float sdf = 0;
-                              if (abs(x2 - x1) < 0.0001) { // Handle vertical lines
-                              sdf = abs(x - x1);
+                              if (abs(x2 - x1) < 0.01) { // Handle vertical lines
+                                        sdf = abs(x - x1);
                               } else {
-                              float slope = (y2 - y1) / (x2 - x1);
-                              sdf = abs(y - y1 - slope * (x - x1));
+                                        float slope = (y2 - y1) / (x2 - x1);
+                                        sdf = abs(y - y1 - slope * (x - x1));
                               }
 
                               vec4 color = p2;
-                              if ((sdf < p3.x) && (x > small_x && x < large_x) && (y > small_y && y < large_y))  {
-                              //debugPrintfEXT("xKo:%f, yKo:%f", x, y);
-                              imageStore(storageImage, to_draw_at, color * (p3.x - sdf));
+                              if (
+                                        (sdf <= thickness) &&
+                                        (x >= (small_x - thickness / 2.0f) && x <= (large_x + thickness / 2.0f)) &&
+                                        (y >= (small_y - thickness / 2.0f) && y <= (large_y + thickness / 2.0f))
+                              )  {
+                                        imageStore(storageImage, to_draw_at, color * (thickness - sdf));
                               }
 
                               ]]

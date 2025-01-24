@@ -1,6 +1,7 @@
 require "ElementLibrary.Commons.Commons"
 local conf = gDefaultConfiguration()
-gPresentation(conf, false, "NoLoop")
+local Validation = true
+gPresentation(conf, Validation, "NoLoop")
 
 P = {
           Frame {
@@ -79,8 +80,34 @@ P = {
 P = {
           Frame {
                     one = CGrid {
+                              x_count = 10,
+                              y_count = 10,
+                              d = vec3(200, 200, 1)
+                    },
 
+          },
+          Frame {
+                    one = CGrid {
+                              x_count = 6,
+                              y_count = 6,
+                              p = vec3(200, 200, 1),
+                              d = vec3(500, 500, 1)
                     }
           }
 }
-gPresentation(P, false, "GeneralLoop")
+
+-- P = {
+--           Frame {
+--                     line = CLine {
+--                               p1 = vec3(50, 50, 1),
+--                               p2 = vec3(50, 90, 1),
+--                               t = 3
+--                     },
+--                     line2 = CLine {
+--                               p1 = vec3(10, 50, 1),
+--                               p2 = vec3(70, 90, 1),
+--                               t = 3
+--                     }
+--           }
+-- }
+gPresentation(P, Validation, "GeneralLoop")
