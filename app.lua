@@ -3,7 +3,7 @@ require "ElementLibrary.Procedurals.Procedurals"
 
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = true
+          local Validation = false
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           Configuration.Config.StepTime = 0.001

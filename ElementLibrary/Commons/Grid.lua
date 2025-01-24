@@ -32,5 +32,10 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
 
           local computeImages, computePainters = CComputeImagesGet()
           local cmd = Jkr.CmdParam.None
-          
+          local element = computeImages[elementName]
+          element[1] = function(mat1, mat2, X, Y, Z)
+                    local shader = computePainters["LINE2"]
+                    shader:Bind(gwindow, cmd)
+                    element.cimage.BindPainter(shader)
+          end
 end
