@@ -93,7 +93,15 @@ function Main()
 
     MainLayout = V(
         {
-            H({ U { t = "Write Ip", bc = vec4(0.9) }, U { t = "<<", onclick = BackSpace } }, { 0.7, 0.3 }),
+            H({
+                    U {
+                        t = "Write Ip", bc = vec4(0.9),
+                    },
+                    U {
+                        t = "<<", onclick = BackSpace,
+                    } },
+                { 0.7, 0.3 }
+            ),
             U { t = "", en = "DisplayText", bc = vec4(1) },
             H({ B(1), B(2), B(3) }, { 1 / 3.0, 1 / 3.0, 1 / 3.0 }),
             H({ B(4), B(5), B(6) }, { 1 / 3.0, 1 / 3.0, 1 / 3.0 }),

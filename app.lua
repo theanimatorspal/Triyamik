@@ -31,6 +31,8 @@ do
 
                     Frame {
                               text = PRO.Text3D_group {
+                                        each_color = vec4(1),
+                                        background_color = vec4(0, 0, 0, 1),
                                         each_d = vec3(0.3, 0.1, 2),
                                         type = "UNIFIED",
                                         texts = Generate("20x")
@@ -44,7 +46,7 @@ do
                               text = PRO.Text3D_group {
                                         each_d = vec3(0.3, 0.1, 0.001),
                                         type = "GRID2D",
-                                        texts = Generate("20x")
+                                        texts = Generate("20x"),
                               },
                               PRO.Camera3D {
                                         fov = 45.0,
@@ -54,8 +56,10 @@ do
                     Frame {
                               text = PRO.Text3D_group {
                                         p = vec3(0, 0, 2),
+                                        each_color = vec4(1, 1, 1, 1),
                                         each_d = vec3(0.5, 0.5, 0.001),
                                         type = "CIRCLE2D",
+                                        background_color = vec4(1, 0, 0, 1),
                                         texts = Generate("20x")
                               },
                               PRO.Camera3D {

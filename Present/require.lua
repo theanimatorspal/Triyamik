@@ -134,7 +134,6 @@ ComputePositionByName = function(inPositionName, inDimension)
           return vec3(xPos, yPos, gbaseDepth)
 end
 
-
 function IterateEachFrame(inPresentation, infunc_int_val)
           local frameindex = 1
           for _, elements in ipairs(inPresentation) do
