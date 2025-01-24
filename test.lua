@@ -1,6 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 local conf = gDefaultConfiguration()
-gPresentation(conf, true, "NoLoop")
+gPresentation(conf, false, "NoLoop")
 
 P = {
           Frame {
@@ -75,4 +75,12 @@ P = {
                     }
           }
 }
-gPresentation(P, true, "GeneralLoop")
+
+P = {
+          Frame {
+                    one = CGrid {
+
+                    }
+          }
+}
+gPresentation(P, false, "GeneralLoop")

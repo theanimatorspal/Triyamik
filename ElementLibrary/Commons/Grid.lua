@@ -27,7 +27,7 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     d = d,
                     cd = cd,
                     mat1 = mat4(
-                              vec4(x_count, y_count, inValue.t),
+                              vec4(x_count, y_count, inValue.t, 1),
                               vec4(c),
                               vec4(0),
                               vec4(0)
@@ -62,13 +62,46 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     local x_count = mat1[1].x
                     local y_count = mat1[1].y
                     local c       = mat1[2]
+                    local t       = mat1[1].z
+                    local x       = 0
+                    local y       = 0
+                    local del_y   = cd.y / y_count
+                    local del_x   = cd.x / x_count
+                    -- for i = 1, y_count do
+                    --           shader:Draw(gwindow, PC_Mats(
+                    --                     mat4(vec4(x, y, x, y + del_y)),
+                    --                     mat2
+                    --           ), X, Y, Z, cmd)
+                    --           for j = 1, x_count do
+                    --                     shader:Draw(gwindow, PC_Mats(
+                    --                               mat4(vec4(x, y, x + del_x, y)),
+                    --                               mat2
+                    --                     ), X, Y, Z, cmd)
+                    --                     x = x + del_x
+                    --           end
+                    --           y = y + del_y
+                    -- end
+                    local x       = 0
+                    for i = 1, x_count do
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(x, 0, x, cd.y), c, vec4(t), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
 
+                              x = x + del_x
+                    end
+
+                    local y = 0
+
+                    for i = 1, y_count do
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(0, y, cd.x, y), c, vec4(t), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              y = y + del_y
+                    end
                     -- calculation garera grid banaunu paro
                     -- for loop for x axis
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(0),
-                              mat2
-                    ), X, Y, Z, cmd)
                     -- end forloop
                     -- for loop for y axis
                     -- end forloop

@@ -1,5 +1,4 @@
-require "Present.Present"
-
+require "ElementLibrary.Commons.Require"
 --@note will have both compute image and non compute image
 CComputeImage = function(inComputeImageTable)
           local t = {
