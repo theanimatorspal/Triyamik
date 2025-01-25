@@ -197,10 +197,10 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 Element.mMatrix2 = new.renderer_parameter
             end
         end
-        -- Element.mMatrix2 = renderer_parameter
+        Element.mMatrix2 = renderer_parameter
         gobjects3d:add(Element) -- gobjects3d is erased at each frame
     end
-    gshadowobjects3d = nil
+    -- gshadowobjects3d = nil
     if Value.shadows then
         gshadowobjects3d = gobjects3d
     end
