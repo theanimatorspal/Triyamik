@@ -1,6 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 local conf = gDefaultConfiguration()
-local Validation = true
+local Validation = false
 gPresentation(conf, Validation, "NoLoop")
 
 P = {
@@ -114,6 +114,7 @@ P = {
           Frame {
                     jpt = CAxis {
                               type = "XY",
+                              text = "aabbddksdjflasj",
                               r = 0
                     },
                     CContinue { true },
