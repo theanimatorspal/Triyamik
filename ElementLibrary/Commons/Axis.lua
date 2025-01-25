@@ -6,6 +6,7 @@ CAxis = function(inTable)
                     d = vec3(200, 200, 1),
                     cd = vec3(100, 100, 1),
                     type = "XY",
+                    text = "abc",
                     c = vec4(1, 0, 1, 1),
                     t = 1,
                     r = 90,
@@ -16,6 +17,7 @@ end
 
 gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
           local elementName = gUnique(inElementName)
+
           local p = inValue.p
           local d = inValue.d
           local cd = inValue.cd
@@ -24,6 +26,7 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
           local t = inValue.t
           local r = inValue.r
           local d_t = inValue.d_t
+          local text = inValue.text
 
           local mat = Jmath.GetIdentityMatrix4x4()
           mat = Jmath.Translate(mat, vec3(cd.x / 2, cd.y / 2, 1))
@@ -36,6 +39,11 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
                     mat1 = mat4(vec4(t, r, 1, 1), vec4(c), vec4(0), vec4(0)),
                     mat2 = mat
           }.CComputeImage, inFrameIndex, elementName)
+          
+          gprocess.CText(inPresentation,
+                    CText { p = vec3((p.x + d.x) / 2, p.y + d.y * 0.45, gbaseDepth - 100), t = text }.CText,
+                    inFrameIndex, elementName .. "axis")
+
           local computeImages, computePainters = CComputeImagesGet()
           local cmd = Jkr.CmdParam.None
           local element = computeImages[elementName]
