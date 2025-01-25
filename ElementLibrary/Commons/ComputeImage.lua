@@ -112,11 +112,12 @@ compileShaders = function()
                               float x = float(gl_GlobalInvocationID.x);
                               float y = float(gl_GlobalInvocationID.y);
 
-                              vec2 center = vec2((x1 + x2) / 2.0f, (y1 + y2) / 2.0f);
+                              vec2 center = vec2((x1 + x2) / 2, (y1 + y2) / 2);
                               center.x = center.x / image_size.x;
                               center.y = center.y / image_size.y;
 
                               vec2 hw = vec2(abs(x2 - x1) / 2.0f, abs(y2 - y1) / 2.0f);
+                              hw = vec2(1, 1);
                               hw.x = hw.x / image_size.x;
                               hw.y = hw.y / image_size.y;
 
@@ -140,6 +141,8 @@ compileShaders = function()
                                         (y >= (small_y) && y <= (large_y))
                               )  {
                                         imageStore(storageImage, to_draw_at, final_color);
+                              } else {
+                                        imageStore(storageImage, to_draw_at, vec4(0, 0, 0, 1));
                               }
                               ]]
                               .GlslMainEnd()
@@ -211,9 +214,9 @@ gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inE
                     d = vec3(500, 500, 1),
                     cd = vec3(500, 500, 1),
                     mat1 = mat4(
-                              vec4(100, 100, 400, 300),
-                              vec4(1, 0, 0, 1),
-                              vec4(0.01),
+                              vec4(100, 100, 400, 400),
+                              vec4(0, 1, 0, 1),
+                              vec4(0.0001),
                               vec4(0)
                     ),
                     mat2 = Jmath.GetIdentityMatrix4x4(),
