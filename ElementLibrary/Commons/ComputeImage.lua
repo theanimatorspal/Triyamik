@@ -129,21 +129,12 @@ compileShaders = function()
                               vec4 final_color = vec4(p2.x * color, p2.y * color, p2.z * color, p2.w * color);
                               // final_color = mix(final_color, old_color, p3.w);
 
-                              float small_x = x1;
-                              float large_x = x2;
-                              if (x1 > x2)
-                              {
-                                        large_x = x1;
-                                        small_x = x2;
-                              }
+                              float small_x = (x1 > x2) ? x2 : x1;
+                              float large_x = (x1 > x2) ? x1 : x2;
 
-                              float small_y = y1;
-                              float large_y = y2;
-                              if (y1 > y2)
-                              {
-                                        large_y = y1;
-                                        small_y = y2;
-                              }
+                              float small_y = (y1 > y2) ? y2 : y1;
+                              float large_y = (y1 > y2) ? y1 : y2;
+
                               if (
                                         (x >= (small_x) && x <= (large_x)) &&
                                         (y >= (small_y) && y <= (large_y))
@@ -177,21 +168,12 @@ compileShaders = function()
                               float x = float(gl_GlobalInvocationID.x);
                               float y = float(gl_GlobalInvocationID.y);
 
-                              float small_x = x1;
-                              float large_x = x2;
-                              if (x1 > x2)
-                              {
-                                        large_x = x1;
-                                        small_x = x2;
-                              }
+                              float small_x = (x1 > x2) ? x2 : x1;
+                              float large_x = (x1 > x2) ? x1 : x2;
 
-                              float small_y = y1;
-                              float large_y = y2;
-                              if (y1 > y2)
-                              {
-                                        large_y = y1;
-                                        small_y = y2;
-                              }
+                              float small_y = (y1 > y2) ? y2 : y1;
+                              float large_y = (y1 > y2) ? y1 : y2;
+
                               float thickness = p3.x;
 
                               // Calculate signed distance function
