@@ -77,24 +77,6 @@ P = {
           }
 }
 
-P = {
-          Frame {
-                    one = CGrid {
-                              x_count = 10,
-                              y_count = 10,
-                              d = vec3(200, 200, 1),
-                    },
-
-          },
-          Frame {
-                    one = CGrid {
-                              x_count = 6,
-                              y_count = 6,
-                              p = vec3(200, 200, 1),
-                              d = vec3(500, 500, 1)
-                    }
-          }
-}
 
 -- P = {
 --           Frame {
@@ -163,4 +145,22 @@ P = {
           }
 }
 
+P = {
+          -- Frame {
+          --           one = CGrid {
+          --                     x_count = 10,
+          --                     y_count = 10,
+          --                     d = vec3(200, 200, 1),
+          --           },
+
+          -- },
+          Frame {
+                    one = CGrid {
+                              x_count = 6,
+                              y_count = 6,
+                              p = vec3(0, 0, 1),
+                              d = vec3(500, 500, 1)
+                    }
+          }
+}
 gPresentation(P, Validation, "GeneralLoop")

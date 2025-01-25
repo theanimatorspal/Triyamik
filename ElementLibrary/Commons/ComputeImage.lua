@@ -26,11 +26,11 @@ gprocess.CComputeImage = function(inPresentation, inValue, inFrameIndex, inEleme
           if not computeImages[ElementName] then
                     computeImages[ElementName] = {
                               cimage = gwid.CreateComputeImage(
-                                        ComputePositionByName(inValue.p, inValue.d),
+                                        ComputePositionByName(inValue.p, inValue.cd),
                                         inValue.cd),
                               sampled_image = gwid.CreateSampledImage(
-                                        ComputePositionByName(inValue.p, inValue.d),
-                                        inValue.d, nil, true, nil
+                                        ComputePositionByName(inValue.p, inValue.cd),
+                                        inValue.cd, nil, true, nil
                               ),
                     }
                     computeImages[ElementName].cimage.RegisterPainter(computePainters["LINE2D"], 0)
