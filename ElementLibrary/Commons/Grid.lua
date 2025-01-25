@@ -2,10 +2,11 @@ require "ElementLibrary.Commons.Require"
 
 CGrid = function(inTable)
           local t = {
-                    mark_size = 1,
+                    should_mark = false,
+                    mark_size = 0,
                     mark = vec2(5, 3),
-                    mark_color = vec4(0, 1, 0, 1),
-                    mark_line_color = vec4(0, 0, 1, 1),
+                    mark_color = vec4(0, 1, 0, 0),
+                    mark_line_color = vec4(0, 0, 1, 0),
                     p = vec3(100, 100, gbaseDepth),
                     d = vec3(100, 100, 1),
                     cd = vec3(100, 100, 1),
@@ -70,20 +71,23 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     local offsetx, offsety = del_x / 2, del_y / 2
                     local x                = offsetx
                     local y                = offsety
-
-                    shader:Draw(gwindow, PC_Mats(
-                              mat4(
-                                        vec4(x + del_x * (mark.x - 1) + offsetx, y + del_y * (mark.y - 1) + offsety,
-                                                  x + del_x * (mark.x - 1) + offsetx, y + del_y * (mark.y - 1) + offsety),
-                                        mark_color, vec4(del_x * mark_size),
-                                        vec4(0)),
-                              mat2
-                    ), X, Y, Z, cmd)
+                    if inValue.should_mark then
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(
+                                                  vec4(x + del_x * (mark.x - 1) + offsetx,
+                                                            y + del_y * (mark.y - 1) + offsety,
+                                                            x + del_x * (mark.x - 1) + offsetx,
+                                                            y + del_y * (mark.y - 1) + offsety),
+                                                  mark_color, vec4(del_x * mark_size),
+                                                  vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                    end
                     x = offsetx
                     y = offsety
                     for i = 1, x_count do
                               local color = vec4(c)
-                              if i == mark.x then
+                              if i == mark.x and inValue.should_mark then
                                         color = mark_line_color
                               end
 
@@ -97,15 +101,14 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
 
                     for i = 1, y_count do
                               local color = vec4(c)
-                              if i == mark.y then
+                              if i == mark.y and inValue.should_mark then
                                         color = mark_line_color
                               end
-                                        shader:Draw(gwindow, PC_Mats(
-                                                  mat4(vec4(0, y, cd.x, y), color, vec4(t), vec4(0)),
-                                                  mat2
-                                        ), X, Y, Z, cmd)
-                                        y = y + del_y
-                              
+                              shader:Draw(gwindow, PC_Mats(
+                                        mat4(vec4(0, y, cd.x, y), color, vec4(t), vec4(0)),
+                                        mat2
+                              ), X, Y, Z, cmd)
+                              y = y + del_y
                     end
 
 
