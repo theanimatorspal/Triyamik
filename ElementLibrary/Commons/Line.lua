@@ -2,7 +2,7 @@ require "ElementLibrary.Commons.Require"
 
 CLine = function(inTable)
           local t = {
-                    p1 = vec3(40, 50, 0),
+                    p1 = vec3(40, 50, gbaseDepth),
                     p2 = vec3(100, 200, 0),
                     c = vec4(1, 0, 0, 1),
                     t = 2

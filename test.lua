@@ -82,7 +82,7 @@ P = {
                     one = CGrid {
                               x_count = 10,
                               y_count = 10,
-                              d = vec3(200, 200, 1)
+                              d = vec3(200, 200, 1),
                     },
 
           },
@@ -110,36 +110,49 @@ P = {
 --                     }
 --           }
 -- }
+-- P = {
+--           Frame {
+--                     jpt = CAxis {
+--                               type = "XY",
+--                               text = "aabbddksdjflasj",
+--                               r = 0
+--                     },
+--                     CContinue { true },
+--                     CCircularSwitch { true }
+--           },
+
+--           Frame {
+--                     jpt = CAxis {
+--                               type = "XY",
+--                               r = 90
+--                     }
+--           },
+
+--           Frame {
+--                     jpt = CAxis {
+--                               type = "XY",
+--                               r = 270
+--                     },
+--           },
+--           Frame {
+--                     jpt = CAxis {
+--                               type = "XY",
+--                               r = 360
+--                     }
+--           }
+
 P = {
           Frame {
-                    jpt = CAxis {
-                              type = "XY",
-                              text = "aabbddksdjflasj",
-                              r = 0
-                    },
-                    CContinue { true },
-                    CCircularSwitch { true }
-          },
-
-          Frame {
-                    jpt = CAxis {
-                              type = "XY",
-                              r = 90
+                    jpt = CLineList {
+                              lines = { vec4(10, 10, 100, 100), vec4(200, 100, 10, 0) }
                     }
           },
+          Frame {
+                    jpt = CLineList {
 
-          Frame {
-                    jpt = CAxis {
-                              type = "XY",
-                              r = 270
-                    },
-          },
-          Frame {
-                    jpt = CAxis {
-                              type = "XY",
-                              r = 360
+                              lines = { vec4(50, 67, 20, 11), vec4(400, 200, 300, 100) }
                     }
           }
-
 }
+
 gPresentation(P, Validation, "GeneralLoop")

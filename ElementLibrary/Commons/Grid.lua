@@ -2,7 +2,11 @@ require "ElementLibrary.Commons.Require"
 
 CGrid = function(inTable)
           local t = {
-                    p = vec3(100, 100, 1),
+                    mark_size = 1,
+                    mark = vec2(5, 3),
+                    mark_color = vec4(0, 1, 0, 1),
+                    mark_line_color = vec4(0, 0, 1, 1),
+                    p = vec3(100, 100, gbaseDepth),
                     d = vec3(100, 100, 1),
                     cd = vec3(100, 100, 1),
                     x_count = 20,
@@ -21,6 +25,10 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
           local y_count = inValue.y_count
           local c = inValue.c
           local cd = inValue.cd
+          local mark = inValue.mark
+          local mark_color = inValue.mark_color
+          local mark_size = inValue.mark_size
+          local mark_line_color = inValue.mark_line_color
 
           gprocess.CComputeImage(inPresentation, CComputeImage {
                     p = p,
@@ -29,7 +37,7 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     mat1 = mat4(
                               vec4(x_count, y_count, inValue.t, 1),
                               vec4(c),
-                              vec4(0),
+                              vec4(mark.x, mark.y, 1, 1),
                               vec4(0)
                     ),
                     mat2 = Jmath.GetIdentityMatrix4x4(),
@@ -39,7 +47,6 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
           local cmd = Jkr.CmdParam.None
           local element = computeImages[elementName]
 
-          -- yo function pratyek frame ma chalxa
           element[1] = function(mat1, mat2, X, Y, Z)
                     local shader = computePainters["CLEAR"]
                     shader:Bind(gwindow, cmd)
@@ -49,23 +56,9 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                               mat4(0.0)
                     ), X, Y, Z, cmd)
 
-                    -- mat1 ra mat2 vaneko interpolate gareko values ho
                     local shader = computePainters["LINE2D"]
                     shader:Bind(gwindow, cmd)
                     element.cimage.BindPainter(shader)
-                    -- specific
-                    -- push constant vanne kura chae shader le linxa
-                    -- tesma 2 ota matrix hunxa
-                    -- local push = PC_Mats(a, b), where a and b are matrices
-                    --[[
-                              a = mat4(
-                                        vec4(p1_x, p1_y, p2_x, p2_y),
-                                        vec4(color_4f),
-                                        vec4(thicness, 1, 1, 1),
-                                        vec4(1)
-                              ),
-                              b = tranformation matrix -> set default as Jmath.GetIdentityMatrix4x4()
-                    ]]
 
                     local x_count          = mat1[1].x
                     local y_count          = mat1[1].y
@@ -73,45 +66,48 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     local t                = mat1[1].z
                     local del_y            = cd.y / y_count
                     local del_x            = cd.x / x_count
-                    -- for i = 1, y_count do
-                    --           shader:Draw(gwindow, PC_Mats(
-                    --                     mat4(vec4(x, y, x, y + del_y)),
-                    --                     mat2
-                    --           ), X, Y, Z, cmd)
-                    --           for j = 1, x_count do
-                    --                     shader:Draw(gwindow, PC_Mats(
-                    --                               mat4(vec4(x, y, x + del_x, y)),
-                    --                               mat2
-                    --                     ), X, Y, Z, cmd)
-                    --                     x = x + del_x
-                    --           end
-                    --           y = y + del_y
-                    -- end
+                    local mark             = vec2(mat1[3].x, mat1[3].y)
                     local offsetx, offsety = del_x / 2, del_y / 2
                     local x                = offsetx
+                    local y                = offsety
+
+                    shader:Draw(gwindow, PC_Mats(
+                              mat4(
+                                        vec4(x + del_x * (mark.x - 1) + offsetx, y + del_y * (mark.y - 1) + offsety,
+                                                  x + del_x * (mark.x - 1) + offsetx, y + del_y * (mark.y - 1) + offsety),
+                                        mark_color, vec4(del_x * mark_size),
+                                        vec4(0)),
+                              mat2
+                    ), X, Y, Z, cmd)
+                    x = offsetx
+                    y = offsety
                     for i = 1, x_count do
+                              local color = vec4(c)
+                              if i == mark.x then
+                                        color = mark_line_color
+                              end
+
                               shader:Draw(gwindow, PC_Mats(
-                              -- mat4(vec4(x, 0, x, cd.y), c, vec4(t), vec4(0)),
-                                        mat4(vec4(x, 0, x, cd.y), c, vec4(t), vec4(0)),
+                                        mat4(vec4(x, 0, x, cd.y), color, vec4(t), vec4(0)),
                                         mat2
                               ), X, Y, Z, cmd)
 
                               x = x + del_x
                     end
 
-                    local y = offsety
                     for i = 1, y_count do
-                              shader:Draw(gwindow, PC_Mats(
-                                        mat4(vec4(0, y, cd.x, y), c, vec4(t), vec4(0)),
-                                        mat2
-                              ), X, Y, Z, cmd)
-                              y = y + del_y
+                              local color = vec4(c)
+                              if i == mark.y then
+                                        color = mark_line_color
+                              end
+                                        shader:Draw(gwindow, PC_Mats(
+                                                  mat4(vec4(0, y, cd.x, y), color, vec4(t), vec4(0)),
+                                                  mat2
+                                        ), X, Y, Z, cmd)
+                                        y = y + del_y
+                              
                     end
-                    -- calculation garera grid banaunu paro
-                    -- for loop for x axis
-                    -- end forloop
-                    -- for loop for y axis
-                    -- end forloop
+
 
                     element.cimage.handle:SyncAfter(gwindow, cmd)
                     element.cimage.CopyToSampled(element.sampled_image)
