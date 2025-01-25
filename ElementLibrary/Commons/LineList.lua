@@ -25,7 +25,8 @@ gprocess.CLineList = function(inPresentation, inValue, inFrameIndex, inElementNa
                     p = p,
                     d = d,
                     cd = cd,
-                    mat1 = mat4(vec4(t, 1, 1, 1), vec4(c), vec4(0), vec4(0)), mat2 = Jmath.GetIdentityMatrix4x4()
+                    mat1 = mat4(vec4(t, 1, 1, 1), vec4(c), vec4(0), vec4(0)), mat2 = Jmath.GetIdentityMatrix4x4(),
+                    lines = lines
           }.CComputeImage, inFrameIndex, elementName)
 
           local computeImages, computePainters = CComputeImagesGet()
@@ -44,8 +45,8 @@ gprocess.CLineList = function(inPresentation, inValue, inFrameIndex, inElementNa
                     local shader = computePainters["LINE2D"]
                     shader:Bind(gwindow, cmd)
                     element.cimage.BindPainter(shader)
-                    print(inspect(prev))
-                    print(inspect(new))
+                    -- print(inspect(prev))
+                    -- print(inspect(new))
                     local prev_lines = prev.lines
                     local new_lines = new.lines
                     local min_len = 0

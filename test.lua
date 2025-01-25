@@ -144,13 +144,14 @@ P = {
 P = {
           Frame {
                     jpt = CLineList {
-                              lines = { vec4(10, 10, 100, 100), vec4(200, 100, 10, 0) }
-                    }
+                              lines = { vec4(10, 10, 100, 100) }
+                    },
+                    -- CContinue { true },
+                    -- CCircularSwitch { true }
           },
           Frame {
                     jpt = CLineList {
-
-                              lines = { vec4(50, 67, 20, 11), vec4(400, 200, 300, 100) }
+                              lines = { vec4(50, 67, 0, 0) }
                     }
           }
 }
