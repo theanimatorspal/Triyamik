@@ -1,6 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 local conf = gDefaultConfiguration()
-local Validation = false
+local Validation = true
 gPresentation(conf, Validation, "NoLoop")
 
 P = {
@@ -144,14 +144,21 @@ P = {
 P = {
           Frame {
                     jpt = CLineList {
-                              lines = { vec4(10, 10, 100, 100) }
+                              lines = {
+                                        vec4(10, 10, 100, 100),
+                                        vec4(60, 100, 30, 67),
+                              },
+                              t = 5,
                     },
                     -- CContinue { true },
                     -- CCircularSwitch { true }
           },
           Frame {
                     jpt = CLineList {
-                              lines = { vec4(50, 67, 0, 0) }
+                              lines = { vec4(50, 67, 0, 0),
+                                        vec4(100, 60, 67, 30),
+                              },
+                              t = 1,
                     }
           }
 }

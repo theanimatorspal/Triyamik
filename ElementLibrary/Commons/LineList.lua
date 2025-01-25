@@ -25,7 +25,10 @@ gprocess.CLineList = function(inPresentation, inValue, inFrameIndex, inElementNa
                     p = p,
                     d = d,
                     cd = cd,
-                    mat1 = mat4(vec4(t, 1, 1, 1), vec4(c), vec4(0), vec4(0)), mat2 = Jmath.GetIdentityMatrix4x4(),
+                    mat1 = mat4(vec4(t, 1, 1, 1), vec4(c), vec4(0), vec4(0)),
+                    mat2 = Jmath.GetIdentityMatrix4x4(),
+                    c = c,
+                    t = t,
                     lines = lines
           }.CComputeImage, inFrameIndex, elementName)
 
@@ -33,7 +36,7 @@ gprocess.CLineList = function(inPresentation, inValue, inFrameIndex, inElementNa
           local cmd = Jkr.CmdParam.None
           local element = computeImages[elementName]
 
-          element[1] = function(mat1, mat2, X, Y, Z, prev, new, t)
+          element[1] = function(mat1, mat2, X, Y, Z, prev, new, t_)
                     local shader = computePainters["CLEAR"]
                     shader:Bind(gwindow, cmd)
                     element.cimage.BindPainter(shader)
@@ -50,17 +53,21 @@ gprocess.CLineList = function(inPresentation, inValue, inFrameIndex, inElementNa
                     local prev_lines = prev.lines
                     local new_lines = new.lines
                     local min_len = 0
-                    if #prev_lines < #new_lines then
+                    if #prev_lines <= #new_lines then
                               min_len = #prev_lines
                     else
                               min_len = #new_lines
                     end
 
+                    local inter_c = glerp_4f(prev.c, new.c, t_)
+                    local inter_t = glerp(prev.t, new.t, t_)
                     for i = 1, min_len do
                               local line1 = prev_lines[i]
                               local line2 = new_lines[i]
-                              local inter_line = glerp_4f(line1, line2, t)
-                              shader:Draw(gwindow, PC_Mats(mat4(inter_line, c, vec4(t), vec4(0)), mat2), X, Y, Z, cmd)
+                              local inter_line = glerp_4f(line1, line2, t_)
+                              shader:Draw(gwindow, PC_Mats(mat4(inter_line, inter_c, vec4(inter_t), vec4(0)), mat2), X, Y,
+                                        Z,
+                                        cmd)
                     end
                     element.cimage.handle:SyncAfter(gwindow, cmd)
                     element.cimage.CopyToSampled(element.sampled_image)
