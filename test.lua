@@ -115,7 +115,9 @@ P = {
                     jpt = CAxis {
                               type = "XY",
                               r = 0
-                    }
+                    },
+                    CContinue { true },
+                    CCircularSwitch { true }
           },
 
           Frame {
@@ -129,7 +131,7 @@ P = {
                     jpt = CAxis {
                               type = "XY",
                               r = 270
-                    }
+                    },
           },
           Frame {
                     jpt = CAxis {

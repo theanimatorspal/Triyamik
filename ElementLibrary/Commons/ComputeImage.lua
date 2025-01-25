@@ -219,4 +219,37 @@ CComputeImageTest = function(inTable)
           return { CComputeImageTest = inTable }
 end
 gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inElementName)
+          gprocess.CComputeImage(inPresentation, CComputeImage {
+                    p = vec3(0, 0, 1),
+                    d = vec3(700, 700, 1),
+                    cd = vec3(700, 700, 1),
+                    mat1 = mat4(
+                              vec4(200, 300, 500, 600),
+                              vec4(1, 0, 0, 1),
+                              vec4(0),
+                              vec4(0)
+                    ),
+                    mat2 = Jmath.GetIdentityMatrix4x4(),
+          }.CComputeImage, inFrameIndex, "CCOMPUTEIMAGETESTFUCK")
+
+          local computeImages, computePainters = CComputeImagesGet()
+          local cmd = Jkr.CmdParam.None
+          local element = computeImages["CCOMPUTEIMAGETESTFUCK"]
+          element[1] = function(mat1, mat2, X, Y, Z)
+                    local shader = computePainters["CLEAR"]
+                    shader:Bind(gwindow, cmd)
+                    element.cimage.BindPainter(shader)
+                    shader:Draw(gwindow, PC_Mats(
+                              mat4(0.0),
+                              mat4(0.0)
+                    ), X, Y, Z, cmd)
+
+                    local shader = computePainters["RECTANGLE"]
+                    shader:Bind(gwindow, cmd)
+                    element.cimage.BindPainter(shader)
+                    shader:Draw(gwindow, PC_Mats(
+                              mat1,
+                              mat2
+                    ), X, Y, Z, cmd)
+          end
 end

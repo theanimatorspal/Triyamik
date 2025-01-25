@@ -201,6 +201,12 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
             stepTime = conf.StepTime
         end
 
+        inPresentation.ContinousAutoPlay = function(value)
+            continousAutoPlay = value
+        end
+        inPresentation.CircularSwitch = function(value)
+            circularSwitch = value
+        end
         gMoveForward = function(inT)
             if receive_events and hasNextFrame and (currentFrame < gFrameCount - 1) then
                 if inT then t = inT else t = 0.0 end

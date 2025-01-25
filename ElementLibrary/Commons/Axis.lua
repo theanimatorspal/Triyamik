@@ -35,7 +35,6 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
                     cd = cd,
                     mat1 = mat4(vec4(t, r, 1, 1), vec4(c), vec4(0), vec4(0)),
                     mat2 = mat
-
           }.CComputeImage, inFrameIndex, elementName)
           local computeImages, computePainters = CComputeImagesGet()
           local cmd = Jkr.CmdParam.None
