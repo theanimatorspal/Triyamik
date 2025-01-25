@@ -2,7 +2,7 @@ require "ElementLibrary.Commons.Require"
 
 CAxis = function(inTable)
           local t = {
-                    p = vec3(100, 100, 1),
+                    p = vec3(100, 100, gbaseDepth),
                     d = vec3(200, 200, 1),
                     cd = vec3(100, 100, 1),
                     type = "XY",
@@ -39,9 +39,9 @@ gprocess.CAxis = function(inPresentation, inValue, inFrameIndex, inElementName)
                     mat1 = mat4(vec4(t, r, 1, 1), vec4(c), vec4(0), vec4(0)),
                     mat2 = mat
           }.CComputeImage, inFrameIndex, elementName)
-          
+
           gprocess.CText(inPresentation,
-                    CText { p = vec3((p.x + d.x) / 2, p.y + d.y * 0.45, gbaseDepth - 100), t = text }.CText,
+                    CText { p = vec3((p.x + d.x) / 2, p.y + d.y * 0.45, gbaseDepth - 1), t = text }.CText,
                     inFrameIndex, elementName .. "axis")
 
           local computeImages, computePainters = CComputeImagesGet()
