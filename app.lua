@@ -1,9 +1,9 @@
 require "ElementLibrary.Commons.Commons"
-require "ElementLibrary.Procedurals.Procedurals"
+-- require "ElementLibrary.Procedurals.Procedurals"
 
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = true
+          local Validation = false
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           Configuration.Config.StepTime = 0.001
@@ -28,9 +28,6 @@ do
                     -- Frame {
                     --           CAndroid {},
                     -- },
-                    Frame {
-                              comp = CComputeImageTest {}
-                    }
                     -- Frame {
                     --           comp = CComputeImage {
                     --                     mat1 = mat4(
@@ -166,14 +163,15 @@ do
                     --           fuck = Cobj {
                     --                     filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
                     --                     hdr_filename = "res/images/warm.hdr",
-                    --                     camera_control = "FLYCAM_KEYBOARD",
+                    --                     camera_control = "EDITOR_MOUSE",
                     --                     renderer = "PBR_SHADOW",
+                    --                     shadows = true,
                     --                     -- renderer = "PBR",
                     --                     p = vec3(0, 0, 0),
                     --                     r = vec4(1, 1, 1, 0),
                     --                     d = vec3(1, 1, 1),
-                    --                     world = "default",
-                    --                     renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1, 11.2, 1 / 2.2, 1))
+                    --                     world = "fuck_it_shit",
+                    --                     renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1.5, 11.2, 1 / 2.2, 1))
                     --           }
                     -- },
                     -- Frame {
