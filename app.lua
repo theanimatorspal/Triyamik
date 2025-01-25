@@ -3,7 +3,7 @@ require "ElementLibrary.Procedurals.Procedurals"
 
 do
           local Configuration = gDefaultConfiguration()
-          local Validation = false
+          local Validation = true
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           Configuration.Config.StepTime = 0.001
@@ -28,6 +28,9 @@ do
                     -- Frame {
                     --           CAndroid {},
                     -- },
+                    Frame {
+                              comp = CComputeImageTest {}
+                    }
                     -- Frame {
                     --           comp = CComputeImage {
                     --                     mat1 = mat4(

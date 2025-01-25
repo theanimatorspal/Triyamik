@@ -1,6 +1,6 @@
 require "ElementLibrary.Commons.Commons"
 local conf = gDefaultConfiguration()
-local Validation = false
+local Validation = true
 gPresentation(conf, Validation, "NoLoop")
 
 P = {

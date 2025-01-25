@@ -111,18 +111,23 @@ compileShaders = function()
                               float y2 = point2.y;
                               float x = float(gl_GlobalInvocationID.x);
                               float y = float(gl_GlobalInvocationID.y);
+
                               vec2 center = vec2((x1 + x2) / 2.0f, (y1 + y2) / 2.0f);
                               center.x = center.x / image_size.x;
                               center.y = center.y / image_size.y;
+
                               vec2 hw = vec2(abs(x2 - x1) / 2.0f, abs(y2 - y1) / 2.0f);
+                              hw.x = hw.x / image_size.x;
+                              hw.y = hw.y / image_size.y;
+
                               float radius = p3.x;
                               vec2 Q = abs(xy - center) - hw;
                               float color = distance(max(Q, vec2(0.0)), vec2(0.0)) + min(max(Q.x, Q.y), 0.0) - radius;
                               color = smoothstep(-0.05, 0.05, -color);
 
-                              vec4 old_color = imageLoad(storageImage, to_draw_at);
+                              // vec4 old_color = imageLoad(storageImage, to_draw_at);
                               vec4 final_color = vec4(p2.x * color, p2.y * color, p2.z * color, p2.w * color);
-                              final_color = mix(final_color, old_color, p3.w);
+                              // final_color = mix(final_color, old_color, p3.w);
 
                               float small_x = x1;
                               float large_x = x2;
@@ -221,12 +226,12 @@ end
 gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           gprocess.CComputeImage(inPresentation, CComputeImage {
                     p = vec3(0, 0, 1),
-                    d = vec3(700, 700, 1),
-                    cd = vec3(700, 700, 1),
+                    d = vec3(500, 500, 1),
+                    cd = vec3(500, 500, 1),
                     mat1 = mat4(
-                              vec4(200, 300, 500, 600),
+                              vec4(100, 100, 400, 300),
                               vec4(1, 0, 0, 1),
-                              vec4(0),
+                              vec4(0.01),
                               vec4(0)
                     ),
                     mat2 = Jmath.GetIdentityMatrix4x4(),
@@ -251,5 +256,7 @@ gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inE
                               mat1,
                               mat2
                     ), X, Y, Z, cmd)
+                    element.cimage.handle:SyncAfter(gwindow, cmd)
+                    element.cimage.CopyToSampled(element.sampled_image)
           end
 end
