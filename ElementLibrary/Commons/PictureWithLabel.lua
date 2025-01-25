@@ -3,7 +3,7 @@ require "Present.Present"
 CPictureWithLabel = function(inCaptionPictureTable)
           local t = {
                     path = -1,
-                    p    = vec3(100, 100, 1),
+                    p    = vec3(100, 100, gbaseDepth),
                     d    = vec3(400, 300, 1),
                     tl   = "",
                     f    = "Normal",
