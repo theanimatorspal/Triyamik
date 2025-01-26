@@ -8,6 +8,7 @@ CComputeImage = function(inComputeImageTable)
                     cd = vec3(100, 100, 1),
                     mat1 = mat4(0),
                     mat2 = mat4(0),
+                    no_draw = false
           }
           return { CComputeImage = Default(inComputeImageTable, t) }
 end
