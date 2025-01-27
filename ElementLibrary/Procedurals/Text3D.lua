@@ -219,9 +219,9 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                               (outC.z) * color.z,
                               (outC.w) * color.w
                     );
-                    if(outC.w == 0.00) {
-                         outFragColor = background_color;
-                    }
+                    //if(outC.w == 0.00) {
+                    //     outFragColor = background_color;
+                    //}
                     ]]
             .GlslMainEnd()
 
