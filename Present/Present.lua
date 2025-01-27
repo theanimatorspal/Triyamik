@@ -172,7 +172,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         local w = gwindow
         local nw = gnwindow
         local mt = Engine.mt
-        if conf.FullScreen then
+        if conf and conf.FullScreen then
             w:ToggleWindowFullScreen()
         end
 
@@ -197,7 +197,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         local animate = true
         local receive_events = true
 
-        if conf.StepTime then
+        if conf and conf.StepTime then
             stepTime = conf.StepTime
         end
 
@@ -428,8 +428,21 @@ ClosePresentations = function()
     Engine.mt:Wait()
 end
 
+function gGetDefaultFontSizes()
+    return {
+        Tiny = 10,     -- \tiny
+        Small = 12,    -- \small
+        Normal = 16,   -- \normalsize
+        large = 20,    -- \large
+        Large = 24,    -- \Large
+        huge = 28,     -- \huge
+        Huge = 32,     -- \Huge
+        gigantic = 38, -- \gigantic
+        Gigantic = 42, -- \Gigantic
+    }
+end
 
-function gDefaultConfiguration()
+function gGetPresentationWithDefaultConfiguration()
     local o = {
         Config = {
             -- FullScreen = true,

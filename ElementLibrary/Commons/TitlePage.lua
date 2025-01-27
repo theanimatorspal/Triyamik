@@ -34,8 +34,8 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                               bc = background_color,
                               _push_constant = FullPC
                     }
-                    gprocess.CButton(inPresentation, CButton(background).CButton, inFrameIndex,
-                              "__common__background")
+                    -- gprocess.CButton(inPresentation, CButton(background).CButton, inFrameIndex,
+                    --           "__common__background")
                     local t = U({
                               f = "Huge",
                               t = inValue.t,
@@ -59,7 +59,10 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                     local namesratio = { 0.3, UPK(CR(names, 1 - 0.3)) }
 
                     local logo = U({
-                              pic = inValue.logo
+                              -- pic = inValue.logo,
+                              ar = 1,
+                              bh = true
+
                     })
 
                     V():Add({
@@ -67,7 +70,7 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                               t,
                               st,
                               H():Add({
-                                                  logo, -- esma logo halne ho
+                                                  U(), -- esma logo halne ho
                                                   V():Add(names, namesratio),
                                         },
                                         { 0.5, 0.5 }),
@@ -126,22 +129,27 @@ gprocess["CTitlePage"] = function(inPresentation, inValue, inFrameIndex, inEleme
                     end
 
                     local namesratio = CR(#names, 1 - 0.3)
+
                     local logo = U({})
 
                     V():Add({
                               U(),
                               H():Add(names, namesratio),
-                    }, { 0.93, 0.07 }):Update(
+                              logo
+                    }, { 0.93, 0.06, 0.01 }):Update(
                               vec3(0, 0, gbaseDepth),
                               vec3(gFrameDimension.x, gFrameDimension.y, 1)
                     )
-                    logo.d = vec3(100, 100, 1)
+                    logo.d = vec3(10, 10, 1)
                     logo.p = ComputePositionByName("BOTTOM_RIGHT", logo.d)
                     logo.c = vec4(0.1)
                     logo.bc = vec4(0.4)
 
-                    gprocess.CPicture(inPresentation, CPicture(logo).CPicture, inFrameIndex,
-                              "__common_titlepage_logo")
+                    -- gprocess.CPicture(inPresentation, CPicture({
+                    --                     c = vec4(0.1),
+                    --                     d = vec3(10),
+                    --           }).CPicture, inFrameIndex,
+                    --           "__common_titlepage_logo")
 
                     gprocess.CButton(inPresentation,
                               CButton(t).CButton,

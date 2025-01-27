@@ -25,12 +25,12 @@ gprocess.CPicture = function(inPresentation, inValue, inFrameIndex, inElementNam
                                         inValue.d.y = inValue.ar * inValue.d.x
                               end
                     end
-                    -- if PrevD.x > inValue.d.x then
-                    --           inValue.p.x = inValue.p.x + (PrevD.x - inValue.d.x) / 2
-                    -- end
-                    -- if PrevD.y > inValue.d.y then
-                    --           inValue.p.y = inValue.p.y + (PrevD.y - inValue.d.y) / 2
-                    -- end
+                    if PrevD.x > inValue.d.x then
+                              inValue.p.x = inValue.p.x + (PrevD.x - inValue.d.x) / 2
+                    end
+                    if PrevD.y > inValue.d.y then
+                              inValue.p.y = inValue.p.y + (PrevD.y - inValue.d.y) / 2
+                    end
                     if not gscreenElements[ElementName] then
                               if inValue.pic ~= -1 then
                                         gscreenElements[ElementName] = gwid.CreateGeneralButton(

@@ -2,7 +2,7 @@ require "ElementLibrary.Procedurals.Image"
 require "ElementLibrary.Procedurals.Object"
 require "ElementLibrary.common.common"
 
-Pr = gDefaultConfiguration()
+Pr = gGetPresentationWithDefaultConfiguration()
 
 Pr:insert({
           -- Frame {

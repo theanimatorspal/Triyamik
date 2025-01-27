@@ -1,5 +1,5 @@
 require "ElementLibrary.Commons.Commons"
-Pr = gDefaultConfiguration()
+Pr = gGetPresentationWithDefaultConfiguration()
 Pr.Config.FullScreen = true
 
 local titlepage = {

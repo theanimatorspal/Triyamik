@@ -3,7 +3,7 @@ do
     local runApp = true
     local bc = vec4(1, 0.5, 0, 0.5)
     local c = vec4(0, 0, 0, 1)
-    local Configuration = gDefaultConfiguration()
+    local Configuration = gGetPresentationWithDefaultConfiguration()
     local Validation = true
     local CurrentLoopType = "GeneralLoop"
     Configuration.Config.FullScreen = false

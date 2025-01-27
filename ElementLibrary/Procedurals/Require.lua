@@ -56,18 +56,21 @@ PRO.GetCubeGenerator = function(sizex, sizey, sizez, type)
                                         end
                               elseif type == "FOURSIDED" then
                                         v.mUV = uvs[j]
+                              else
+                                        v.mUV = uvs[j]
                               end
                               v.mColor = vec3(1)
                               v3ds:add(v)
                     end
           end
           for i = 1, 6 do
-                    uis:add(i * 4)
-                    uis:add(i * 4 + 1)
-                    uis:add(i * 4 + 2)
-                    uis:add(i * 4)
-                    uis:add(i * 4 + 2)
-                    uis:add(i * 4 + 3)
+                    local offset = (i - 1) * 4
+                    uis:add(offset)
+                    uis:add(offset + 1)
+                    uis:add(offset + 2)
+                    uis:add(offset)
+                    uis:add(offset + 2)
+                    uis:add(offset + 3)
           end
           c.mVertices = v3ds
           c.mIndices = uis

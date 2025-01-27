@@ -1,5 +1,5 @@
 require "ElementLibrary.Commons.Commons"
-Pr = gDefaultConfiguration()
+Pr = gGetPresentationWithDefaultConfiguration()
 Pr.Config.StepTime = 0.1
 Pr.Config.FullScreen = true
 -- todo commonenumerate hide bug, should write all over again

@@ -1,55 +1,51 @@
 require "ElementLibrary.Commons.Commons"
 require "ElementLibrary.Procedurals.Procedurals"
-Pr = gDefaultConfiguration()
-Pr.Config.FullScreen = false
-local Validation = false
 
-gPresentation(Pr, Validation, "NoLoop")
+local Validation = true
 
-P = {
+local BG = function(inTable)
+          local t = {
+                    x_count = 25,
+                    y_count = 25,
+                    p = vec3(math.huge, 0, gbaseDepth),
+                    d = vec3(1000, 1000, 1),
+                    cd = vec3(100, 100, 1)
+          }
+          inTable = Default(inTable, t)
+          return CGrid(inTable)
+end
+
+local Initialize = {
           Frame {
-                    background_grid = CGrid {
-                              x_count = 25,
-                              y_count = 25,
-                              t = 3,
-                              p = vec3(math.huge, 0, gbaseDepth),
-                              d = vec3(1000, 1000, 1),
-                              cd = vec3(200, 200, 1)
-                    },
-                    -- CContinue { true },
+                    background_grid = BG {},
+          }
+}
 
-                    -- PRO.Camera3D {
-                    --           fov = 45.0
-                    -- }
+gPresentation(Initialize, Validation, "NoLoop")
 
-          },
+local P = {
           Frame {
-                    background_grid = CGrid {
-                              x_count = 10,
-                              y_count = 10,
-                              t = 1,
-                              p = vec3(math.huge, 0, gbaseDepth),
-                              d = vec3(1000, 1000, 1),
-                              cd = vec3(200, 200, 1)
+                    CTitlePage {
+                              t = "Triyamik",
+                              st = "A Graphics Engine based on JkrGUI",
+                              names = {
+                                        "077bct022 Bishal Jaiswal",
+                                        "077bct024 Darshan Koirala",
+                                        "077bct027 Dipesh Regmi",
+                              },
+                              logo = "tulogo.png"
                     },
+                    CNumbering {},
+                    background_grid = BG {},
                     something = PRO.Shape {
                               type = "CUBE3D",
                               compute_texture = "background_grid"
                     }
-                    -- axis = CAxis {
-                    --
-                    -- }
 
           },
           Frame {
-                    background_grid = CGrid {
-                              x_count = 25,
-                              y_count = 25,
-                              t = 1,
-                              p = vec3(math.huge, 0, gbaseDepth),
-                              d = vec3(1000, 1000, 1),
-                              cd = vec3(200, 200, 1)
-                    },
+                    CTitlePage { act = "structure" },
+                    background_grid = BG {},
                     something = PRO.Shape {
                               type = "CUBE3D",
                               compute_texture = "background_grid"
@@ -59,4 +55,9 @@ P = {
 
 }
 
+P.Config = {
+          FullScreen = true,
+          FontSizes = gGetDefaultFontSizes(),
+          FontFilePaths = { "font.ttf" }
+}
 gPresentation(P, Validation, "GeneralLoop")

@@ -2,7 +2,7 @@ require "ElementLibrary.Commons.Commons"
 -- require "ElementLibrary.Procedurals.Procedurals"
 
 do
-          local Configuration = gDefaultConfiguration()
+          local Configuration = gGetPresentationWithDefaultConfiguration()
           local Validation = false
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
