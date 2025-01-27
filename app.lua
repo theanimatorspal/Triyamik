@@ -1,9 +1,10 @@
 require "ElementLibrary.Commons.Commons"
--- require "ElementLibrary.Procedurals.Procedurals"
+require "ElementLibrary.Procedurals.Procedurals"
+require "sync"
 
 do
           local Configuration = gGetPresentationWithDefaultConfiguration()
-          local Validation = false
+          local Validation = VALIDATION
           local CurrentLoopType = "GeneralLoop"
           Configuration.Config.FullScreen = false
           Configuration.Config.StepTime = 0.001
@@ -39,44 +40,44 @@ do
                     --                     mat2 = Jmath.GetIdentityMatrix4x4()
                     --           }
                     -- }
-                    -- Frame {
-                    --           text = PRO.Text3D_group {
-                    --                     each_color = vec4(1),
-                    --                     background_color = vec4(0, 0, 0, 1),
-                    --                     each_d = vec3(0.3, 0.1, 2),
-                    --                     type = "UNIFIED",
-                    --                     texts = Generate("20x")
-                    --           },
-                    --           PRO.Camera3D {
-                    --                     fov = 1.0,
-                    --                     type = "ORTHO"
-                    --           }
-                    -- },
-                    -- Frame {
-                    --           text = PRO.Text3D_group {
-                    --                     each_d = vec3(0.3, 0.1, 0.001),
-                    --                     type = "GRID2D",
-                    --                     texts = Generate("20x"),
-                    --           },
-                    --           PRO.Camera3D {
-                    --                     fov = 45.0,
-                    --                     -- type = "ORTHO"
-                    --           }
-                    -- },
-                    -- Frame {
-                    --           text = PRO.Text3D_group {
-                    --                     p = vec3(0, 0, 2),
-                    --                     each_color = vec4(1, 1, 1, 1),
-                    --                     each_d = vec3(0.5, 0.5, 0.001),
-                    --                     type = "CIRCLE2D",
-                    --                     background_color = vec4(1, 0, 0, 1),
-                    --                     texts = Generate("20x")
-                    --           },
-                    --           PRO.Camera3D {
-                    --                     fov = 45.0,
-                    --                     -- type = "ORTHO"
-                    --           }
-                    -- }
+                    Frame {
+                              text = PRO.Text3D_group {
+                                        each_color = vec4(1),
+                                        background_color = vec4(0, 0, 0, 1),
+                                        each_d = vec3(0.3, 0.1, 2),
+                                        type = "UNIFIED",
+                                        texts = Generate("20x")
+                              },
+                              PRO.Camera3D {
+                                        fov = 1.0,
+                                        type = "ORTHO"
+                              }
+                    },
+                    Frame {
+                              text = PRO.Text3D_group {
+                                        each_d = vec3(0.3, 0.1, 0.001),
+                                        type = "GRID2D",
+                                        texts = Generate("20x"),
+                              },
+                              PRO.Camera3D {
+                                        fov = 45.0,
+                                        -- type = "ORTHO"
+                              }
+                    },
+                    Frame {
+                              text = PRO.Text3D_group {
+                                        p = vec3(0, 0, 2),
+                                        each_color = vec4(1, 1, 1, 1),
+                                        each_d = vec3(0.5, 0.5, 0.001),
+                                        type = "CIRCLE2D",
+                                        background_color = vec4(1, 0, 0, 1),
+                                        texts = Generate("20x")
+                              },
+                              PRO.Camera3D {
+                                        fov = 45.0,
+                                        -- type = "ORTHO"
+                              }
+                    }
                     -- Frame {
                     --           text = PRO.Text3D_group {
                     --                     type = "GRID2D",
@@ -159,21 +160,21 @@ do
                     --                     renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1, 11.2, 1 / 2.2, 1))
                     --           }
                     -- },
-                    Frame {
-                              fuck = Cobj {
-                                        filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
-                                        hdr_filename = "res/images/warm.hdr",
-                                        camera_control = "EDITOR_MOUSE",
-                                        renderer = "PBR_SHADOW",
-                                        shadows = true,
-                                        -- renderer = "PBR",
-                                        p = vec3(0, 0, 0),
-                                        r = vec4(1, 1, 1, 0),
-                                        d = vec3(1, 1, 1),
-                                        world = "fuck_it_shit",
-                                        renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1.5, 11.2, 1 / 2.2, 1))
-                              }
-                    },
+                    -- Frame {
+                    --           fuck = Cobj {
+                    --                     filename = "res/models/sponza-gltf-pbr/sponza-gltf-pbr/sponza.glb",
+                    --                     hdr_filename = "res/images/warm.hdr",
+                    --                     camera_control = "EDITOR_MOUSE",
+                    --                     renderer = "PBR_SHADOW",
+                    --                     shadows = true,
+                    --                     -- renderer = "PBR",
+                    --                     p = vec3(0, 0, 0),
+                    --                     r = vec4(1, 1, 1, 0),
+                    --                     d = vec3(1, 1, 1),
+                    --                     world = "fuck_it_shit",
+                    --                     renderer_parameter = mat4(vec4(0), vec4(0), vec4(0), vec4(1.5, 11.2, 1 / 2.2, 1))
+                    --           }
+                    -- },
                     -- Frame {
                     --           img = CComputeImage {
                     --                     cd = vec3(640, 480, 1),
