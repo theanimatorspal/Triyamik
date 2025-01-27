@@ -18,6 +18,7 @@ gprocess.CPictureWithLabelList = function(inPresentation, inValue, inFrameIndex,
           local paths = inValue.paths
           local index = inValue.index
 
+
           if paths ~= -1 and texts ~= -1 then
                     pictureWithLabelLists[elementName] = { paths = paths, texts = texts }
           else

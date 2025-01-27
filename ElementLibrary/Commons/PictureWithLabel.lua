@@ -14,7 +14,8 @@ CPictureWithLabel = function(inCaptionPictureTable)
 end
 
 gprocess.CPictureWithLabel = function(inPresentation, inValue, inFrameIndex, inElementName)
-          -- Process the picture part
+          local font_y = gFontMap[inValue.f]:GetTextDimension("Y").y
+
           local text_dimen = gFontMap[inValue.f]:GetTextDimension(inValue.tl)
           local text_x = (inValue.p.x + (inValue.d.x - text_dimen.x) / 2.0)
           local pic_dimen = vec3(inValue.d.x, inValue.d.y - text_dimen.y, gbaseDepth)
@@ -24,7 +25,7 @@ gprocess.CPictureWithLabel = function(inPresentation, inValue, inFrameIndex, inE
                     .CPicture,
                     inFrameIndex, pictureElementName)
           local textElementName = gUnique(inElementName .. "_Label")
-          local text_pos = vec3(text_x, inValue.p.y + pic_dimen.y, gbaseDepth)
+          local text_pos = vec3(text_x, inValue.p.y + pic_dimen.y + font_y / 2, gbaseDepth)
           gprocess.CText(inPresentation, CText({ t = inValue.tl, p = text_pos, c = inValue.tc }).CText, inFrameIndex,
                     textElementName)
 end
