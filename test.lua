@@ -123,46 +123,46 @@ P = {
 --                     }
 --           }
 
-P = {
-          Frame {
-                    jpt = CLineList {
-                              lines = {
-                                        vec4(10, 10, 100, 100),
-                                        vec4(60, 100, 30, 67),
-                              },
-                              t = 5,
-                    },
-                    -- CContinue { true },
-                    -- CCircularSwitch { true }
-          },
-          Frame {
-                    jpt = CLineList {
-                              lines = { vec4(50, 67, 0, 0),
-                                        vec4(100, 60, 67, 30),
-                              },
-                              t = 1,
-                    }
-          }
-}
+-- P = {
+--           Frame {
+--                     jpt = CLineList {
+--                               lines = {
+--                                         vec4(10, 10, 100, 100),
+--                                         vec4(60, 100, 30, 67),
+--                               },
+--                               t = 5,
+--                     },
+--                     -- CContinue { true },
+--                     -- CCircularSwitch { true }
+--           },
+--           Frame {
+--                     jpt = CLineList {
+--                               lines = { vec4(50, 67, 0, 0),
+--                                         vec4(100, 60, 67, 30),
+--                               },
+--                               t = 1,
+--                     }
+--           }
+-- }
 
-P = {
-          Frame {
-                    one = CGrid {
-                              x_count = 10,
-                              y_count = 10,
-                              d = vec3(500, 500, 1),
-                              should_mark = true
-                    },
+-- P = {
+--           Frame {
+--                     one = CGrid {
+--                               x_count = 10,
+--                               y_count = 10,
+--                               d = vec3(500, 500, 1),
+--                               should_mark = true
+--                     },
 
-          },
-          Frame {
-                    one = CGrid {
-                              should_mark = true,
-                              x_count = 10,
-                              y_count = 10,
-                              mark_list = { vec2(7, 7), vec2(6, 6) },
-                              d = vec3(500, 500, 1)
-                    }
-          }
-}
+--           },
+--           Frame {
+--                     one = CGrid {
+--                               should_mark = true,
+--                               x_count = 10,
+--                               y_count = 10,
+--                               mark_list = { vec2(7, 7), vec2(6, 6) },
+--                               d = vec3(500, 500, 1)
+--                     }
+--           }
+-- }
 gPresentation(P, Validation, "GeneralLoop")
