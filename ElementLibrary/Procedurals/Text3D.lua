@@ -200,48 +200,8 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
     --           Local.Text3D_textShader.simple3did = simple3did
     --           Local.Text3D_textShader.simple3d = simple3d
     -- end
-    if not PRO.cube_ShowImageShader then
-        local vshader, fshader = Engine.GetAppropriateShader("NORMAL",
-            Jkr.CompileContext.Default, nil, nil,
-            nil, nil, { baseColorTexture = true })
-        fshader = Basics.GetConstantFragmentHeader()
-            .Append "layout(set = 0, binding = 32) uniform sampler2DArray shadowMap;\n"
-            .uSampler2D(3, "uBaseColorTexture")
-        PBR.PreCalcImages(fshader)
-        fshader.GlslMainBegin()
-            .Append [[
-                    vec4 color = Push.m2[0];
-                    vec4 background_color = Push.m2[1];
-                    vec4 outC = texture(uBaseColorTexture, vUV);
-                    outFragColor = vec4(
-                              (outC.x) * color.x,
-                              (outC.y) * color.y,
-                              (outC.z) * color.z,
-                              (outC.w) * color.w
-                    );
-                    if(outC.w == 0.00) {
-                         outFragColor = background_color;
-                    }
-                    ]]
-            .GlslMainEnd()
 
-        local simple3did = gworld3d:AddSimple3D(Engine.i, gwindow)
-        local simple3d = gworld3d:GetSimple3D(simple3did)
-        simple3d:CompileEXT(
-            Engine.i,
-            gwindow,
-            "cache/3d_background_color_shader.glsl",
-            vshader.str,
-            fshader.str,
-            "",
-            false,
-            Jkr.CompileContext.Default
-        )
-        PRO.cube_ShowImageShader = {}
-        PRO.cube_ShowImageShader.simple3did = simple3did
-        PRO.cube_ShowImageShader.simple3d = simple3d
-    end
-
+    PRO.CompileShaders()
     local ElementName = gUnique(inElementName)
     if inValue.mode == "SEPARATED" then
         if not gscreenElements[ElementName] then
