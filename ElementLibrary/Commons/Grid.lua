@@ -48,7 +48,7 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
           local cmd = Jkr.CmdParam.None
           local element = computeImages[elementName]
 
-          element[1] = function(mat1, mat2, X, Y, Z)
+          element[1] = function(mat1, mat2, X, Y, Z, prev, new, t)
                     local shader = computePainters["CLEAR"]
                     shader:Bind(gwindow, cmd)
                     element.cimage.BindPainter(shader)
@@ -67,17 +67,19 @@ gprocess.CGrid = function(inPresentation, inValue, inFrameIndex, inElementName)
                     local t                = mat1[1].z
                     local del_y            = cd.y / y_count
                     local del_x            = cd.x / x_count
-                    local mark             = vec2(mat1[3].x, mat1[3].y)
+                    local mark             = vec2(math.floor(mat1[3].x), math.floor(mat1[3].y))
                     local offsetx, offsety = del_x / 2, del_y / 2
                     local x                = offsetx
                     local y                = offsety
+                    local mark_vec4        =
+                        vec4(x + del_x * (mark.x - 1) + offsetx,
+                                  y + del_y * (mark.y - 1) + offsety,
+                                  x + del_x * (mark.x - 1) + offsetx,
+                                  y + del_y * (mark.y - 1) + offsety)
+
                     if inValue.should_mark then
                               shader:Draw(gwindow, PC_Mats(
-                                        mat4(
-                                                  vec4(x + del_x * (mark.x - 1) + offsetx,
-                                                            y + del_y * (mark.y - 1) + offsety,
-                                                            x + del_x * (mark.x - 1) + offsetx,
-                                                            y + del_y * (mark.y - 1) + offsety),
+                                        mat4(mark_vec4,
                                                   mark_color, vec4(del_x * mark_size),
                                                   vec4(0)),
                                         mat2
