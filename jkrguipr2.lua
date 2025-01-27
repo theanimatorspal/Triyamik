@@ -9,6 +9,8 @@ local BG = function(inTable)
                     x_count = 25,
                     y_count = 25,
                     p = vec3(math.huge, 0, gbaseDepth),
+                    c = vec4(gcolors.green_pigment, 1),
+                    should_mark = true,
                     d = vec3(1000, 1000, 1),
                     cd = vec3(100, 100, 1)
           }
@@ -40,6 +42,7 @@ local P = {
                     background_grid = BG {},
                     something = PRO.Shape {
                               type = "CUBE3D",
+                              d = vec3(10, 10, 10),
                               compute_texture = "background_grid"
                     }
 
@@ -57,7 +60,7 @@ local P = {
 }
 
 P.Config = {
-          FullScreen = true,
+          FullScreen = false,
           FontSizes = gGetDefaultFontSizes(),
           FontFilePaths = { "font.ttf" }
 }
