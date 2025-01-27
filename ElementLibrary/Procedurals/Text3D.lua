@@ -212,7 +212,7 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
             .Append [[
                     vec4 color = Push.m2[0];
                     vec4 background_color = Push.m2[1];
-                    vec4 outC = texture(uBaseColorTexture, vUV) + background_color;
+                    vec4 outC = texture(uBaseColorTexture, vUV);
                     outFragColor = vec4(
                               (outC.x) * color.x,
                               (outC.y) * color.y,
@@ -220,7 +220,7 @@ gprocess.PRO_Text3Dbase = function(inPresentation, inValue, inFrameIndex, inElem
                               (outC.w) * color.w
                     );
                     if(outC.w == 0.00) {
-                        outFragColor = background_color;
+                         outFragColor = background_color;
                     }
                     ]]
             .GlslMainEnd()

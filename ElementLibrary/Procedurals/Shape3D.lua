@@ -8,7 +8,7 @@ PRO.Shape = function(inTable)
                     d = vec3(1),
                     r = vec4(1, 1, 1, 1),
                     -- renderer_parameter = mat4(0),
-                    renderer_parameter = mat4(vec4(1, 0, 0, 1), vec4(0), vec4(0), vec4(0)),
+                    renderer_parameter = mat4(vec4(1, 1, 1, 1), vec4(0), vec4(0), vec4(0)),
                     sidedness = "FOURSIDED"
           }
           return { PRO_Shape = Default(inTable, t) }
