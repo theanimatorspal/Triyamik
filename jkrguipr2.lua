@@ -6,8 +6,8 @@ local Validation = VALIDATION
 
 local BG = function(inTable)
           local t = {
-                    x_count = 25,
-                    y_count = 25,
+                    x_count = 15,
+                    y_count = 15,
                     p = vec3(math.huge, 0, gbaseDepth),
                     c = vec4(gcolors.green_pigment, 1),
                     should_mark = true,
