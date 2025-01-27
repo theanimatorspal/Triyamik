@@ -146,19 +146,21 @@ P = {
 }
 
 P = {
-          -- Frame {
-          --           one = CGrid {
-          --                     x_count = 10,
-          --                     y_count = 10,
-          --                     d = vec3(200, 200, 1),
-          --           },
-
-          -- },
           Frame {
                     one = CGrid {
-                              x_count = 6,
-                              y_count = 6,
-                              p = vec3(0, 0, 1),
+                              x_count = 10,
+                              y_count = 10,
+                              d = vec3(500, 500, 1),
+                              should_mark = true
+                    },
+
+          },
+          Frame {
+                    one = CGrid {
+                              should_mark = true,
+                              x_count = 10,
+                              y_count = 10,
+                              mark_list = { vec2(7, 7), vec2(6, 6) },
                               d = vec3(500, 500, 1)
                     }
           }
