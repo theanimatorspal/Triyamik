@@ -1,7 +1,8 @@
 require "ElementLibrary.Commons.Commons"
 require "ElementLibrary.Procedurals.Procedurals"
+require "sync"
 
-local Validation = true
+local Validation = VALIDATION
 
 local BG = function(inTable)
           local t = {
