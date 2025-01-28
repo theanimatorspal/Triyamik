@@ -18,37 +18,6 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                     local listen = true
 
                     local function android_construct_next_previous_buttons()
-                              GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
-                              F = GWR.CreateFont("font.ttf", 14)
-                              REMOTE_NEXT_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
-                                        vec3(FrameD.x, FrameD.y / 2, 1),
-                                        function()
-                                                  SHOULD_SEND_TCP = true
-                                                  TCP_FILE_IN:WriteFunction("CTRL", function()
-                                                            gMoveForward()
-                                                  end)
-                                        end, false, F, "Next",
-                                        vec4(0, 0, 0, 1), vec4(1))
-                              REMOTE_NEXT_BUTTON:Update(vec3(0, 0, 20),
-                                        vec3(FrameD.x, FrameD.y / 2, 1))
-
-
-                              REMOVE_PREV_BUTTON = GWR.CreateGeneralButton(vec3(0, 0, 20),
-                                        vec3(FrameD.x, FrameD.y / 2, 1), function()
-                                                  SHOULD_SEND_TCP = true
-                                                  TCP_FILE_IN:WriteFunction("CTRL",
-                                                            function()
-                                                                      gMoveBackward()
-                                                            end
-                                                  )
-                                        end, false, F, "Previous",
-                                        vec4(0, 0, 0, 1), vec4(1))
-
-                              REMOVE_PREV_BUTTON:Update(vec3(0, FrameD.y / 2, 20),
-                                        vec3(FrameD.x, FrameD.y / 2, 1))
-                    end
-
-                    local function android_construct_next_previous_buttons()
                               local Next = function()
                                         SHOULD_SEND_TCP = true
                                         TCP_FILE_IN:WriteFunction("CTRL",
@@ -75,7 +44,7 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                               local _c = vec4(1)
                               local dimension = vec3(FrameD.x, FrameD.y, 1)
                               local down_pos = vec3(0, FrameD.y / 3.3, GBASE_DEPTH)
-                              local up_pos = vec3(0, FrameD.y / 10, GBASE_DEPTH)
+                              local up_pos = vec3(0, -FrameD.y / 2, GBASE_DEPTH)
                               local OverMenu = V(
                                         {
                                                   U { e = true, bc = _c },
@@ -91,7 +60,7 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
                                                   ),
                                                   U { c = vec4(1), bc = _c }
                                         },
-                                        { 0.65, 0.05, 0.35 }
+                                        { 0.65, 0.05, 0.8 }
                               )
 
                               OverMenu:Update(down_pos, dimension)
@@ -189,27 +158,32 @@ end
 
 
 TCP_FILE_IN = Jkr.FileJkr()
-UDP_FILE_IN = Jkr.FileJkr()
 
 SHOULD_SEND_TCP = false
 TCP_FILE_OUT = Jkr.FileJkr()
-SHOUDL_SEND_UDP = false
 UDP_FILE_OUT = Jkr.FileJkr()
 
+gFUNCTIONS_TO_BE_SEND_TO_ANDROID = {}
+local CURRENT_ANDROID_CONTROL = 0
 ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           TCP_FILE_IN:Clear()
+          local func = gFUNCTIONS_TO_BE_SEND_TO_ANDROID[inFrameIndex]
           if not Engine.net.listenOnce then
                     Engine.net.Server()
           end
           if Engine.gate.android_device_connected_tcp then
                     do
-                              if SHOULD_SEND_TCP then
-                                        local vchar = TCP_FILE_OUT:GetDataFromMemory()
-                                        local msg = Jkr.Message()
-                                        msg:InsertVChar(vchar)
-                                        net.BroadCast(msg)
-                                        SHOULD_SEND_TCP = false
-                                        TCP_FILE_OUT:Clear()
+                              if func then
+                                        -- local vchar = TCP_FILE_OUT:GetDataFromMemory()
+                                        -- local msg = Jkr.Message()
+                                        -- msg:InsertVChar(vchar)
+                                        -- net.BroadCast(msg)
+                                        -- SHOULD_SEND_TCP = false
+                                        if CURRENT_ANDROID_CONTROL ~= inFrameIndex then
+                                                  Engine.net.BroadCast(func)
+                                                  CURRENT_ANDROID_CONTROL = inFrameIndex
+                                        end
+                                        -- TCP_FILE_OUT:Clear()
                               end
                     end
                     local Message = Engine.net.listenOnce()
@@ -219,7 +193,6 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
                               local vchar = Message:GetVChar()
                               TCP_FILE_IN:PutDataFromMemory(vchar)
                               if (TCP_FILE_IN:HasEntry("CTRL")) then
-                                        print("FUCK YOU")
                                         local f = load(TCP_FILE_IN:ReadFunction("CTRL"))
                                         f()
                               end

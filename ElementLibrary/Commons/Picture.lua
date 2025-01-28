@@ -14,6 +14,7 @@ CPicture = function(inCPictureTable)
 end
 
 
+local pictures = {}
 gprocess.CPicture = function(inPresentation, inValue, inFrameIndex, inElementName)
           if inValue.pic ~= -1 then
                     local ElementName = gUnique(inElementName)
@@ -31,9 +32,9 @@ gprocess.CPicture = function(inPresentation, inValue, inFrameIndex, inElementNam
                     if PrevD.y > inValue.d.y then
                               inValue.p.y = inValue.p.y + (PrevD.y - inValue.d.y) / 2
                     end
-                    if not gscreenElements[ElementName] then
+                    if not pictures[ElementName] then
                               if inValue.pic ~= -1 then
-                                        gscreenElements[ElementName] = gwid.CreateGeneralButton(
+                                        pictures[ElementName] = gwid.CreateGeneralButton(
                                                   vec3(math.huge), vec3(inValue.d), inValue.onclick, false, nil,
                                                   nil, inValue.c, inValue.bc, nil, inValue.pic
                                         )
@@ -42,7 +43,7 @@ gprocess.CPicture = function(inPresentation, inValue, inFrameIndex, inElementNam
                     gAddFrameKeyElement(inFrameIndex, {
                               {
                                         "*CP*",
-                                        handle = gscreenElements[ElementName],
+                                        handle = pictures[ElementName],
                                         value = inValue,
                                         name = ElementName
                               }

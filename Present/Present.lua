@@ -207,6 +207,9 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
         inPresentation.CircularSwitch = function(value)
             circularSwitch = value
         end
+        inPresentation.SetDirection = function(inValue)
+            direction = inValidation
+        end
         gMoveForward = function(inT)
             if receive_events and hasNextFrame and (currentFrame < gFrameCount - 1) then
                 if inT then t = inT else t = 0.0 end

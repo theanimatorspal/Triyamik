@@ -163,4 +163,15 @@ P = {
                     }
           }
 }
+
+P = {
+          Frame {
+                    CAndroid {}
+          },
+          Frame {
+                    FUCKYOU = CAxis {
+
+                    }
+          }
+}
 gPresentation(P, Validation, "GeneralLoop")
