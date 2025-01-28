@@ -7,19 +7,19 @@ gPresentation(conf, Validation, "NoLoop")
 
 P = {
           Frame {
-                    aab = PRO.Grid3D { mark = vec3(1, 1, 1) },
+                    aab = PRO.Grid3D { mark = vec3(1, 1, 1), line_size = 0.1 },
                     camera = PRO.Camera3D {
-                              t = vec3(0),
-                              e = vec3(0, 0, -100),
+                              t = vec3(0, 0, 0),
+                              e = vec3(100, 100, -100),
                               type = "PERSPECTIVE",
-                              fov = 43
+                              fov = 50
                     }
           },
           Frame {
-                    aab = PRO.Grid3D { mark = vec3(5, 5, 5) },
+                    aab = PRO.Grid3D { mark = vec3(5, 5, 5), line_size = 0.5 },
                     camera = PRO.Camera3D {
                               t = vec3(0),
-                              e = vec3(0, 0, -400),
+                              e = vec3(100, 100, -150),
                               type = "PERSPECTIVE",
                               fov = 43
                     }
@@ -29,10 +29,9 @@ P = {
                     camera = PRO.Camera3D {
                               t = vec3(0),
                               e = vec3(0, 0, -400),
-                              type = "ORTHO",
-                              fov = 45
+                              type = "PERSPECTIVE",
+                              fov = 43
                     }
-
           },
 }
 
