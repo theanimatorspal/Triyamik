@@ -2,10 +2,10 @@ require "ElementLibrary.Procedurals.Require"
 
 PRO.Camera3D = function(inText3DTable)
           local t = {
-                    t = vec3(0),
-                    e = vec3(0, 0, -2),
-                    fov = 45.0,
-                    aspect = 16 / 9,
+                    t = vec3(0),        -- target vaneko, kun position focus garne, arthaat kun position maa herne
+                    e = vec3(0, 0, -2), -- eye, camera ko position jastai ho
+                    fov = 45.0,         -- field of view vaneko kattiko wide herne ho, (in degrees)
+                    aspect = 16 / 9,    --
                     near = 0.001,
                     far = 1000,
                     projection = mat4(0.0),
@@ -32,7 +32,7 @@ gprocess.PRO_Camera3D = function(inPresentation, inValue, inFrameIndex, inElemen
           local cu = Jmath.Normalize(Jmath.Cross(d, r))
           inValue.view = Jmath.LookAt(e, e + d, cu)
           if inValue.type == "PERSPECTIVE" then
-                    inValue.projection = Jmath.Perspective(inValue.fov * 180.0 / math.pi, inValue.aspect, inValue.near,
+                    inValue.projection = Jmath.Perspective(math.rad(inValue.fov), inValue.aspect, inValue.near,
                               inValue.far)
           elseif inValue.type == "ORTHO" then
                     inValue.projection = Jmath.Ortho(

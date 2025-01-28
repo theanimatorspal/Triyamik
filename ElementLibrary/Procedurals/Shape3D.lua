@@ -58,7 +58,7 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
                 d = d,
                 renderer_parameter = renderer_parameter,
                 r = r,
-                camera_control = "EDITOR_MOUSE",
+                -- camera_control = "EDITOR_MOUSE",
             }.Cobj, inFrameIndex, elementName)
         end
     end
