@@ -43,7 +43,7 @@ gprocess.CTextList = function(inPresentation, inValue, inFrameIndex, inElementNa
                                         p = vec3(inValue.p.x + d[index].x + padding.x, inValue.p.y, gbaseDepth)
                               end
                               if i == index - 1 or i == index + 1 then
-                                        alpha = 0.5
+                                        alpha = 0.2
                               end
                     end
                     if type == "VERTICAL" then
@@ -57,7 +57,7 @@ gprocess.CTextList = function(inPresentation, inValue, inFrameIndex, inElementNa
                                         p = vec3(inValue.p.x, inValue.p.y + d[i].y + padding.y, gbaseDepth)
                               end
                               if i == index - 1 or i == index + 1 then
-                                        alpha = 0.5
+                                        alpha = 0.2
                               end
                     end
 
