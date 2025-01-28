@@ -1,5 +1,5 @@
 require "ElementLibrary.Procedurals.Require"
-PRO_Grid3D = function(inTable)
+PRO.Grid3D = function(inTable)
           local t = {
                     grid_color = vec4(gcolors.armygreen, 1),
                     mark_color = vec4(gcolors.blue, 1),

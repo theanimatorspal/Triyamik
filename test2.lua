@@ -7,14 +7,15 @@ gPresentation(conf, Validation, "NoLoop")
 
 P = {
           Frame {
-                    aab = PRO_Grid3D { mark = vec3(1, 1, 1) },
+                    aab = PRO.Grid3D { mark = vec3(1, 1, 1) },
           },
           Frame {
-                    aab = PRO_Grid3D { mark = vec3(5, 5, 5) }
+                    aab = PRO.Grid3D { mark = vec3(5, 5, 5) }
           },
           Frame {
-                    aab = PRO_Grid3D { mark = vec3(9, 7, 8) }
-          }
+                    aab = PRO.Grid3D { mark = vec3(9, 7, 8) },
+
+          },
 }
 
 P.Config = {
