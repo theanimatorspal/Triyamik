@@ -93,6 +93,14 @@ PRO.CompileShaders = function()
                     local Gen = PRO.GetCubeGenerator(0.5, 0.5, 0.5, "FOURSIDED")
                     PRO.cube_foursided = gshaper3d:Add(Gen, vec3(0, 0, 0))
           end
+          if not PRO.sphere8x8 then
+                    local Gen = PRO.GetSphereGenerator(1, 8, 8)
+                    PRO.sphere8x8 = gshaper3d:Add(Gen, vec3(0, 0, 0))
+          end
+          if not PRO.sphere32x32 then
+                    local Gen = PRO.GetSphereGenerator(1, 32, 32)
+                    PRO.sphere32x32 = gshaper3d:Add(Gen, vec3(0, 0, 0))
+          end
 end
 
 PRO.GetSphereGenerator = function(radius, segmentsLat, segmentsLong, type)
@@ -122,7 +130,7 @@ PRO.GetSphereGenerator = function(radius, segmentsLat, segmentsLong, type)
                               local z = math.sin(phi) * r
                               local v = Jkr.Vertex3D()
                               v.mPosition = vec3(x, y, z)
-                              v.mNormal = vec3(x, y, z):normalize()
+                              v.mNormal = Jmath.Normalize(vec3(x, y, z))
                               v.mUV = vec2(j / segmentsLong, 1 - i / segmentsLat)
                               v.mColor = vec3(1)
                               v3ds:add(v)
@@ -438,8 +446,8 @@ PRO.GetGearGenerator = function(innerRadius, outerRadius, numTeeth, toothDepth, 
                     local nextBack = backStart + nextI
 
                     -- Calculate normal
-                    local edge = v3ds[nextFront].mPosition - v3ds[currentFront].mPosition
-                    local normal = vec3(-edge.y, edge.x, 0):normalize()
+                    local edge = v3ds[nextFront + 1].mPosition - v3ds[currentFront + 1].mPosition
+                    local normal = Jmath.Normalize(vec3(-edge.y, edge.x, 0))
 
                     -- Side vertices
                     local v1 = Jkr.Vertex3D()

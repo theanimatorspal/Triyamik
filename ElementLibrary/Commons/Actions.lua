@@ -40,3 +40,20 @@ ExecuteFunctions["CCircularSwitch"] = function(inPresentation, inElement, inFram
                     inPresentation.CircularSwitch(inElement[2][1])
           end
 end
+
+CReverse = function(inTable)
+          return { CReverse = inTable }
+end
+
+gprocess.CReverse = function(inPresentation, inValue, inFrameIndex, inElementName)
+          gAddFrameKeyElement(inFrameIndex, {
+                    {
+                              "CReverse",
+                              inValue
+                    }
+          })
+end
+
+ExecuteFunctions["CReverse"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
+          inPresentation.SetDirection(inElement[2])
+end
