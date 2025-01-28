@@ -154,25 +154,59 @@ P = {
 --                               should_mark = true
 --                     },
 
-          -- },
+-- },
+--           Frame {
+--                     one = CGrid {
+--                               x_count = 6,
+--                               y_count = 6,
+--                               p = vec3(0, 0, 1),
+--                               d = vec3(500, 500, 1)
+--                     }
+--           }
+-- }
+
+P = {
           Frame {
-                    one = CGrid {
-                              x_count = 6,
-                              y_count = 6,
-                              p = vec3(0, 0, 1),
-                              d = vec3(500, 500, 1)
+                    a = CTextList {
+                              type = "VERTICAL",
+                              texts = { "a for apple", "jkr", "whahahah" },
+                              index = 1
                     }
+          },
+          Frame {
+                    a = CTextList {
+                              type = "VERTICAL",
+                              index = 2
+                    }
+          },
+          Frame {
+                    a = CTextList {
+                              type = "VERTICAL",
+                              index = 3
+                    },
           }
 }
 
 P = {
           Frame {
-                    CAndroid {}
-          },
-          Frame {
-                    FUCKYOU = CAxis {
+                    b = CDate {
 
                     }
-          }
+          },
+          Frame {
+                    b = CDate {
+                              year = 2080,
+                              month = 10,
+                              day = 22
+                    }
+          },
+          Frame {
+                    b = CDate {
+                              year = 2081,
+                              month = 1,
+                              day = 10
+                    }
+          },
+
 }
 gPresentation(P, Validation, "GeneralLoop")

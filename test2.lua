@@ -35,6 +35,12 @@ P = {
           },
 }
 
+P = {
+          Frame {
+                    a = PRO.LineList3D { line_lists = { vec4(20, 40, 80, 10), vec4(100, 30, 20, 75) } }
+          },
+}
+
 P.Config = {
           FullScreen = false,
           FontSizes = gGetDefaultFontSizes(),
