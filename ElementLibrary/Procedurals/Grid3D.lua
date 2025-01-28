@@ -84,16 +84,6 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
           gprocess.PRO_Shape(inPresentation,
                     PRO.Shape {
                               compute_texture = elementName .. "grid1",
-                              p = vec3(unit_size * inValue.mark.x, unit_size * inValue.mark.y, -unit_size * inValue.mark.z),
-                              d = vec3(unit_size, unit_size, unit_size),
-                              renderer_parameter = mat4(inValue.line_colors[1], inValue.line_colors[2], vec4(0), vec4(0)),
-                    }
-                    .PRO_Shape,
-                    inFrameIndex, elementName .. "cube_mark_3")
-
-          gprocess.PRO_Shape(inPresentation,
-                    PRO.Shape {
-                              compute_texture = elementName .. "grid1",
                               p = vec3(unit_size * inValue.mark.x, unit_size * inValue.mark.y, -unit_size * inValue.mark.z + size_z / 2),
                               d = vec3(unit_size * inValue.line_size, unit_size * inValue.line_size, size_z),
                               renderer_parameter = mat4(inValue.line_colors[1], inValue.line_colors[2], vec4(0), vec4(0)),
@@ -109,4 +99,14 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     }
                     .PRO_Shape,
                     inFrameIndex, elementName .. "cube_mark_2")
+
+          gprocess.PRO_Shape(inPresentation,
+                    PRO.Shape {
+                              compute_texture = elementName .. "grid1",
+                              p = vec3(unit_size * inValue.mark.x, unit_size * inValue.mark.y, -unit_size * inValue.mark.z),
+                              d = vec3(unit_size, unit_size, unit_size),
+                              renderer_parameter = mat4(inValue.mark_colors[1], inValue.mark_colors[2], vec4(0), vec4(0)),
+                    }
+                    .PRO_Shape,
+                    inFrameIndex, elementName .. "cube_mark_3")
 end
