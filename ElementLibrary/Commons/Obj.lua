@@ -158,17 +158,14 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 local interp = glerp_3f(prev.p, new.p, t)
                 local interr = glerp_4f(prev.r, new.r, t)
                 local interd = glerp_3f(prev.d, new.d, t)
-                local Matrix = Jmath.Scale(Element.mMatrix3, vec3(1))
-                -- Jmath.PrintMatrix(Matrix)
-                -- rotate
                 local rotateby = vec3(interr.x, interr.y, interr.z)
                 local rotateby_deg = interr.w
-                -- translate
-                Matrix = Jmath.Translate(Matrix, interp)
-                -- scale
-                Matrix = Jmath.Scale(Matrix, interd)
-                -- rotate
-                Matrix = Jmath.Rotate_deg(Matrix, rotateby_deg, rotateby)
+
+                local identity = Jmath.GetIdentityMatrix4x4()
+                local translate_m = Jmath.Translate(identity, interp)
+                local scale_m = Jmath.Scale(identity, interd)
+                local rotate_m = Jmath.Rotate_deg(identity, rotateby_deg, rotateby)
+                Matrix = translate_m * rotate_m * scale_m
                 Element.mMatrix2 = glerp_mat4f(prev.renderer_parameter, new.renderer_parameter, t)
                 Element.mMatrix = Matrix
             else
@@ -184,14 +181,14 @@ ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t
                 local interr = new.r
                 local interd = new.d
                 local Matrix = Jmath.Scale(Element.mMatrix3, vec3(1))
-                -- translate
-                Matrix = Jmath.Translate(Matrix, interp)
-                -- scale
-                Matrix = Jmath.Scale(Matrix, interd)
-                -- rotate
                 local rotateby = vec3(interr.x, interr.y, interr.z)
                 local rotateby_deg = interr.w
-                Matrix = Jmath.Rotate_deg(Matrix, rotateby_deg, rotateby)
+
+                local identity = Jmath.GetIdentityMatrix4x4()
+                local translate_m = Jmath.Translate(identity, interp)
+                local scale_m = Jmath.Scale(identity, interd)
+                local rotate_m = Jmath.Rotate_deg(identity, rotateby_deg, rotateby)
+                Matrix = translate_m * rotate_m * scale_m
 
                 Element.mMatrix = Matrix
                 Element.mMatrix2 = new.renderer_parameter

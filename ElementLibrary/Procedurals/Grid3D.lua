@@ -2,7 +2,7 @@ require "ElementLibrary.Procedurals.Require"
 PRO_Grid3D = function(inTable)
           local t = {
                     size = 100,
-                    mark = vec3(1, 1, 1),
+                    mark = vec3(0, 0, 0),
                     x_count = 5,
                     y_count = 5,
                     c = vec4(1, 0, 0, 1),

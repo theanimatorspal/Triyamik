@@ -1,7 +1,8 @@
 require "ElementLibrary.Procedurals.Procedurals"
+require "sync"
 
 local conf = gGetPresentationWithDefaultConfiguration()
-local Validation = true
+local Validation = VALIDATION
 gPresentation(conf, Validation, "NoLoop")
 
 P = {
