@@ -192,6 +192,21 @@ P = {
                     b = CDate {
 
                     }
-          }
+          },
+          Frame {
+                    b = CDate {
+                              year = 2080,
+                              month = 10,
+                              day = 22
+                    }
+          },
+          Frame {
+                    b = CDate {
+                              year = 2081,
+                              month = 1,
+                              day = 10
+                    }
+          },
+
 }
 gPresentation(P, Validation, "GeneralLoop")
