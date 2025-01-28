@@ -209,13 +209,14 @@ end
 CComputeImageTest = function(inTable)
           return { CComputeImageTest = inTable }
 end
+
 gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           gprocess.CComputeImage(inPresentation, CComputeImage {
                     p = vec3(0, 0, 1),
                     d = vec3(500, 500, 1),
                     cd = vec3(500, 500, 1),
                     mat1 = mat4(
-                              vec4(200, 4, 400, 300),
+                              vec4(0, 1, 400, 300),
                               vec4(0, 1, 0, 1),
                               vec4(0.0001),
                               vec4(0)
