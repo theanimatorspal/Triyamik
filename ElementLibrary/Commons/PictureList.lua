@@ -33,10 +33,10 @@ gprocess.CPictureList = function(inPresentation, inValue, inFrameIndex, inElemen
                                         alpha = 1
                               elseif i < index then
                                         alpha = 0
-                                        p = vec3(inValue.p.x - inValue.d.x, inValue.p.y, gbaseDepth)
+                                        p = vec3(inValue.p.x - inValue.d.x * 0.3, inValue.p.y, gbaseDepth + 10)
                               elseif i > index then
                                         alpha = 0
-                                        p = vec3(inValue.p.x + inValue.d.x, inValue.p.y, gbaseDepth)
+                                        p = vec3(inValue.p.x + inValue.d.x * 0.3, inValue.p.y, gbaseDepth + 10)
                               end
                               if i == index - 1 or i == index + 1 then
                                         alpha = 0.5
@@ -48,10 +48,10 @@ gprocess.CPictureList = function(inPresentation, inValue, inFrameIndex, inElemen
                                         alpha = 1
                               elseif i < index then
                                         alpha = 0
-                                        p = vec3(inValue.p.x, inValue.p.y - inValue.d.y, gbaseDepth)
+                                        p = vec3(inValue.p.x, inValue.p.y - inValue.d.y * 0.3, gbaseDepth + 10)
                               elseif i > index then
                                         alpha = 0
-                                        p = vec3(inValue.p.x, inValue.p.y + inValue.d.y, gbaseDepth)
+                                        p = vec3(inValue.p.x, inValue.p.y + inValue.d.y * 0.3, gbaseDepth + 10)
                               end
                               if i == index - 1 or i == index + 1 then
                                         alpha = 0.5

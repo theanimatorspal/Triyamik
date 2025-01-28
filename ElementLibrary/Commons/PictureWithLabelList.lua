@@ -18,6 +18,7 @@ gprocess.CPictureWithLabelList = function(inPresentation, inValue, inFrameIndex,
           local paths = inValue.paths
           local index = inValue.index
 
+
           if paths ~= -1 and texts ~= -1 then
                     pictureWithLabelLists[elementName] = { paths = paths, texts = texts }
           else
@@ -35,10 +36,10 @@ gprocess.CPictureWithLabelList = function(inPresentation, inValue, inFrameIndex,
                               alpha = 1
                     elseif i < index then
                               alpha = 0
-                              p = vec3(inValue.p.x - inValue.d.x, inValue.p.y, gbaseDepth)
+                              p = vec3(inValue.p.x - inValue.d.x * 0.3, inValue.p.y, gbaseDepth + 10)
                     elseif i > index then
                               alpha = 0
-                              p = vec3(inValue.p.x + inValue.d.x, inValue.p.y, gbaseDepth)
+                              p = vec3(inValue.p.x + inValue.d.x * 0.3, inValue.p.y, gbaseDepth + 10)
                     end
                     if i == index - 1 or i == index + 1 then
                               alpha = 0.5
