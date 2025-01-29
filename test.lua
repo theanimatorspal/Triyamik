@@ -306,7 +306,7 @@ P = {
                               line_size = 0,
                     },
                     mobile_phone = PRO.Shape {
-                              r = vec4(0, 1, 0, 90),
+                              r = vec4(0, 1, 0, -90),
                               p = vec3(1, 1, -1) * unit_size,
                               d = vec3(4),
                               type = "GLTF",
@@ -316,7 +316,7 @@ P = {
                     rectangles_3d = PRO.RectangleList3D
                         {
                                   p = vec3(1, 1, -1) * unit_size,
-                                  d = vec3(1, 1, 5),
+                                  d = vec3(1, 1, 1),
                                   rectangle_lists = {
                                             mat4(vec4(1, 1, 100, 100), vec4(gcolors.red, 1), vec4(0, 1, 0, 0), vec4(0)),
                                             --     mat4(vec4(10, 10, 100, 100), vec4(gcolors.green_yellow, 1), vec4(0.15, 0.82, 0, 0), vec4(0)),
