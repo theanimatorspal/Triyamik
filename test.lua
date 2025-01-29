@@ -213,8 +213,8 @@ P = {
           Frame {
                     sth = CRectanglelist {
                               list = {
-                                        mat4(vec4(1, 1, 50, 30), vec4(gcolors.bluebell, 1), vec4(0.1), vec4(0)),
-                                        mat4(vec4(50, 30, 100, 100), vec4(gcolors.cadetgrey, 1), vec4(0.001), vec4(0)),
+                                        mat4(vec4(1, 1, 50, 30), vec4(gcolors.bluebell, 1), vec4(0.1, 0.7, 0, 0), vec4(0)),
+                                        mat4(vec4(50, 30, 100, 100), vec4(gcolors.cadetgrey, 1), vec4(0.1, 0.7, 0, 0), vec4(0)),
                               }
                     }
           }
