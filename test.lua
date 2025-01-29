@@ -221,13 +221,123 @@ P = {
           }
 }
 
+
+local x_count = 100
+local size = 1000
+local unit_size = size / x_count
+
+
+local TopDownCamera = function(inTarget)
+          return PRO.Camera3D {
+                    e = vec3(0, 100, -20),
+                    t = inTarget or vec3(0, 0, -20),
+                    fov = 43,
+          }
+end
+
+local RightToLeft = function(inTarget)
+          return PRO.Camera3D {
+                    e = vec3(-50, 25, -20),
+                    t = inTarget or vec3(100, 25, -100),
+                    fov = 70,
+
+          }
+end
+
+local LeftToRight = function(inTarget)
+          return PRO.Camera3D {
+                    e = vec3(),
+                    t = vec3(),
+          }
+end
+
+local DownTopCamera = function(inTarget)
+          return PRO.Camera3D {
+                    t = inTarget or vec3(0, 0, 0),
+                    e = vec3(50, 5, -50),
+                    fov = 60,
+          }
+end
+
+
 P = {
           Frame {
+                    cam = RightToLeft(),
+                    grid = PRO.Grid3D {
+                              size = size,
+                              x_count = x_count,
+                              y_count = x_count,
+                              mark = vec3(1),
+                              mark_size = vec3(0),
+                              line_size = 0,
+
+                    },
+                    -- Grid Banau
                     mobile_phone = PRO.Shape {
+                              p = vec3(1, 1, -1) * unit_size,
+                              d = vec3(4),
                               type = "GLTF",
                               file_name = "tiny_res/mobile_phone/mobile_phone.gltf"
-                              -- 3d object ko information haru vako file format
-                    }
-          }
+
+                    },
+                    laptop = PRO.Shape {
+                              p = vec3(1, 5, -15) * unit_size,
+                              d = vec3(4),
+                              type = "GLTF",
+                              file_name = "tiny_res/laptop/laptop.gltf"
+                    },
+
+
+                    --- J garera pani, euta cube CrectangleList3D, chae mobile bata niksera tyo k rey, laptop ma janu paro,
+                    -- camera lai pani animate gara
+          },
+          Frame {
+                    cam = PRO.Camera3D {
+                              t = vec3(0),
+                              e = vec3(1, 1, -50),
+                              f = 40,
+                    },
+                    grid = PRO.Grid3D {
+                              size = size,
+                              x_count = x_count,
+                              y_count = x_count,
+                              mark = vec3(1),
+                              mark_size = vec3(0),
+                              line_size = 0,
+                    },
+                    mobile_phone = PRO.Shape {
+                              r = vec4(0, 1, 0, 90),
+                              p = vec3(1, 1, -1) * unit_size,
+                              d = vec3(4),
+                              type = "GLTF",
+                              file_name = "tiny_res/mobile_phone/mobile_phone.gltf"
+
+                    },
+                    rectangles_3d = PRO.RectangleList3D
+                        {
+                                  p = vec3(1, 1, -1) * unit_size,
+                                  d = vec3(1, 1, 5),
+                                  rectangle_lists = {
+                                            mat4(vec4(1, 1, 100, 100), vec4(gcolors.red, 1), vec4(0, 1, 0, 0), vec4(0)),
+                                            --     mat4(vec4(10, 10, 100, 100), vec4(gcolors.green_yellow, 1), vec4(0.15, 0.82, 0, 0), vec4(0)),
+                                  }
+                        }
+          },
+          -- Frame {
+          --           cam = PRO.Camera3D {
+          --                     t = vec3(0),
+          --                     e = vec3(1, 1, -50),
+          --                     f = 40,
+          --           },
+          --           rectangles_3d = PRO.RectangleList3D {
+          --                     p = vec3(1, 0.7, -1) * unit_size,
+          --                     d = vec3(1, 1, 1),
+          --                     rectangle_lists = {
+          --                               mat4(vec4(10, 10, 100, 100), vec4(gcolors.green_yellow, 1), vec4(0.15, 0.82, 0, 0), vec4(0)),
+          --                     }
+
+          --           }
+          -- }
 }
 gPresentation(P, Validation, "GeneralLoop")
+-- mobile bata crectangle list mobile to laptop and laptop to mobile
