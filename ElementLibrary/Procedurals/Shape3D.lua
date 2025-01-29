@@ -23,7 +23,10 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
     local r = inValue.r
     local compute_texture = inValue.compute_texture
     local renderer_parameter = inValue.renderer_parameter
-    if inValue.type == "CUBE3D" then
+    if inValue.type == "CUBE3D"
+        or inValue.type == "SPHERE3D"
+        or inValue.type == "GEAR3D"
+    then
         if compute_texture ~= -1 then
             local computeImages, computePainters = CComputeImagesGet()
             local element = computeImages[compute_texture]
@@ -45,10 +48,14 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
                     --           3)
 
                     local obj = Jkr.Object3D()
-                    if inValue.sidedness == "TWOSIDED" then
-                        obj.mId = PRO.cube_twosided
-                    elseif inValue.sidedness == "FOURSIDED" then
-                        obj.mId = PRO.cube_foursided
+                    if inValue.type == "CUBE3D" then
+                        if inValue.sidedness == "TWOSIDED" then
+                            obj.mId = PRO.cube_twosided
+                        elseif inValue.sidedness == "FOURSIDED" then
+                            obj.mId = PRO.cube_foursided
+                        end
+                    elseif inValue.type == "SPHERE3D" then
+                        obj.mId = PRO.sphere32x32
                     end
                     obj.mAssociatedUniform = uniform3did
                     obj.mAssociatedSimple3D = PRO.cube_ShowImageShader.simple3did

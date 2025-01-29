@@ -84,13 +84,13 @@ gprocess.CAndroid = function(inPresentation, inValue, inFrameIndex, inElementNam
 
                     Engine.net.UDP()
                     Engine.net.StartUDP(6523)
-                    local vc = std_vector_char(5000)
+                    local vc = Jkr.ConvertToVChar(vec4(0))
                     Jkr.SetBufferSizeUDP(#vc)
 
                     local android_setup_udp = function()
                               Engine.net.UDP()
                               Engine.net.StartUDP(6525)
-                              local vc = std_vector_char(5000)
+                              local vc = Jkr.ConvertToVChar(vec4(0))
                               Jkr.SetBufferSizeUDP(#vc)
                     end
 

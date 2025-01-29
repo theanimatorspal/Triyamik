@@ -106,6 +106,7 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
                               p = vec3(unit_size * inValue.mark.x, unit_size * inValue.mark.y, -unit_size * inValue.mark.z),
                               d = vec3(unit_size, unit_size, unit_size),
                               renderer_parameter = mat4(inValue.mark_colors[1], inValue.mark_colors[2], vec4(0), vec4(0)),
+                              type = "SPHERE3D"
                     }
                     .PRO_Shape,
                     inFrameIndex, elementName .. "cube_mark_3")

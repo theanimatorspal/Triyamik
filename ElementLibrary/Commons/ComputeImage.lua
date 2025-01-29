@@ -106,19 +106,21 @@ compileShaders = function()
                               .Append [[
                               vec4 point1 = push.b * vec4(p1.x, p1.y, 0, 1);
                               vec4 point2 = push.b * vec4(p1.z, p1.w, 0, 1);
+                              point1.xyz /= point1.w;
+                              point2.xyz /= point2.w;
+
                               float x1 = point1.x;
                               float y1 = point1.y;
                               float x2 = point2.x;
                               float y2 = point2.y;
                               float x = float(gl_GlobalInvocationID.x);
                               float y = float(gl_GlobalInvocationID.y);
-
                               vec2 center = vec2((x1 + x2) / 2, (y1 + y2) / 2);
-                              center.x = center.x / image_size.x;
-                              center.y = center.y / image_size.y;
+                              vec2 hw = vec2(abs(x2 - x1), abs(y2 - y1));
 
-                              vec2 hw = vec2(abs(x2 - x1) / 2.0f, abs(y2 - y1) / 2.0f);
-                              hw = vec2(1, 1);
+                              center.x = (center.x - image_size.x / 2.0f) / (image_size.x / 2.0f);
+                              center.y = (image_size.y / 2.0f - center.y) / (image_size.y / 2.0f);
+
                               hw.x = hw.x / image_size.x;
                               hw.y = hw.y / image_size.y;
 
@@ -142,11 +144,9 @@ compileShaders = function()
                                         (y >= (small_y) && y <= (large_y))
                               )  {
                                         imageStore(storageImage, to_draw_at, final_color);
-                              } else {
-                                        imageStore(storageImage, to_draw_at, vec4(0, 0, 0, 1));
                               }
                               ]]
-                              .GlslMainEnd()
+                              .GlslMainEnd().Print()
                               .str
                     )
                     shader:Store(Engine.i, gwindow)
@@ -209,13 +209,14 @@ end
 CComputeImageTest = function(inTable)
           return { CComputeImageTest = inTable }
 end
+
 gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inElementName)
           gprocess.CComputeImage(inPresentation, CComputeImage {
                     p = vec3(0, 0, 1),
                     d = vec3(500, 500, 1),
                     cd = vec3(500, 500, 1),
                     mat1 = mat4(
-                              vec4(100, 100, 400, 400),
+                              vec4(0, 1, 400, 300),
                               vec4(0, 1, 0, 1),
                               vec4(0.0001),
                               vec4(0)
