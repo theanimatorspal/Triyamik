@@ -173,6 +173,9 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
           end
           if Engine.gate.android_device_connected_tcp then
                     do
+                              Engine.net.BroadCast(function()
+
+                              end)
                               if func then
                                         -- local vchar = TCP_FILE_OUT:GetDataFromMemory()
                                         -- local msg = Jkr.Message()

@@ -174,8 +174,6 @@ compileShaders = function()
                               center.x = (center.x - image_size.x / 2.0f) / (image_size.x / 2.0f);
                               center.y = (image_size.y / 2.0f - center.y) / (image_size.y / 2.0f);
 
-                              vec2 center = vec2(p1.x, p1.y);
-                              float radius = p1.z;
                               vec2 Q = abs(xy - center);
                               float color = length(Q) - radius;
                               color = smoothstep(-0.05, 0.05, -color);

@@ -230,6 +230,7 @@ gPresentation = function(inPresentation, inValidation, inLoopType)
             print("currentFrame: ", currentFrame, "gFrameCount:", gFrameCount)
         end
 
+        local ExecuteFrame = ExecuteFrame
         gMoveToParicular = function(inFrameNumber)
             local hasNextFrame = true
             if currentFrame > inFrameNumber then
