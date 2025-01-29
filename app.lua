@@ -139,17 +139,17 @@ do
                     --                     renderer_parameter = mat4(vec4(1, 0, 0, 1), vec4(0), vec4(0), vec4(0))
                     --           }
                     -- },
-                    Frame {
-                              laptop = Cobj {
-                                        filename = "tiny_res/laptop/laptop.gltf",
-                                        camera_control = "EDITOR_MOUSE",
-                                        renderer = "NORMAL",
-                                        p = vec3(0, 0, 0),
-                                        r = vec4(1, 1, 1, 0),
-                                        d = vec3(1, 1, 1),
-                                        world = "default"
-                              }
-                    },
+                    -- Frame {
+                    --           laptop = Cobj {
+                    --                     filename = "tiny_res/laptop/laptop.gltf",
+                    --                     camera_control = "EDITOR_MOUSE",
+                    --                     renderer = "NORMAL",
+                    --                     p = vec3(0, 0, 0),
+                    --                     r = vec4(1, 1, 1, 0),
+                    --                     d = vec3(1, 1, 1),
+                    --                     world = "default"
+                    --           }
+                    -- },
                     -- Frame {
                     --           fuck = Cobj {
                     --                     filename = "res/models/DamagedHelmet/DamagedHelmet.gltf",
