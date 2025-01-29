@@ -6,23 +6,32 @@ local Validation = VALIDATION
 
 local BG = function(inTable)
           local t = {
-                    x_count = 15,
-                    y_count = 15,
-                    p = vec3(1000, 0, gbaseDepth),
-                    c = vec4(gcolors.green_pigment, 1),
-                    should_mark = true,
-                    mark = vec2(1, 1),
-                    d = vec3(1000, 1000, 1),
-                    cd = vec3(100, 100, 1)
+                    line_size = 0,
+                    mark_size = vec3(0),
+                    grid_color = vec4(gcolors.dandelion, 1),
+                    x_count = 50,
+                    y_count = 50,
+                    mark = vec3(0),
           }
           inTable = Default(inTable, t)
-          return CGrid(inTable)
+          return PRO.Grid3D(inTable)
+end
+
+local C = function(inTable)
+          local t = {
+                    e = vec3(100, 10, -100),
+                    type = "ORTHO",
+                    fov = 44,
+
+          }
+          inTable = Default(inTable, t)
+          return PRO.Camera3D(inTable)
 end
 
 local Initialize = {
-          Frame {
-                    background_grid = BG {},
-          }
+          -- Frame {
+          --           background_grid = BG {},
+          -- }
 }
 
 local architecture_minor = function()
@@ -81,31 +90,17 @@ local P = {
                               logo = "tulogo.png"
                     },
                     CNumbering {},
+                    camera = C {},
                     background_grid = BG {},
-                    something = PRO.Shape {
-                              type = "CUBE3D",
-                              d = vec3(10, 10, 10),
-                              compute_texture = "background_grid"
-                    }
-
           },
           Frame {
                     CTitlePage { act = "structure" },
+                    camera = C {},
                     background_grid = BG {},
-                    something = PRO.Shape {
-                              type = "CUBE3D",
-                              d = vec3(5, 5, 5),
-                              compute_texture = "background_grid"
-                    }
           },
           Frame {
+                    camera = C {},
                     background_grid = BG {
-                              mark = vec2(5, 5),
-                    },
-                    something = PRO.Shape {
-                              type = "CUBE3D",
-                              d = vec3(5, 5, 5),
-                              compute_texture = "background_grid"
                     },
                     first = CPictureWithLabelList {
                               type = "HORIZONTAL",
