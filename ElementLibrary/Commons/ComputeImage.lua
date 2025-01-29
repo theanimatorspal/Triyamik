@@ -113,6 +113,7 @@ compileShaders = function()
                               float y1 = point1.y;
                               float x2 = point2.x;
                               float y2 = point2.y;
+                              float radius = p3.x;
                               float x = float(gl_GlobalInvocationID.x);
                               float y = float(gl_GlobalInvocationID.y);
                               vec2 center = vec2((x1 + x2) / 2, (y1 + y2) / 2);
@@ -121,10 +122,9 @@ compileShaders = function()
                               center.x = (center.x - image_size.x / 2.0f) / (image_size.x / 2.0f);
                               center.y = (image_size.y / 2.0f - center.y) / (image_size.y / 2.0f);
 
-                              hw.x = hw.x / image_size.x;
-                              hw.y = hw.y / image_size.y;
+                              hw.x = hw.x / image_size.x * p3.y;
+                              hw.y =  hw.y / image_size.y * p3.y;
 
-                              float radius = p3.x;
                               vec2 Q = abs(xy - center) - hw;
                               float color = distance(max(Q, vec2(0.0)), vec2(0.0)) + min(max(Q.x, Q.y), 0.0) - radius;
                               color = smoothstep(-0.05, 0.05, -color);
@@ -153,7 +153,54 @@ compileShaders = function()
                     computePainters.RECTANGLE = shader
           end
           if not computePainters.CIRCLE then
-                    local shader = Jkr.CreateCustomImagePainter("cache/CIRCLE.glsl", TwoDimensionalIPs.Circle.str)
+                    local shader = Jkr.CreateCustomImagePainter("cache/CIRCLE.glsl",
+                              TwoDimensionalIPs.
+                              HeaderWithoutBegin().
+                              GlslMainBegin().
+                              ImagePainterAssistMatrix2().Append [[
+                              vec4 point1 = push.b * vec4(p1.x, p1.y, 0, 1);
+                              vec4 point2 = push.b * vec4(p1.z, p1.w, 0, 1);
+                              point1.xyz /= point1.w;
+                              point2.xyz /= point2.w;
+
+                              float x1 = point1.x;
+                              float y1 = point1.y;
+                              float x2 = point2.x;
+                              float y2 = point2.y;
+                              float x = float(gl_GlobalInvocationID.x);
+                              float y = float(gl_GlobalInvocationID.y);
+                              float radius = p3.x;
+                              vec2 center = vec2((x1 + x2) / 2, (y1 + y2) / 2);
+                              center.x = (center.x - image_size.x / 2.0f) / (image_size.x / 2.0f);
+                              center.y = (image_size.y / 2.0f - center.y) / (image_size.y / 2.0f);
+
+                              vec2 center = vec2(p1.x, p1.y);
+                              float radius = p1.z;
+                              vec2 Q = abs(xy - center);
+                              float color = length(Q) - radius;
+                              color = smoothstep(-0.05, 0.05, -color);
+
+                              // vec4 old_color = imageLoad(storageImage, to_draw_at);
+                              vec4 final_color = vec4(p2.x * color, p2.y * color, p2.z * color, p2.w * color);
+                              // final_color = mix(final_color, old_color, p3.w);
+
+                              float small_x = (x1 > x2) ? x2 : x1;
+                              float large_x = (x1 > x2) ? x1 : x2;
+
+                              float small_y = (y1 > y2) ? y2 : y1;
+                              float large_y = (y1 > y2) ? y1 : y2;
+
+                              if (
+                                        (x >= (small_x) && x <= (large_x)) &&
+                                        (y >= (small_y) && y <= (large_y))
+                              )  {
+                                        imageStore(storageImage, to_draw_at, final_color);
+                              }
+
+                    ]]
+                              .GlslMainEnd()
+                              .str
+                    )
                     shader:Store(Engine.i, gwindow)
                     computePainters.CIRCLE = shader
           end
@@ -218,7 +265,7 @@ gprocess.CComputeImageTest = function(inPresentation, inValue, inFrameIndex, inE
                     mat1 = mat4(
                               vec4(0, 1, 400, 300),
                               vec4(0, 1, 0, 1),
-                              vec4(0.0001),
+                              vec4(0.4, 0.3, 0, 0),
                               vec4(0)
                     ),
                     mat2 = Jmath.GetIdentityMatrix4x4(),
