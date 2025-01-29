@@ -174,7 +174,8 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
           if Engine.gate.android_device_connected_tcp then
                     do
                               Engine.net.BroadCast(function()
-
+                                        SHOULD_SEND_TCP = true
+                                        TCP_FILE_IN:Write()
                               end)
                               if func then
                                         -- local vchar = TCP_FILE_OUT:GetDataFromMemory()
@@ -198,6 +199,10 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
                               if (TCP_FILE_IN:HasEntry("CTRL")) then
                                         local f = load(TCP_FILE_IN:ReadFunction("CTRL"))
                                         f()
+                              end
+                              if (TCP_FILE_IN:HasEntry("ACC")) then
+                                        local ac = Jkr.ConvertFromVChar(vec4(0), TCP_FILE_IN:Read("ACC"))
+                                        print(ac.x, ac.y, ac.z, ac.w)
                               end
                     end
           end
