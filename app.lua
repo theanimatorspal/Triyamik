@@ -30,9 +30,9 @@ do
                     -- Frame {
                     --           CAndroid {},
                     -- },
-                    Frame {
-                              tset = CComputeImageTest {}
-                    }
+                    -- Frame {
+                    --           tset = CComputeImageTest {}
+                    -- }
                     -- Frame {
                     --           comp = CComputeImage {
                     --                     mat1 = mat4(
@@ -139,18 +139,18 @@ do
                     --                     renderer_parameter = mat4(vec4(1, 0, 0, 1), vec4(0), vec4(0), vec4(0))
                     --           }
                     -- },
-                    -- Frame {
-                    --           laptop = Cobj {
-                    --                     filename = "res/models/laptop/laptop.gltf",
-                    --                     camera_control = "EDITOR_MOUSE",
-                    --                     hdr_filename = "res/images/lakeside.hdr",
-                    --                     renderer = "CONSTANT_COLOR",
-                    --                     p = vec3(0, 0, 0),
-                    --                     r = vec4(1, 1, 1, 0),
-                    --                     d = vec3(1, 1, 1),
-                    --                     world = "default"
-                    --           }
-                    -- },
+                    Frame {
+                              laptop = Cobj {
+                                        filename = "tiny_res/laptop/laptop.gltf",
+                                        camera_control = "EDITOR_MOUSE",
+                                        hdr_filename = "res/images/lakeside.hdr",
+                                        renderer = "NORMAL",
+                                        p = vec3(0, 0, 0),
+                                        r = vec4(1, 1, 1, 0),
+                                        d = vec3(1, 1, 1),
+                                        world = "default"
+                              }
+                    },
                     -- Frame {
                     --           fuck = Cobj {
                     --                     filename = "res/models/DamagedHelmet/DamagedHelmet.gltf",

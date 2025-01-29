@@ -4,6 +4,7 @@ PRO.Shape = function(inTable)
     local t = {
         type = "CUBE3D", -- "GLTF" | "SPHERE3D"
         compute_texture = -1,
+        file_name = -1,
         p = vec3(0),
         d = vec3(1),
         r = vec4(1, 1, 1, 1),
@@ -42,10 +43,6 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
                         element.sampled_image.mId,
                         3
                     )
-                    -- Jkr.RegisterShape2DImageToUniform3D(gwid.st.handle,
-                    --           uniform3d,
-                    --           texts[i].mId.mImgId,
-                    --           3)
 
                     local obj = Jkr.Object3D()
                     if inValue.type == "CUBE3D" then
@@ -69,4 +66,16 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
             }.Cobj, inFrameIndex, elementName)
         end
     end
+    if inValue.type == "GLTF" then
+        if inValue.file_name ~= -1 then
+            gprocess.Cobj(inPresentation, Cobj {
+                filename = inValue.file_name,
+                p = p,
+                d = d,
+                r = r,
+            }.Cobj, inFrameIndex, elementName)
+        end
+    end
+    -- rotation vaneko chae vec4 hunxa, vec4(axis, rotate_by_deg)
+    -- to rotate about z axis by 90 degrees garnu paro vane vec4(0, 0, 1, 90) or vec4(vec3(0, 0, 1), 90)
 end

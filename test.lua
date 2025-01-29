@@ -1,4 +1,5 @@
 require "ElementLibrary.Commons.Commons"
+require "ElementLibrary.Procedurals.Procedurals"
 local conf = gGetPresentationWithDefaultConfiguration()
 local Validation = true
 gPresentation(conf, Validation, "NoLoop")
@@ -216,6 +217,16 @@ P = {
                                         mat4(vec4(1, 1, 50, 30), vec4(gcolors.bluebell, 1), vec4(0.1, 0.7, 0, 0), vec4(0)),
                                         mat4(vec4(50, 30, 100, 100), vec4(gcolors.cadetgrey, 1), vec4(0.1, 0.7, 0, 0), vec4(0)),
                               }
+                    }
+          }
+}
+
+P = {
+          Frame {
+                    mobile_phone = PRO.Shape {
+                              type = "GLTF",
+                              file_name = "tiny_res/mobile_phone/mobile_phone.gltf"
+                              -- 3d object ko information haru vako file format
                     }
           }
 }

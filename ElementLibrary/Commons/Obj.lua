@@ -2,10 +2,10 @@ require "ElementLibrary.Commons.Require"
 
 Cobj = function(inOBJViewTable)
     local t = {
-        filename = "",               -- expects GLTF
-        hdr_filename = "",           -- expects HDR for skybox, PBR
+        filename = "",       -- expects GLTF
+        hdr_filename = "",   -- expects HDR for skybox, PBR
         world = "default",
-        renderer = "CONSTANT_COLOR", -- Write "PBR" for PBR
+        renderer = "NORMAL", -- Write "PBR" for PBR
         shadows = false,
         renderer_parameter = mat4(vec4(1), vec4(1), vec4(1), vec4(1)),
         skinning = -1,
