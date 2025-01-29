@@ -143,7 +143,6 @@ do
                               laptop = Cobj {
                                         filename = "tiny_res/laptop/laptop.gltf",
                                         camera_control = "EDITOR_MOUSE",
-                                        hdr_filename = "res/images/lakeside.hdr",
                                         renderer = "NORMAL",
                                         p = vec3(0, 0, 0),
                                         r = vec4(1, 1, 1, 0),
