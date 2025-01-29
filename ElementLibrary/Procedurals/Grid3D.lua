@@ -104,9 +104,9 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     PRO.Shape {
                               compute_texture = elementName .. "grid1",
                               p = vec3(unit_size * inValue.mark.x, unit_size * inValue.mark.y, -unit_size * inValue.mark.z),
-                              d = vec3(unit_size, unit_size, unit_size),
+                              d = vec3(unit_size * inValue.mark_size.x, unit_size * inValue.mark_size.y, unit_size * inValue.mark_size.z),
                               renderer_parameter = mat4(inValue.mark_colors[1], inValue.mark_colors[2], vec4(0), vec4(0)),
-                              type = "SPHERE3D"
+                              type = "CUBE3D"
                     }
                     .PRO_Shape,
                     inFrameIndex, elementName .. "cube_mark_3")

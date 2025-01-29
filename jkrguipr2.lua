@@ -8,7 +8,7 @@ local BG = function(inTable)
           local t = {
                     line_size = 0,
                     mark_size = vec3(0),
-                    grid_color = vec4(gcolors.dandelion, 1),
+                    grid_color = vec4(gcolors.rossocorsa, 0.1),
                     x_count = 50,
                     y_count = 50,
                     mark = vec3(0),
@@ -19,9 +19,10 @@ end
 
 local C = function(inTable)
           local t = {
-                    e = vec3(100, 10, -100),
+                    e = vec3(200, 150, -100),
+                    t = vec3(200, 150, 5),
                     type = "ORTHO",
-                    fov = 44,
+                    fov = 45,
 
           }
           inTable = Default(inTable, t)
@@ -77,6 +78,13 @@ end
 
 gPresentation(Initialize, Validation, "NoLoop")
 
+local eachFrame = {
+          background_grid = BG {},
+          camera = C {},
+}
+local center_d = vec3(400, 400, 1)
+local center_p = vec3(gFrameDimension.x / 2 - center_d.x / 2, gFrameDimension.y / 2 - center_d.y / 2, gbaseDepth)
+
 local P = {
           Frame {
                     CTitlePage {
@@ -90,32 +98,30 @@ local P = {
                               logo = "tulogo.png"
                     },
                     CNumbering {},
-                    camera = C {},
-                    background_grid = BG {},
+                    CStructure {},
           },
           Frame {
                     CTitlePage { act = "structure" },
-                    camera = C {},
-                    background_grid = BG {},
           },
           Frame {
-                    camera = C {},
-                    background_grid = BG {
-                    },
+                    s1 = CSection { t = "Introduction" },
                     first = CPictureWithLabelList {
+                              p = center_p,
+                              d = center_d,
                               type = "HORIZONTAL",
                               paths = { "tiny_res/sample app2.png", "tiny_res/sampleapp3.png", "tiny_res/SampleApplication.png", "tiny_res/simulated annealing stuff.png" },
                               texts = { "app1", "app2", "app3", "app4" },
                               ic = vec4(gcolors.amber, 0),
                               tc = vec4(gcolors.amber, 0),
                               index = 1
-                    }
+                    },
+
           },
           Frame {
                     first = CPictureWithLabelList {
+                              p = center_p,
+                              d = center_d,
                               type = "HORIZONTAL",
-                              p = vec3(((gFrameDimension.x / 2) - 100), ((gFrameDimension.y / 2) - 100), 1),
-                              d = vec3(200, 200, 1),
                               paths = { "tiny_res/sample app2.png", "tiny_res/sampleapp3.png", "tiny_res/SampleApplication.png", "tiny_res/simulated annealing stuff.png" },
                               texts = { "app1", "app2", "app3", "app4" },
                               index = 1
@@ -123,24 +129,24 @@ local P = {
           },
           Frame {
                     first = CPictureWithLabelList {
-                              p = vec3(((gFrameDimension.x / 2) - 100), ((gFrameDimension.y / 2) - 100), 1),
-                              d = vec3(200, 200, 1),
+                              p = center_p,
+                              d = center_d,
                               type = "HORIZONTAL",
                               index = 2
                     }
           },
           Frame {
                     first = CPictureWithLabelList {
-                              p = vec3(((gFrameDimension.x / 2) - 100), ((gFrameDimension.y / 2) - 100), 1),
-                              d = vec3(200, 200, 1),
+                              p = center_p,
+                              d = center_d,
                               type = "HORIZONTAL",
                               index = 3
                     }
           },
           Frame {
                     first = CPictureWithLabelList {
-                              p = vec3(((gFrameDimension.x / 2) - 100), ((gFrameDimension.y / 2) - 100), 1),
-                              d = vec3(200, 200, 1),
+                              p = center_p,
+                              d = center_d,
                               type = "HORIZONTAL",
                               index = 4
                     },
@@ -153,24 +159,19 @@ local P = {
                               type = "HORIZONTAL",
                               index = 4
                     },
-                    s1 = CSection {},
-                    minmaj = CEnumerate { view = 1 },
                     CLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
           Frame {
-                    s1 = CSection {},
-                    minmaj = CEnumerate { view = 2 },
-                    CLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
-                    scope_enum = CEnumerate {
-                              items = {
-                                        "2D + 3D Rendering and Presentation",
-                                        "Mobile <-> PC Communication",
-                                        "Research for Android Devices"
-                              },
-                              hide = "all"
+
+                    camera = C {
+                              e = vec3(100, 100, -100),
+                              t = vec3(0),
+                              type = "PERSPECTIVE",
                     },
-                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
+                    CLayout { layout = minor_layout() }.Apply({ bc = vec4(0), c = vec4(0, 0, 0, 0) }),
           },
+
+
 }
 
 P.Config = {
@@ -178,4 +179,12 @@ P.Config = {
           FontSizes = gGetDefaultFontSizes(),
           FontFilePaths = { "font.ttf" }
 }
+IterateEachFrame(P, function(eachFrameIndex, inValue)
+          for key, value in pairs(eachFrame) do
+                    if not inValue[key] then
+                              inValue[key] = value
+                    end
+          end
+end
+)
 gPresentation(P, Validation, "GeneralLoop")
