@@ -6,6 +6,7 @@ require("JkrGUIv2.Widgets.General")
 --
 -- General Stuffs
 gwindow = nil
+gnwindow = nil
 gwid = nil
 gassets = {}
 gliterals = {}
@@ -14,15 +15,36 @@ gFontMap = {}
 gCurrentKey = 1
 gWindowDimension = vec2(0)
 gFrameKeys = {}
+gFrameKeysCompute = {}
 gbaseDepth = 50
 gFrameCount = 0
 gPresentationUseArrowToSwitchSlides = true
 gFrameDimension = vec2(1920 / 2, 1080 / 2)
+gNFrameDimension = vec2(1920 / 2, 1080 / 2)
+gCurrentScissorsTobeDrawn = Jkr.Table(100, 0)
 
 -- 3d Stuffs
+gworld3dS = {}
+gworld3dS["default"] = {}
 gworld3d = nil
 gshaper3d = nil
 gobjects3d = nil
+gshadowobjects3d = nil
+gshadowsimple3did = nil
+gcamera3d = nil
+
+-- 3d stuffs for nowindow
+gnworld3d = nil
+gnshaper3d = nil
+gnobjects3d = nil
+gncamera3d = nil
+
+--[============================================================[
+          MAINLOOP FUNCTIONS
+]============================================================]
+MainLoop = function(w, e, shouldRun, inDontRunWindowLoop, Update, Dispatch, Draw, MultiThreadedDraws,
+                    MultiThreadedExecute)
+end
 
 
 --[============================================================[
@@ -35,30 +57,48 @@ glogError = function(inStr)
           print("==================")
 end
 
-glerp = function(a, b, t)
-          return (a * (1 - t) + t * b) * (1 - t) + b * t
+gSetInterpolationType = function(inType)
+          if inType == "QUADLINEAR" then
+                    glerp = function(a, b, t)
+                              return (a * (1 - t) + t * b) * (1 - t) + b * t
+                    end
+          elseif inType == "LINEAR" then
+                    glerp = function(a, b, t)
+                              return a * (1 - t) + t * b
+                    end
+          end
+          glerp_2f = function(a, b, t)
+                    return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
+          end
+
+          glerp_3f = function(a, b, t)
+                    return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
+          end
+
+          glerp_4f = function(a, b, t)
+                    return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
+          end
+          glerp_mat4f = function(a, b, t)
+                    return mat4(
+                              glerp_4f(a[1], b[1], t),
+                              glerp_4f(a[2], b[2], t),
+                              glerp_4f(a[3], b[3], t),
+                              glerp_4f(a[4], b[4], t)
+                    )
+          end
 end
 
-glerp_2f = function(a, b, t)
-          return vec2(glerp(a.x, b.x, t), glerp(a.y, b.y, t))
-end
+gSetInterpolationType("QUADLINEAR")
 
-glerp_3f = function(a, b, t)
-          return vec3(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t))
-end
 
-glerp_4f = function(a, b, t)
-          return vec4(glerp(a.x, b.x, t), glerp(a.y, b.y, t), glerp(a.z, b.z, t), glerp(a.w, b.w, t))
-end
-
--- Test for performance
-glerp = Jmath.Lerp
-glerp_2f = Jmath.Lerp
-glerp_3f = Jmath.Lerp
-glerp_4f = Jmath.Lerp
+-- -- Test for performance
+-- glerp = Jmath.Lerp
+-- glerp_2f = Jmath.Lerp
+-- glerp_3f = Jmath.Lerp
+-- glerp_4f = Jmath.Lerp
 
 ComputePositionByName = function(inPositionName, inDimension)
-          -- tracy.ZoneBeginN("ComputePositionByName")
+          -- --tracy.ZoneBeginN("ComputePositionByName")
           if type(inPositionName) ~= "string" then
                     return inPositionName
           end
@@ -90,10 +130,9 @@ ComputePositionByName = function(inPositionName, inDimension)
                     print("Unsupported LEFTRIGHT Type")
           end
 
-          -- tracy.ZoneEnd()
+          -- --tracy.ZoneEnd()
           return vec3(xPos, yPos, gbaseDepth)
 end
-
 
 function IterateEachFrame(inPresentation, infunc_int_val)
           local frameindex = 1
@@ -105,4 +144,5 @@ function IterateEachFrame(inPresentation, infunc_int_val)
                               end
                     end
           end
+          gFrameCount = frameindex
 end

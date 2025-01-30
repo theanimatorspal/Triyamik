@@ -1,13 +1,15 @@
-require "ElementLibrary.Fancy.Fancy"
-Pr = DefaultPresentation()
--- todo fancyenumerate hide bug, should write all over again
+require "ElementLibrary.Commons.Commons"
+Pr = gGetPresentationWithDefaultConfiguration()
+Pr.Config.StepTime = 0.1
+Pr.Config.FullScreen = true
+-- todo commonenumerate hide bug, should write all over again
 
 local titlepage = {
           t = "Triyamik",
           st = "A Graphics Engine based on JkrGUI",
           names = {
-                    "077bct024 Darshan Koirala",
                     "077bct022 Bishal Jaiswal",
+                    "077bct024 Darshan Koirala",
                     "077bct027 Dipesh Regmi",
           },
           logo = "tulogo.png"
@@ -15,11 +17,13 @@ local titlepage = {
 
 local architecture_minor = function()
           return V({
+                    U { t = "Application", en = "ping", c = vec4(vec3(1), 0), bc = vec4(vec3(1), 0) },
                     U { t = "jkrgui", en = "jkrgui" },
                     U { t = "jkrengine (2D)", en = "jkrengine" },
+                    U { t = "jkrjni", en = "jkrjni", bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) },
                     H({ U { t = "SDL(Events)", en = "sdl" }, U { t = "ksaivulkan", en = "kvk" } }, { 0.5, 0.5 }),
                     H({ U { t = "Win, Mac", en = "papi" }, U { t = "Vulkan API", en = "vapi" } }, { 0.5, 0.5 })
-          }, { 0.25, 0.25, 0.25, 0.25 })
+          }, { 0, 0.25, 0.25, 0, 0.25, 0.25 })
 end
 
 
@@ -35,8 +39,8 @@ local count = 6
 local architecture_major = function()
           return V({
                     U { t = "Application", en = "ping", bc = transparent_color },
-                    U { t = "jkrgui", en = "jkrgui", bc = vec4(1, 0.5, 0.5, 0.2) },
-                    U { t = "jkrengine (2D + 3D)", en = "jkrengine", bc = vec4(1, 0.5, 0.5, 0.2) },
+                    U { t = "jkrgui", en = "jkrgui", bc = vec4(1, 0.9, 0.5, 0.5) },
+                    U { t = "jkrengine (2D + 3D)", en = "jkrengine", bc = vec4(1, 0.9, 0.5, 0.5) },
                     U { t = "jkrjni", en = "jkrjni", bc = transparent_color },
                     H({ U { t = "SDL(Events)", en = "sdl" }, U { t = "ksaivulkan", en = "kvk" } }, { 0.5, 0.5 }),
                     H({ U { t = "Win, Mac, Android", en = "papi" }, U { t = "Vulkan API", en = "vapi" } }, { 0.5, 0.5 })
@@ -54,76 +58,80 @@ end
 
 P = {
           Frame {
-                    FancyAndroid {},
+                    CAndroid {},
           },
           Frame {
-                    FancyTitlePage(titlepage),
-                    FancyNumbering {},
-                    FancyStructure {},
+                    CTitlePage(titlepage),
+                    CNumbering {},
+                    CStructure {},
           },
           Frame {
-                    FancyTitlePage { act = "structure" },
-                    minmaj = FancyEnumerate {
+                    CTitlePage { act = "structure" },
+                    minmaj = CEnumerate {
                               items = {
                                         "Minor Project Overview",
                                         "Major Project Overview",
                                         "Scope",
                               },
-                              hide = { 1, 2, 3 }
+                              hide = "all"
                     },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
-                    FancyLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
+                    -- CButton {
+                    --           onclick = function()
+                    --                     gMoveToParicular(13)
+                    --           end
+                    -- }
           },
           Frame {
-                    minmaj = FancyEnumerate {
-                              items = {
-                                        "Minor Project Overview",
-                                        "Major Project Overview",
-                                        "Scope"
-                              }
-                    },
+                    s1 = CSection { t = "Introduction" },
+                    minmaj = CEnumerate {},
+                    CLayout { layout = minor_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
           },
           Frame {
-                    s1 = FancySection { t = "Introduction" },
-                    minmaj = FancyEnumerate { view = 1 },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
-                    FancyLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 1 },
+                    CLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 2 },
-                    FancyLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
-                    scope_enum = FancyEnumerate {
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 2 },
+                    CLayout { layout = minor_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+          },
+          Frame {
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 2 },
+                    CLayout { layout = major_layout() }.Apply({ bc = very_transparent_color, c = vec4(0, 0, 0, 1) }),
+                    scope_enum = CEnumerate {
                               items = {
                                         "2D + 3D Rendering and Presentation",
                                         "Mobile <-> PC Communication",
                                         "Research for Android Devices"
                               },
-                              hide = { 1, 2, 3 }
+                              hide = "all"
                     },
-                    it_was_all = Text { t = "It was all ", c = vec4(0) }
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
           },
           Frame {
-                    s1 = FancySection {},
-                    minmaj = FancyEnumerate { view = 3 },
-                    FancyLayout { layout = major_layout() }.ApplyAll({ bc = vec4(0), c = vec4(0) }),
-                    scope_enum = FancyEnumerate {
-                              items = {
-                                        "2D + 3D Rendering and Presentation",
-                                        "Mobile <-> PC Communication",
-                                        "Research for Android Devices"
-                              }
-                    },
-                    it_was_all = Text { t = "It was all ", c = vec4(0) }
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 3 },
+                    CLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
+                    scope_enum = CEnumerate { order = { 3, 1, 2 } },
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) }
           },
           Frame {
-                    s3 = FancySection { t = "Demonstration" },
-                    minmaj = FancyEnumerate { hide = { 1, 2, 3 } },
-                    scope_enum = FancyEnumerate { hide = { 1, 2, 3 } },
-                    it_was_all = Text { t = "It was all ", c = vec4(0, 0, 0, 0.5) }
+                    s1 = CSection {},
+                    minmaj = CEnumerate { view = 3 },
+                    scope_enum = CEnumerate { items = {} },
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(vec3(1), 0) },
+                    CLayout { layout = major_layout() }.ApplyAll({ bc = vec4(vec3(1), 0), c = vec4(vec3(1), 0) }),
           },
           Frame {
-                    s3 = FancySection {},
+                    s3 = CSection { t = "Demonstration" },
+                    minmaj = CEnumerate { hide = { 1, 2, 3 } },
+                    scope_enum = CEnumerate { hide = { 1, 2, 3 } },
+                    it_was_all = Text { t = "It was all ", f = "Huge", c = vec4(0, 0, 0, 0.5) }
+          },
+          Frame {
+                    s3 = CSection {},
                     it_was_all = Text {
                               t = "It was all a demonstration",
                               c = vec4(0, 0, 0, 1),
@@ -131,8 +139,8 @@ P = {
                     }
           },
           Frame {
-                    s3 = FancySection {},
-                    en = FancyEnumerate {
+                    s3 = CSection {},
+                    en = CEnumerate {
                               items = {
                                         "Refactoring Code (C++, Lua, Java) and Interlop C++ <-> Lua <-> Java",
                                         "Basic PBR with Texture, and IBL",
@@ -141,53 +149,59 @@ P = {
                                         "Basic Architecture of Presentation Engine",
                                         "Basic Networking and RCE",
                               },
-                              hide = { 1, 2, 3, 4, 5, 6 }
+                              hide = "all"
                     },
                     it_was_all = Text { t = "Other Demonstrations", c = vec4(0, 0, 0, 1), f = "Huge" }
           },
           Frame {
-                    s2 = FancySection { t = "Tasks Completed" },
-                    en = FancyEnumerate {
-                              items = {
-                                        "Refactoring Code (C++, Lua, Java) and Interlop C++ <-> Lua <-> Java",
-                                        "Basic PBR with Texture, and IBL",
-                                        "Deferred Rendering",
-                                        "Shadow Mapping",
-                                        "Basic Architecture of Presentation Engine",
-                                        "Basic Networking and RCE",
-                              }
-                    },
-                    it_was_all = Text { t = "Other Demonstrations", c = vec4(0), f = "Huge" },
-                    remain_enum = FancyEnumerate {
+                    s2 = CSection { t = "Tasks Completed" },
+                    en = CEnumerate {},
+                    it_was_all = Text { t = "Other Demonstrations", c = vec4(vec3(1), 0), f = "Huge" },
+                    remain_enum = CEnumerate {
                               items = {
                                         "Architecture Finalization and 3D Integration",
-                                        "Robust Networking Support(Multiple Clients)"
+                                        "Context Aware UI",
+                                        "Robust Networking Support(Multiple Clients)",
+                                        "Full PBR, Large Scenes 3D Support",
+                                        "Procedural 2D/3D Animations (Compute  Shaders)",
+                                        "Accelerometer + Event Management",
+                                        "Sample Applications",
+                                        "Optimization + Documentation",
                               },
-                              hide = { 1, 2 }
+                              hide = "all"
                     }
           },
           Frame {
-                    s4 = FancySection { t = "Remaining Works" },
-                    en = FancyEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
-                    remain_enum = FancyEnumerate {
-                              items = {
-                                        "Architecture Finalization and 3D Integration",
-                                        "Robust Networking Support(Multiple Clients)"
-                              }
-                    }
-          },
-          Frame {
-                    s4 = FancySection {},
-          },
-          Frame {
+                    s4 = CSection { t = "Remaining Works" },
+                    en = CEnumerate { hide = { 1, 2, 3, 4, 5, 6 } },
+                    remain_enum = CEnumerate {},
                     thank_you = Text { t = "Thank You", p = "CENTER_CENTER", f = "Huge", c = vec4(1, 1, 1, 0) }
           },
           Frame {
+                    s4 = CSection {},
+                    remain_enum = CEnumerate { hide = "all" },
                     thank_you = Text { t = "Thank You, Any Questions ?", p = "CENTER_CENTER", f = "Huge", c = vec4(0, 0, 0, 1) }
           }
 }
 
+-- Pr:insert(P)
+-- gPresentation(Pr, true, "GeneralLoop")
+
+-- P = {
+--           Frame {
+--                     text = CText {
+--                               t = "FUCK YOU",
+--                     }
+--           },
+--           Frame {
+--                     text = CText {
+--                               t = "How are you",
+--                               p = vec3(0, 0, gbaseDepth)
+--                     }
+--           }
+-- }
+
 Pr:insert(P)
-Presentation(Pr)
+gPresentation(Pr, true, "GeneralLoop")
 
 -- print(inspect(gFrameKeys))

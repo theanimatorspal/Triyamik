@@ -1,187 +1,203 @@
 function Main()
-    -- Jkr.ShowToastNotification("Fuck you Bro")
-    gdisplayloop = true
+    if not ANDROID then
+        require "JkrGUIv2.Widgets.General"
+        require "JkrGUIv2.Engine.Engine"
+        inspect = require "JkrGUIv2.inspect"
+    end
+    Jkr.GetLayoutsAsVH()
     Engine:Load(true)
-    framed = vec2(200, 400)
-    w = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, framed)
-    e = Engine.e
-    gwr = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, w, e)
-    f = gwr.CreateFont("font.ttf", 14)
+    FrameD = vec2(400, 700)
+    W = Jkr.CreateWindow(Engine.i, "Hello Anroid", vec2(400, 700), 3, FrameD)
+    E = Engine.e
+    GWR = Jkr.CreateGeneralWidgetsRenderer(nil, Engine.i, W, E)
+    F = GWR.CreateFont("font.ttf", 18)
+    SHOULD_SEND_TCP = false
+    TCP_FILE_IN = Jkr.FileJkr()
+    TCP_FILE_IN:WriteFunction("CTRL", function()
+        gMoveForward()
+    end)
 
-    local Background = gwr.CreatePressButton(vec3(0, 0, 50), vec3(100, 100, 1),
-        function() end,
-        false, f,
-        "", vec4(0),
-        vec4(0.5, 0.8, 0.95, 1))
-    Background:Update(vec3(-20, -20, 50), vec3(framed.x + 40, framed.y + 40, 1))
+    GBASE_DEPTH = 50
 
-    local DisplayText = " "
-    local Display = gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
-        nil,
-        false, f,
-        DisplayText,
-        vec4(1, 1, 0, 1))
-
-    local UpdateDisplay = function()
-
-    end
-
-
-    local Clear = gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
-        function()
-            DisplayText = " "
-            UpdateDisplay()
-        end,
-        false, f,
-        "Clear",
-        vec4(0.2, 0.4, 0, 1))
-
-    local cpbf = function(inTextToAppend)
-        return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), function()
-                DisplayText = DisplayText .. inTextToAppend
-                print(DisplayText)
-                UpdateDisplay()
-            end,
-            false, f,
-            inTextToAppend,
-            vec4(0.5, 0, 0, 1), vec4(1, 1, 1, 0.8))
-    end
-
-    local spbf = function(inText, inFunction)
-        if not inFunction then
-            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1),
-                nil,
-                false,
-                f,
-                inText,
-                vec4(0, 0, 0, 1), vec4(1, 1, 1, 0.8))
+    ELEMENTS = {}
+    function U(inValue)
+        if not inValue.e then
+            inValue.p = inValue.p or vec3(0, 0, GBASE_DEPTH)
+            inValue.d = inValue.d or vec3(100, 100, 1)
+            inValue.onclick = inValue.onclick or function() end
+            inValue.c = inValue.c or vec4(vec3(0), 1)
+            inValue.bc = inValue.bc or vec4(0.9, 0.8, 0.95, 0.6)
+            inValue.f = inValue.f or F
+            local Value = GWR.CreateGeneralButton(
+                inValue.p,
+                inValue.d,
+                inValue.onclick,
+                inValue.continous,
+                inValue.f,
+                inValue.t,
+                inValue.c,
+                inValue.bc,
+                inValue.pc,
+                inValue.img
+            )
+            if inValue.en then
+                ELEMENTS[inValue.en] = Value
+            elseif inValue.t then
+                ELEMENTS[inValue.t] = Value
+            end
+            inValue = Value
         else
-            return gwr.CreatePressButton(vec3(math.huge, math.huge, 20), vec3(100, 100, 1), inFunction,
-                false,
-                f,
-                inText,
-                vec4(0, 0, 0, 1), vec4(1, 1, 1, 0.8))
+            inValue.Update = function(self, inPosition_3f, inDimension_3f)
+            end
+        end
+        return inValue
+    end
+
+    local DisplayText = ""
+    local B = function(inNumber)
+        local onclickf = function()
+            DisplayText = DisplayText .. inNumber
+            local el = ELEMENTS["DisplayText"]
+            el:Update(el.mPosition_3f, el.mDimension_3f, F, DisplayText)
+        end
+        if type(inNumber) == "string" then
+            return U { t = inNumber, onclick = onclickf }
+        else
+            return U { t = tostring(inNumber), onclick = onclickf }
         end
     end
 
-    local ScreenVLayout = Jkr.VLayout:New(0)
+    local Background = U { p = vec3(-80, -80, 50),
+        d = vec3(FrameD.x + 160, FrameD.y + 160, 1),
+        bc = vec4(0.5, 0.8, 0.95, 1) }
 
-    local TopInfoHLayout_1 = Jkr.HLayout:New(0)
-    TopInfoHLayout_1:AddComponents({ spbf("Write"), spbf("IP"), Clear }, { 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 })
+    local BackSpace = function()
+        DisplayText = string.sub(DisplayText, 1, #DisplayText - 1)
+        local el = ELEMENTS["DisplayText"]
+        el:Update(el.mPosition_3f, el.mDimension_3f, F, DisplayText)
+    end
 
-    local DisplayHLayout_2 = Jkr.HLayout:New(0)
-    DisplayHLayout_2:AddComponents({ Display }, { 1 })
-
-    local NRatioTable = { 1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0 }
-    local NumericHLayout_3 = Jkr.HLayout:New(0)
-    NumericHLayout_3:AddComponents({ cpbf("1"), cpbf("2"), cpbf("3") }, NRatioTable)
-
-    local NumericHLayout_4 = Jkr.HLayout:New(0)
-    NumericHLayout_4:AddComponents({ cpbf("4"), cpbf("5"), cpbf("6"), }, NRatioTable)
-
-    local NumericHLayout_5 = Jkr.HLayout:New(0)
-    NumericHLayout_5:AddComponents({ cpbf("7"), cpbf("8"), cpbf("9"), }, NRatioTable)
-
-    local NumericHLayout_6 = Jkr.HLayout:New(0)
-    NumericHLayout_6:AddComponents({ cpbf("."), cpbf("0"), spbf("Submit", function()
+    local ConnectToPC = function()
         local function afunction()
             net = Engine.net
-            net.Client(string.sub(DisplayText, 2, #DisplayText))
+            net.Client()
+            net.Start(DisplayText)
         end
         if pcall(afunction) then
-            Jkr.ShowToastNotification("Connection Succeeded")
-            gnetworkloop = true
+            Jkr.ShowToastNotification("Connection Tried")
+            GNetworkLoop = true
         else
             Jkr.ShowToastNotification("Connection Failed")
         end
-    end), }, NRatioTable)
-
-    ScreenVLayout:AddComponents({
-        TopInfoHLayout_1,
-        DisplayHLayout_2,
-        NumericHLayout_3,
-        NumericHLayout_4,
-        NumericHLayout_5,
-        NumericHLayout_6
-    }, { 0.1, 0.3, 0.15, 0.15, 0.15, 0.15 })
-
-    ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
-
-    UpdateDisplay = function()
-        Display.sampledText:Update(vec3(20), vec3(0), f, DisplayText, vec4(0.2, 0.4, 0, 1))
-        ScreenVLayout:Update(vec3(0, 0, 20), vec3(framed.x, framed.y, 1))
     end
 
-    e:SetEventCallBack(
+    MainLayout = V(
+        {
+            H({
+                    U {
+                        t = "Write Ip", bc = vec4(0.9),
+                    },
+                    U {
+                        t = "<<", onclick = BackSpace,
+                    } },
+                { 0.7, 0.3 }
+            ),
+            U { t = "", en = "DisplayText", bc = vec4(1) },
+            H({ B(1), B(2), B(3) }, { 1 / 3.0, 1 / 3.0, 1 / 3.0 }),
+            H({ B(4), B(5), B(6) }, { 1 / 3.0, 1 / 3.0, 1 / 3.0 }),
+            H({ B(7), B(8), B(9) }, { 1 / 3.0, 1 / 3.0, 1 / 3.0 }),
+            H({ B(0), B(".") }, { 0.5, 0.5 }),
+            U { t = "Connect To PC", onclick = ConnectToPC, bc = vec4(0.9) },
+        },
+        { 0.1, 0.4, 0.1, 0.1, 0.1, 0.1, 0.1 }
+    )
+    MainLayout:Update(vec3(0, 0, 50), vec3(FrameD.x, FrameD.y, 1))
+    GWR.AnimationPush(MainLayout, vec3(-10, 0, 50), vec3(0, 0, 50), vec3(0, 20, 1), vec3(FrameD.x, FrameD.y, 1))
+
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    --
+    E:SetEventCallBack(
         function()
-            gwr:Event()
+            GWR:Event()
         end
     )
 
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
-    --
     Update = function()
-        gwr:Update()
+        GWR:Update()
     end
 
     Dispatch = function()
-        gwr:Dispatch()
+        GWR:Dispatch()
     end
 
     UIDraw = function()
-        gwr:Draw()
+        GWR:Draw()
     end
 
     Draw = function()
-        w:BeginDraws(0, 0, 0, 1, 1)
-        w:ExecuteUIs()
-        w:EndDraws()
     end
 
-    while not e:ShouldQuit() and gdisplayloop do
-        if gnetworkloop then
-            gnetwork_value = net.listenOnce()
-            if type(gnetwork_value) == "function" then
-                if not pcall(gnetwork_value) then
-                    Jkr.ShowToastNotification("Error Calling the function")
+    GDisplayLoop = true
+
+    while not E:ShouldQuit() and GDisplayLoop do
+        if GNetworkLoop then
+            GNetworkValue = net.listenOnce()
+            if type(GNetworkValue) == "function" then
+                local success, result = pcall(GNetworkValue)
+                if not success then
+                    Jkr.ShowToastNotification(result)
+                    print(" ")
                 end
             end
-            if type(gnetwork_value) == "string" then
-                Jkr.ShowToastNotification("M:" .. gnetwork_value)
-                if gnetwork_value == "JkrGUIv2Start" then
+            if type(GNetworkValue) == "string" then
+                Jkr.ShowToastNotification("M:" .. GNetworkValue)
+                if GNetworkValue == "JkrGUIv2Start" then
                     net.SendToServer("JkrGUIv2Start")
-                    gnetwork_value = nil
+                    GNetworkValue = nil
                 end
+            end
+
+            if SHOULD_SEND_TCP then
+                local msg = Jkr.Message()
+                local vchar = TCP_FILE_IN:GetDataFromMemory()
+                msg:InsertVChar(vchar)
+                net.SendToServer(msg)
+                SHOULD_SEND_TCP = false;
+                TCP_FILE_IN:Clear();
             end
         end
-        e:ProcessEventsEXT(w)
-        w:BeginUpdates()
-        gWindowDimension = w:GetWindowDimension()
-        Update()
-        w:EndUpdates()
+        if not GForeignLoop then
+            E:ProcessEventsEXT(W)
+            Update()
 
-        w:BeginDispatches()
-        Dispatch()
-        w:EndDispatches()
+            W:Wait()
+            W:AcquireImage()
+            W:BeginRecording()
+            Dispatch()
 
-        w:BeginUIs()
-        UIDraw()
-        w:EndUIs()
+            W:BeginUIs()
+            UIDraw()
+            W:EndUIs()
 
-        Draw()
-        w:Present()
+            W:BeginDraws(0, 0, 0, 1, 1)
+            W:ExecuteUIs()
+            W:EndDraws()
+
+            W:BlitImage()
+            W:EndRecording()
+            W:Present()
+        end
     end
 end
 
