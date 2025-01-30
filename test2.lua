@@ -103,6 +103,7 @@ P = {
                     },
           },
 }
+P = {}
 P.Config = {
           FullScreen = false,
           FontSizes = gGetDefaultFontSizes(),

@@ -165,6 +165,7 @@ UDP_FILE_OUT = Jkr.FileJkr()
 
 gFUNCTIONS_TO_BE_SEND_TO_ANDROID = {}
 local CURRENT_ANDROID_CONTROL = 0
+local sent = false
 ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
           TCP_FILE_IN:Clear()
           local func = gFUNCTIONS_TO_BE_SEND_TO_ANDROID[inFrameIndex]
@@ -173,10 +174,17 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
           end
           if Engine.gate.android_device_connected_tcp then
                     do
-                              Engine.net.BroadCast(function()
-                                        SHOULD_SEND_TCP = true
-                                        TCP_FILE_IN:Write()
-                              end)
+                              if not sent then
+                                        Engine.net.BroadCast(function()
+                                                  GWR.c:Push(Jkr.CreateUpdatable(
+                                                            function()
+                                                                      SHOULD_SEND_TCP = true
+                                                                      TCP_FILE_IN:WriteVec4("ACC", vec4(3, 8, 2, 1))
+                                                            end
+                                                  ))
+                                        end)
+                                        sent = true
+                              end
                               if func then
                                         -- local vchar = TCP_FILE_OUT:GetDataFromMemory()
                                         -- local msg = Jkr.Message()
@@ -196,13 +204,12 @@ ExecuteFunctions["*FANDR*"] = function(inPresentation, inElement, inFrameIndex, 
                     elseif type(Message) == "userdata" then
                               local vchar = Message:GetVChar()
                               TCP_FILE_IN:PutDataFromMemory(vchar)
+                              if (TCP_FILE_IN:HasEntry("ACC")) then
+                                        local ac = TCP_FILE_IN:ReadVec4("ACC")
+                              end
                               if (TCP_FILE_IN:HasEntry("CTRL")) then
                                         local f = load(TCP_FILE_IN:ReadFunction("CTRL"))
                                         f()
-                              end
-                              if (TCP_FILE_IN:HasEntry("ACC")) then
-                                        local ac = Jkr.ConvertFromVChar(vec4(0), TCP_FILE_IN:Read("ACC"))
-                                        print(ac.x, ac.y, ac.z, ac.w)
                               end
                     end
           end
