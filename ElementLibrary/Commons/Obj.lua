@@ -18,6 +18,7 @@ Cobj = function(inOBJViewTable)
     return { Cobj = Default(inOBJViewTable, t) }
 end
 
+local objects = {}
 gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName)
     local ElementName = gUnique(inElementName)
     if inValue.world == "default" then
@@ -90,7 +91,7 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
     if inValue.skinning == -1 then
         inValue.skinning = false
     end
-    if not gscreenElements[ElementName] then
+    if not objects[ElementName] then
         if type(inValue.load) == "function" then
             local obs = inValue.load()
             for i = 1, #obs, 1 do
@@ -98,18 +99,19 @@ gprocess["Cobj"] = function(inPresentation, inValue, inFrameIndex, inElementName
                     obs[i].mP2 = 1
                 end
             end
-            gscreenElements[ElementName] = obs
+            objects[ElementName] = obs
         else
             local OBJObjects, skyboxId = Engine.AddAndConfigureGLTFToWorld(gwindow, gworld3d, gshaper3d,
                 inValue.filename,
                 inValue.renderer,
                 Jkr.CompileContext.Default, inValue.skinning, inValue.hdr_filename)
-            gscreenElements[ElementName] = OBJObjects
+            objects[ElementName] = OBJObjects
         end
     end
+
     local Element = {
         "*Cobj*",
-        handle = gscreenElements[ElementName],
+        handle = objects[ElementName],
         value = inValue,
         name = ElementName
     }
@@ -125,19 +127,21 @@ local FlycamKeyboardCameraControl, EditorMouseCameraControl, AndroidSensorCamera
 ExecuteFunctions["*Cobj*"] = function(inPresentation, inElement, inFrameIndex, t, inDirection)
     local camControl = inElement.value.camera_control
     local Value = gworld3dS[inElement.value.world]
-    gworld3d = Value.world3d
-    gshaper3d = Value.shaper3d
-    gcamera3d = Value.camera3d
-    gobjects3d = Value.objects3d
-    gshadowsimple3did = Value.shadow_shader_id
+    local gworld3d = Value.world3d
+    local gshaper3d = Value.shaper3d
+    local gcamera3d = Value.camera3d
+    local gobjects3d = Value.objects3d
+    local gshadowsimple3did = Value.shadow_shader_id
     local renderer_parameter = inElement.value.renderer_parameter
 
-    if camControl == "FLYCAM_KEYBOARD" then
-        gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
-    elseif camControl == "EDITOR_MOUSE" then
-        gwid.c:PushOneTime(Jkr.CreateUpdatable(EditorMouseCameraControl), 1)
-    elseif camControl == "ANDROID_SENSOR" then
-        gwid.c:PushOneTime(Jkr.CreateUpdatable(AndroidSensorCameraControl), 1)
+    if camControl then
+        if camControl == "FLYCAM_KEYBOARD" then
+            gwid.c:PushOneTime(Jkr.CreateUpdatable(FlycamKeyboardCameraControl), 1)
+        elseif camControl == "EDITOR_MOUSE" then
+            gwid.c:PushOneTime(Jkr.CreateUpdatable(EditorMouseCameraControl), 1)
+        elseif camControl == "ANDROID_SENSOR" then
+            gwid.c:PushOneTime(Jkr.CreateUpdatable(AndroidSensorCameraControl), 1)
+        end
     end
     for i = 1, #inElement.handle, 1 do
         Element = inElement.handle[i]
