@@ -63,7 +63,8 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     PRO.Shape {
                               compute_texture = elementName .. "grid1",
                               p = vec3(size / 2, 0, -size / 2),
-                              d = vec3(size, 0.01, size),
+                              d = vec3(size, 0, size),
+                              renderer_parameter = mat4(vec4(1), vec4(0), vec4(0), vec4(0)),
                     }
                     .PRO_Shape,
                     inFrameIndex, elementName .. "cube_h")
@@ -72,7 +73,8 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
                     PRO.Shape {
                               compute_texture = elementName .. "grid2",
                               p = vec3(size / 2, size / 2, 0),
-                              d = vec3(size, size, 0.01),
+                              d = vec3(size, size, 0),
+                              renderer_parameter = mat4(vec4(1), vec4(0), vec4(0), vec4(0)),
                     }
                     .PRO_Shape,
                     inFrameIndex, elementName .. "cube_v")
