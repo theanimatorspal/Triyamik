@@ -8,7 +8,6 @@ PRO.Shape = function(inTable)
         p = vec3(0),
         d = vec3(1),
         r = vec4(1, 1, 1, 1),
-        -- renderer_parameter = mat4(0),
         renderer_parameter = mat4(vec4(1), vec4(0), vec4(0), vec4(0)),
         sidedness = "FOURSIDED"
     }
@@ -17,7 +16,6 @@ end
 
 gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementName)
     PRO.CompileShaders()
-
     local elementName = gUnique(inElementName)
     local p = inValue.p
     local d = inValue.d
@@ -73,6 +71,7 @@ gprocess.PRO_Shape = function(inPresentation, inValue, inFrameIndex, inElementNa
                 p = p,
                 d = d,
                 r = r,
+                renderer_parameter = renderer_parameter
             }.Cobj, inFrameIndex, elementName)
         end
     end
