@@ -304,6 +304,7 @@ P = {
                               mark = vec3(1),
                               mark_size = vec3(0),
                               line_size = 0,
+                              compute = false,
                     },
                     mobile_phone = PRO.Shape {
                               r = vec4(0, 1, 0, -90),
@@ -331,6 +332,7 @@ P = {
                               mark = vec3(1),
                               mark_size = vec3(0),
                               line_size = 0,
+                              compute = false,
                     },
                     mobile_phone = PRO.Shape {
                               r = vec4(0, 1, 0, 90),
