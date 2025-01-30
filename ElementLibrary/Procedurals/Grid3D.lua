@@ -11,6 +11,7 @@ PRO.Grid3D = function(inTable)
                     x_count = 30,
                     y_count = 30,
                     c = vec4(1, 0, 0, 1),
+                    compute = true, -- set this to false if you have already created the grid and it is runing the performance
                     t = 1,
 
           }
@@ -25,36 +26,38 @@ gprocess.PRO_Grid3D = function(inPresentation, inValue, inFrameIndex, inElementN
           inValue.mark.y = inValue.y_count - inValue.mark.y
           inValue.mark.z = inValue.x_count - inValue.mark.z
 
-          gprocess.CGrid(inPresentation,
-                    CGrid {
-                              p = grid_position,
-                              c = inValue.grid_color,
-                              cd = vec3(size, size, 1),
-                              t = inValue.t,
-                              x_count = inValue.x_count,
-                              y_count = inValue.y_count,
-                              mark_list = { vec2(inValue.mark.x, inValue.mark.z) },
-                              should_mark = true,
-                              mark_color = inValue.mark_colors[1],
-                    }
-                    .CGrid,
-                    inFrameIndex,
-                    elementName .. "grid1")
+          if inValue.compute then
+                    gprocess.CGrid(inPresentation,
+                              CGrid {
+                                        p = grid_position,
+                                        c = inValue.grid_color,
+                                        cd = vec3(size, size, 1),
+                                        t = inValue.t,
+                                        x_count = inValue.x_count,
+                                        y_count = inValue.y_count,
+                                        mark_list = { vec2(inValue.mark.x, inValue.mark.z) },
+                                        should_mark = true,
+                                        mark_color = inValue.mark_colors[1],
+                              }
+                              .CGrid,
+                              inFrameIndex,
+                              elementName .. "grid1")
 
-          gprocess.CGrid(inPresentation,
-                    CGrid {
-                              p = grid_position,
-                              c = inValue.grid_color,
-                              cd = vec3(size, size, 1),
-                              t = inValue.t,
-                              x_count = inValue.x_count,
-                              y_count = inValue.y_count,
-                              mark_list = { vec2(inValue.mark.x, inValue.mark.y) },
-                              should_mark = true,
-                              mark_color = inValue.mark_colors[1] }
-                    .CGrid,
-                    inFrameIndex,
-                    elementName .. "grid2")
+                    gprocess.CGrid(inPresentation,
+                              CGrid {
+                                        p = grid_position,
+                                        c = inValue.grid_color,
+                                        cd = vec3(size, size, 1),
+                                        t = inValue.t,
+                                        x_count = inValue.x_count,
+                                        y_count = inValue.y_count,
+                                        mark_list = { vec2(inValue.mark.x, inValue.mark.y) },
+                                        should_mark = true,
+                                        mark_color = inValue.mark_colors[1] }
+                              .CGrid,
+                              inFrameIndex,
+                              elementName .. "grid2")
+          end
 
           gprocess.PRO_Shape(inPresentation,
                     PRO.Shape {

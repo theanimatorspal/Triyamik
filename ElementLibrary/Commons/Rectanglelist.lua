@@ -5,7 +5,6 @@ CRectanglelist = function(inCRectanglelist)
                     p = vec3(100, 100, gbaseDepth),
                     d = vec3(100, 100, 1),
                     cd = vec3(100, 100, 1),
-
           }
           return { CRectanglelist = Default(inCRectanglelist, t) }
 end
