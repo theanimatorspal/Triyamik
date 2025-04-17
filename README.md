@@ -1,0 +1,102 @@
+<h1 align="center">🧠 PresentTest-for-JkrGUI</h1>
+<p align="center"><i>Lua-based Presentation Engine – like PowerPoint, but cursed</i></p>
+<p align="center"><b>Powered by:</b> Lua 🐍 | Custom Engine 🎮 | <a href="https://github.com/theanimatorspal/jkrgui">JkrGUI</a> 🪞</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/build-chaotic-red?style=flat-square&logo=lua" />
+  <img src="https://img.shields.io/badge/gui-engine-custom-darkblue?style=flat-square&logo=geeksforgeeks" />
+  <img src="https://img.shields.io/badge/docs-none-yellow?style=flat-square&logo=readthedocs" />
+  <img src="https://img.shields.io/badge/stability-quantum--fluctuates-orange?style=flat-square&logo=apacherocketmq" />
+</p>
+
+---
+
+## 🧵 About
+
+This is a **presentation scripting engine** — made with Lua and running on your homemade `jkrgui`.  
+Instead of slides, you get full control over 3D nodes, cameras, buttons, lines, networks... and maybe your own sanity.
+
+> 💡 It's like Prezi, if Prezi was a demon.  
+> 🛠️ Built to render security presentations like *HTTP Request Smuggling* with animations, tiltedy effects, and all that jazz.
+
+---
+
+## 🔥 Features
+
+| What                     | Status       | Description                              |
+|--------------------------|--------------|------------------------------------------|
+| Presentation Scripts     | ✅ Working    | Just write Lua + Frame()s and vibe       |
+| Camera Transforms        | ✅ Functional | Pan, zoom, rotate in 3D space            |
+| Buttons & Labels         | ✅ There      | Interactive or static, your call         |
+| Network Diagrams         | ✅ Cursed     | Animate packets like no one's watching   |
+| Rendering Engine         | ✅ Custom     | 100% `jkrgui` with no external deps      |
+| UX Consistency           | ❌ LMAO       | Each frame is a new surprise             |
+
+---
+
+## 🎞️ Sample Presentation
+
+```lua
+Presentations["req_smug"] = {
+    Init = {},
+    EachFrame = {
+        cam = NET.Camera { "high:" },
+        mlevel = NET.Label { "HTTP: hidden" },
+    },
+    Frame {
+        cam = NET.Camera { "center:" },
+        mlevel = NET.Label { "HTTP Request Smuggling: shiftRight 2 Huge tiltedy" },
+        netwok = NET.Network {
+            { "shiftUp 2",   node1 = "Monitor:", node2 = "Packet:" },
+            { "",            node3 = "Monitor:", node4 = "Packet:" },
+            { "shiftDown 2", node5 = "Monitor:", node6 = "Packet:" },
+        }
+    }
+}
+```
+
+> ⚙️ Pro tip: `tiltedy`, `HUGE`, `shiftRight` – these aren't just keywords, they’re a vibe.
+
+---
+
+## ⚗️ How to Run This Frankenstein
+
+```bash
+# Clone the chaos
+git clone https://github.com/theanimatorspal/PresentTest-for-JkrGUI.git
+cd PresentTest-for-JkrGUI
+
+# You need Lua and jkrgui installed
+# Clone the GUI engine (unless you enjoy suffering)
+git clone https://github.com/theanimatorspal/jkrgui.git
+
+# (Assumes you set up LuaJIT + deps correctly)
+lua main.lua
+```
+
+> 📝 Reminder: No binaries, no package managers, just you and the void.
+
+---
+
+## 💀 Known Weirdness
+
+- Frame sequencing is manual. Don't mess up the order.
+- `Presentations[1]`, `[2]`, `[3]`, etc. – yeah, pick one and pray.
+- There's no error handling. If it breaks, it breaks.
+- Fonts, transforms, button logic – all magical if they work.
+
+---
+
+## 🤘 Why This Exists
+
+This is a **creative chaos engine** for making visually rich presentations, especially for teaching or demonstrating infosec topics like:
+
+- HTTP Request Smuggling
+- UI/UX logic flows
+- Protocol exploits
+- Or just showing off your cursed creativity
+
+---
+
+> 🧠 Made by a mad dev, for mad devs. Built on top of 🔮 [JkrGUI](https://github.com/theanimatorspal/jkrgui) — your very own GUI framework.
+
