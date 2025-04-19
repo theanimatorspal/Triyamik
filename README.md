@@ -129,13 +129,7 @@ P = {
 
 ## 🤘 Why This Exists
 
-This is a **creative chaos engine** for making visually rich presentations, especially for teaching or demonstrating infosec topics like:
-
-- HTTP Request Smuggling
-- UI/UX logic flows
-- Protocol exploits
-- Or just showing off your cursed creativity
-
+This is a **creative chaos engine** for making visually rich presentations, especially for teaching or demonstrating infosec topics.
 ---
 
 > 🧠 Made by a mad dev, for mad devs. Built on top of 🔮 [JkrGUI](https://github.com/theanimatorspal/jkrgui) — your very own GUI framework.
