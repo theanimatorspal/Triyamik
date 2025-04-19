@@ -16,7 +16,6 @@ This is a **presentation scripting engine** — made with Lua and running on you
 Instead of slides, you get full control over 3D nodes, cameras, buttons, lines, networks... and maybe your own sanity.
 
 > 💡 It's like Prezi, if Prezi was a demon.  
-> 🛠️ Built to render security presentations like *HTTP Request Smuggling* with animations, tiltedy effects, and all that jazz.
 
 ---
 
@@ -30,31 +29,6 @@ Instead of slides, you get full control over 3D nodes, cameras, buttons, lines, 
 | Network Diagrams         | ✅ Cursed     | Animate packets like no one's watching   |
 | Rendering Engine         | ✅ Custom     | 100% `jkrgui` with no external deps      |
 | UX Consistency           | ❌ LMAO       | Each frame is a new surprise             |
-
----
-
-## 🎞️ Sample Presentation
-
-```lua
-Presentations["req_smug"] = {
-    Init = {},
-    EachFrame = {
-        cam = NET.Camera { "high:" },
-        mlevel = NET.Label { "HTTP: hidden" },
-    },
-    Frame {
-        cam = NET.Camera { "center:" },
-        mlevel = NET.Label { "HTTP Request Smuggling: shiftRight 2 Huge tiltedy" },
-        netwok = NET.Network {
-            { "shiftUp 2",   node1 = "Monitor:", node2 = "Packet:" },
-            { "",            node3 = "Monitor:", node4 = "Packet:" },
-            { "shiftDown 2", node5 = "Monitor:", node6 = "Packet:" },
-        }
-    }
-}
-```
-
-> ⚙️ Pro tip: `tiltedy`, `HUGE`, `shiftRight` – these aren't just keywords, they’re a vibe.
 
 ---
 
