@@ -1,4 +1,4 @@
-<h1 align="center">🧠 PresentTest-for-JkrGUI</h1>
+<h1 align="center">🧠 Triyamik</h1>
 <p align="center"><i>Lua-based Presentation Engine – like PowerPoint, but cursed</i></p>
 <p align="center"><b>Powered by:</b> Lua 🐍 | Custom Engine 🎮 | <a href="https://github.com/theanimatorspal/jkrgui">JkrGUI</a> 🪞</p>
 
